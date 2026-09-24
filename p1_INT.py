@@ -20,12 +20,31 @@ Numerical Integrator: Infinite Square Well
 # the easiest option provided, but I need to make sure I can submit
 # complete by Tuesday
 # Reduced Planck Constant, SI units
-hbar = const.hbar
 
-def psi0(x, a, n):
+# –––––––––––– INTEGRATOR ––––––––––––
+
+def Reimann(f, x, xmax, dx, A, **kwargs):
     """
-    Ground-state wavefunction for the quantum harmonic oscillator
-    at specified positon, x
+    f (function): Function being integrated
+    xmin (int/float): Value being integrated over
+    xmax (int/float): Upper integration bound
+    dx (int/floar): Step-size
+    A (int): starting area under curve
+    """
+    h = f(x, **kwargs)           # Find the height
+    A += h * dx                     # Calculate the area of the Reimann sum rectangle
+    if x > xmax:
+        return A
+    else:
+        return Reimann(f, x + dx, xmax, dx, A, **kwargs)
+
+# –––––––––––– PROBLEM-SPECIFIC CONDITIONS AND FUNCTIONS ––––––––––––
+
+hbar = const.hbar           # Reduced Planck Constant
+
+def psi_isw(x, a, n, **kwargs):
+    """
+    Position wavefunction for the infinite square well
     x (int/float): position wavefunction is evaluated at
     a (int/float): width of the well
     n (int): energy level 
@@ -33,28 +52,29 @@ def psi0(x, a, n):
     psi = np.sqrt(2 / a) * np.sin((n * np.pi * x) / a)
     return psi
 
-def f_test(x):
-    return x**2
+def squared(x):
+    return x**2     #x^2
 
-def Reimann(f, x0, dx, xmax, A, *args):
+# finding it impossible to make generalized expectation value function, so I'm just going to make four of them
+def expecX(x, psi, x_func = None, **kwargs):
     """
-    f (function): Function being integrated
-    x0 (int/float): Value being integrated over
-    dx (int/floar): Step-size
-    xmax (int/float): Upper integration bound
+    Helper function that helps expectation value
+    psi (function): wavefunction
+    x (int/float): position wavefunction is evaluated at
+    x_func (function): function that you are taking the expectation value of– x if not specified
     """
-    h = f(x0, *args)           # Find the height
-    A += h * dx          # Calculate the area of the Reimann sum rectangle
-    if x0 > xmax:
-        return A
-    else:
-        return Reimann(f, x0 + dx, dx, xmax, A, *args)
+    wf = psi(x, **kwargs)                   # find the value of the wavefunction at x
+    wfi = np.conjugate(wf)                  # get the complex conjugate of the wavefunction at x
+    if x_func is not None:
+        exp_val = wfi * x_func(x) * wf      # expectation value
+    else: 
+        exp_val = wfi * x * wf
+    return exp_val
 
-l = 1
-u = 10
-step = 0.00909
-test_int = Reimann(f_test, l, step, u)
+def expecValue():
+    pass
+
+a = 5
+step = 0.1
+test_int = Reimann(expecX, (a * -1), a, step, psi = psi_isw, x_func = squared, A = 0, n = 1, a = a)
 print(test_int)
-nsteps = (u - l)/ step
-print(f'Steps: {nsteps}')
-# Test implies that I'm getting a recursion depth of ≈1000
