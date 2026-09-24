@@ -23,7 +23,7 @@ Numerical Integrator: Infinite Square Well
 
 # –––––––––––– INTEGRATOR ––––––––––––
 
-def Reimann(f, x, xmax, dx, A, **kwargs):
+def Reimann(f, xmin, xmax, dx, A=0, **kwargs):
     """
     f (function): Function being integrated
     xmin (int/float): Value being integrated over
@@ -31,12 +31,12 @@ def Reimann(f, x, xmax, dx, A, **kwargs):
     dx (int/floar): Step-size
     A (int): starting area under curve
     """
-    h = f(x, **kwargs)           # Find the height
+    h = f(xmin, **kwargs)           # Find the height
     A += h * dx                     # Calculate the area of the Reimann sum rectangle
-    if x > xmax:
+    if xmin > xmax:
         return A
     else:
-        return Reimann(f, x + dx, xmax, dx, A, **kwargs)
+        return Reimann(f, xmin + dx, xmax, dx, A, **kwargs)
 
 # –––––––––––– PROBLEM-SPECIFIC CONDITIONS AND FUNCTIONS ––––––––––––
 
@@ -56,9 +56,9 @@ def squared(x):
     return x**2     #x^2
 
 # finding it impossible to make generalized expectation value function, so I'm just going to make four of them
-def expecX(x, psi, x_func = None, **kwargs):
+def expecVal(x, psi, x_func = None, **kwargs):
     """
-    Helper function that helps expectation value
+    Function that calculates the expectation value of a given quantity (default is x) to be plugged into Reimann integrator.
     psi (function): wavefunction
     x (int/float): position wavefunction is evaluated at
     x_func (function): function that you are taking the expectation value of– x if not specified
@@ -71,10 +71,32 @@ def expecX(x, psi, x_func = None, **kwargs):
         exp_val = wfi * x * wf
     return exp_val
 
-def expecValue():
+def expecVal2(psi, xmin, xmax, dx, x_func = None, **kwargs):
+    """
+    Function that calculates the expectation value of a given quantity (default is x) to be plugged into Reimann integrator.
+    psi (function): wavefunction
+    x (int/float): position wavefunction is evaluated at
+    x_func (function): function that you are taking the expectation value of– x if not specified
+    """
+    def f(xmin, psi, x_func, **kwargs):
+        wf = psi(xmin, **kwargs)                   # find the value of the wavefunction at x
+        wfi = np.conjugate(wf)                  # get the complex conjugate of the wavefunction at x
+        if x_func is not None:
+            exp_val = wfi * x_func(xmin) * wf      # expectation value
+        else: 
+            exp_val = wfi * xmin * wf
+        return exp_val
+    exp_val_final = Reimann(f, xmin, xmax, dx, x_func = x_func, psi = psi_isw, **kwargs)
+    return exp_val_final
+
+
+def fourierTr(x, p, fx):
     pass
+
+
 
 a = 5
 step = 0.1
-test_int = Reimann(expecX, (a * -1), a, step, psi = psi_isw, x_func = squared, A = 0, n = 1, a = a)
+test_int = expecVal2(psi_isw, 0, a, step, x_func = squared, n = 1, a = a)
+#test_int = Reimann(expecVal, (a * -1), a, step, psi = psi_isw, x_func = squared, A = 0, n = 1, a = a)
 print(test_int)
