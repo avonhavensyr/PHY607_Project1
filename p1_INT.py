@@ -40,7 +40,7 @@ def Reimann(f, xmin, xmax, dx, A=0, **kwargs):
 
 # –––––––––––– PROBLEM-SPECIFIC CONDITIONS AND FUNCTIONS ––––––––––––
 
-hbar = const.hbar           # Reduced Planck Constant
+hbar = 1           # Reduced Planck Constant in natural units
 
 def psi_isw(x, a, n, **kwargs):
     """
@@ -51,6 +51,13 @@ def psi_isw(x, a, n, **kwargs):
     """
     psi = np.sqrt(2 / a) * np.sin((n * np.pi * x) / a)
     return psi
+
+def E_isw(n, a, m = 1, **kwargs):
+    return (((n * np.pi * hbar)/a) ** 2) * (1 / (2 * m))
+
+def psit_isw(x, a, n, **kwargs):
+    c = (complex(0, -1) * hbar)
+    # psi_x = psi_isw(x) * 
 
 def squared(x):
     return x**2     #x^2
@@ -86,17 +93,25 @@ def expecVal2(psi, xmin, xmax, dx, x_func = None, **kwargs):
         else: 
             exp_val = wfi * xmin * wf
         return exp_val
-    exp_val_final = Reimann(f, xmin, xmax, dx, x_func = x_func, psi = psi_isw, **kwargs)
+    exp_val_final = Reimann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
     return exp_val_final
 
 
-def fourierTr(x, p, fx):
-    pass
-
-
+def fourierTr(xmin, xmax, dx, fx, **kwargs):
+    """
+    Fourier Transform function that performs the integral using the Reimann numerical solver
+    """
+    pmax = 1 / (xmax - xmin)
+    pmin = -pmax
+    c = 1 / np.sqrt(2 * np.pi * hbar)
+    def f(xmin, pmin, fx, **kwargs):
+        fp = c * np.exp((complex(0, -1) * pmin * xmin)/hbar) * fx(xmin, **kwargs)
+        return fp 
+    fp_final = Reimann(f, xmin, xmax, dx, fx = fx, pmin = pmin, **kwargs)
+    return fp_final
 
 a = 5
 step = 0.1
+test_int = fourierTr(0, a, step, psi_isw, n = 1, a = a)
 test_int = expecVal2(psi_isw, 0, a, step, x_func = squared, n = 1, a = a)
-#test_int = Reimann(expecVal, (a * -1), a, step, psi = psi_isw, x_func = squared, A = 0, n = 1, a = a)
 print(test_int)
