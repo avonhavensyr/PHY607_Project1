@@ -8,8 +8,10 @@ PROJECT I
 """
 
 """
-Numerical Integrator: Quantum Harmonic Oscillator
+Numerical Integrator: Infinite Square Well
 """
+# Switching from harmonic oscillator to make the integrator finite
+
 # Note for instructor: I just got a Macbook from the school and discovered
 # the "option" key– all em-dash characters present in code comments are
 # manually typed by me hitting the option key with ZERO assistance from AI
@@ -20,26 +22,33 @@ Numerical Integrator: Quantum Harmonic Oscillator
 # Reduced Planck Constant, SI units
 hbar = const.hbar
 
-def psi0(m, omega):
-    c = ((m * omega) / (np.pi * hbar)) ** (1/4)     # Ground-state co-efficient
-    a = ((m * omega) / (2 * hbar))                  # Factor in the exponent– little a 
+def psi0(x, a, n):
+    """
+    Ground-state wavefunction for the quantum harmonic oscillator
+    at specified positon, x
+    x (int/float): position wavefunction is evaluated at
+    a (int/float): width of the well
+    n (int): energy level 
+    """
+    psi = np.sqrt(2 / a) * np.sin((n * np.pi * x) / a)
+    return psi
 
 def f_test(x):
     return x**2
 
-def Reimann(f, x0, dx, xmax, A=0):
+def Reimann(f, x0, dx, xmax, A, *args):
     """
     f (function): Function being integrated
     x0 (int/float): Value being integrated over
     dx (int/floar): Step-size
     xmax (int/float): Upper integration bound
     """
-    h = f(x0)           # Find the height
+    h = f(x0, *args)           # Find the height
     A += h * dx          # Calculate the area of the Reimann sum rectangle
     if x0 > xmax:
         return A
     else:
-        return Reimann(f, x0 + dx, dx, xmax, A)
+        return Reimann(f, x0 + dx, dx, xmax, A, *args)
 
 l = 1
 u = 10
