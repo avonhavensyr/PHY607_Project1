@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+import methods as meth
+
 """
 PROJECT I
 Draft: Includes everything for the ODE problem in one file. 
@@ -46,54 +48,6 @@ def f(xi, xj, mi):
     dvi = ((1 / mi) * ((-2 * k * xi) + (k * xj)))
     return dvi
 
-def Euler(m, v, x, xi, dt):
-    """
-    Function that evaluates a new value of a function and its derivative
-    based previous input values and returns the new state as a vector using
-    the symplectic Euler method
-    """
-    # going to use symplectic method
-    # starting with the numbers as singular values rather than as arrays like
-    # previous Euler solvers
-    dv = f(x, xi, m)
-    v_new = v + (dv * dt)       # velocity from Euler method
-    x_new = x + (v_new * dt)    # position from Euler method
-    return np.array([x_new, v_new])
-
-def RK4(mi, mj, vi, vj, xi, xj, dt):
-    """
-    Function that evaluates a new value of a function and its derivative
-    based previous input values and returns the new state as a vector using
-    the fourth-order Runge-Kutta method
-    """
-    k1xi = vi
-    k1vi = dt * f(xi, xj, mi)
-    k1xj = vj
-    k1vj = dt * f(xj, xi, mj)
-
-    k2xi = vi + ((dt/2) * k1vi)
-    k2vi = f((xi + ((dt/2) * k1xi)), (xj + ((dt/2) * k1xj)), mi)
-    k2xj = vj + ((dt/2) * k1vj)
-    k2vj = f((xj + ((dt/2) * k1xj)), (xi + ((dt/2) * k1xi)), mj)
-
-    k3xi = vi + ((dt/2) * k2vi)
-    k3vi = f((xi + ((dt/2) * k2xi)),(xj + ((dt/2) * k2xj)), mi)
-    k3xj = vj + ((dt/2) * k2vj)
-    k3vj = f((xj + ((dt/2) * k2xj)),(xi + ((dt/2) * k2xi)), mj)
-
-    k4xi = vi + ((dt/2) * k3vi)
-    k4vi = f((xi + ((dt/2) * k3xi)),(xj + ((dt/2) * k3xj)), mi)
-    k4xj = vj + ((dt/2) * k3vj)
-    k4vj = f((xj + ((dt/2) * k3xj)),(xi + ((dt/2) * k3xi)), mj)
-
-    xi_new = xi + ((dt/6) * (k1xi + (2*k2xi) + (2*k3xi) + k4xi))
-    vi_new = vi + ((dt/6) * (k1vi + (2*k2vi) + (2*k3vi) + k4vi))
-
-    xj_new = xj + ((dt/6) * (k1xj + (2*k2xj) + (2*k3xj) + k4xj))
-    vj_new = vj + ((dt/6) * (k1vj + (2*k2vj) + (2*k3vj) + k4vj))
-
-    return (np.array([xi_new, vi_new]), np.array([xj_new, vj_new]))
-
 tmax = 20
 t_arr = np.arange(start = 0, stop = tmax + dt, step = dt)
 x1 = np.array([x10])
@@ -108,13 +62,13 @@ for i in range(len(t_arr)-1):
     v1n = v1[-1]                                # most recent (nth) velocity for m1
     v2n = v2[-1]                                # most recent (nth) velocity for m2
 
-    s1np1 = Euler(m1, v1n, x1n, x2n, dt)        # state vector for the n+1th time
+    s1np1 = meth.Euler(f, m1, v1n, x1n, x2n, dt)        # state vector for the n+1th time
     x1np1 = s1np1[0]                            # n+1th position for m1
     v1np1 = s1np1[1]                            # n+1th velocity for m1
     x1 = np.append(x1, x1np1)                   # add new values to arrays
     v1 = np.append(v1, v1np1)                   # ^^^
 
-    s2np1 = Euler(m2, v2n, x2n, x1n, dt)        # state vector for the n+1th time
+    s2np1 = meth.Euler(f, m2, v2n, x2n, x1n, dt)        # state vector for the n+1th time
     x2np1 = s2np1[0]                            # n+1th position for m2
     v2np1 = s2np1[1]                            # n+1th velocity for m2
     x2 = np.append(x2, x2np1)                   # add new values to arrays
@@ -133,7 +87,7 @@ for i in range(len(t_arr)-1):
     v1n = v1r[-1]                                # most recent (nth) velocity for m1
     v2n = v2r[-1]                                # most recent (nth) velocity for m2
 
-    s1np1, s2np1 = RK4(m1, m2, v1n, v2n, x1n, x2n, dt)        # state vector for the n+1th time
+    s1np1, s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)        # state vector for the n+1th time
     x1np1 = s1np1[0]                            # n+1th position for m1
     v1np1 = s1np1[1]                            # n+1th velocity for m1
     x1r = np.append(x1r, x1np1)                   # add new values to arrays

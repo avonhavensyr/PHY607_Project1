@@ -7,6 +7,8 @@ METHODS
 import matplotlib as plt
 import numpy as np
 
+hbar = 1
+
 def Euler(f, m, v, x, xi, dt):
     """
     Function that evaluates a new value of a function and its derivative
@@ -21,7 +23,7 @@ def Euler(f, m, v, x, xi, dt):
     x_new = x + (v_new * dt)    # position from Euler method
     return np.array([x_new, v_new])
 
-def RK4(mi, mj, vi, vj, xi, xj, dt):
+def RK4(f, mi, mj, vi, vj, xi, xj, dt):
     """
     Function that evaluates a new value of a function and its derivative
     based previous input values and returns the new state as a vector using
