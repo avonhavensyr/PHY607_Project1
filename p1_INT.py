@@ -26,7 +26,36 @@ m = 1
 
 def expecVal(psi, xmin, xmax, dx, x_func = None, **kwargs):
     """
-    Function that calculates the expectation value of a given quantity (default is x) to be plugged into Reimann integrator.
+    Function that calculates the expectation value of a given quantity (default is x) to be plugged 
+    into recursive Reimann integrator.
+
+    Keyword Arguments
+    psi (function): wavefunction
+    xmin (int/float): initial position wavefunction is evaluated at
+    xmax (int/float): final position wavefunction is evaluated at
+    dx (int/float): change in x between steps
+    x_func (function): function that you are taking the expectation value of-- x if not specified
+    """
+    # define function to integrate using the standard formula for expectation value
+    def f(xmin, psi, x_func, **kwargs):
+        # get the value of the wavefunction at xmin
+        wf = psi(xmin, **kwargs)
+        # get the complex conjugate of the wavefunction at xmin
+        wfi = np.conjugate(wf)
+        # take the expectation value of specifically entered f(x) (ie: x_func)
+        if x_func is not None:
+            exp_val = wfi * x_func(xmin) * wf
+        # default case: take the expectation value of x
+        else: 
+            exp_val = wfi * xmin * wf
+        return exp_val
+    exp_val_final = meth.Reimann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
+    return exp_val_final
+
+def expecFunc(psi, xmin, xmax, dx, x_func = None, **kwargs):
+    """
+    Function that calculates the expectation value of a given quantity (default is x) at a single 
+    position to be plugged into Reimann integrator.
 
     Keyword Arguments
     psi (function): wavefunction
@@ -166,7 +195,7 @@ def psitpsi(xmin, n1, n2, psi, a, **kwargs):
     psi_prod = psi1 * psi2
     return psi_prod
 
-int_psiprod = meth.Reimann(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
+int_psiprod = meth.reimannRec(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
 lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
 rhs = ((2*m)/hbar) * (E2 - E3) * int_psiprod
 
