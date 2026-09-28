@@ -140,12 +140,12 @@ def squared(x):
 # Trivial Test
 x_arr = np.arange(start = -a, stop = a + step, step = step)
 psi_x = psi_isw(x_arr, a, 1)
-psi_x_num = np.array([0])
+psi_x_num = np.array([])
 
 A_tot = 0
-for i in x_arr:
-    A_tot += meth.Reimann(dpsi_isw, i, step, a = a, n = 1)
+for i in range(len(x_arr)):
     psi_x_num = np.append(psi_x_num, A_tot)
+    A_tot += meth.Reimann(dpsi_isw, x_arr[i], step, a = a, n = 1)
 
 plt.figure()
 fig, ax = plt.subplots()
