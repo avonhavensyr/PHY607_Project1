@@ -140,7 +140,7 @@ def squared(x):
 # Trivial Test
 x_arr = np.arange(start = -a, stop = a + step, step = step)
 psi_x = psi_isw(x_arr, a, 1)
-psi_x_num = np.array([])
+psi_x_num = np.array([0])
 
 A_tot = 0
 for i in x_arr:
