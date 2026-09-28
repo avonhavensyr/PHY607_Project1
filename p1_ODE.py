@@ -28,7 +28,7 @@ v10 = 1
 v20 = 1
 # Initial Time + Time Step
 t0 = 0
-dt = 0.2
+dt = 0.01
 
 def f(x, xi, m):
     """
@@ -42,16 +42,72 @@ def f(x, xi, m):
     dvi = ((1 / m) * ((-2 * k * x) + (k * xi)))
     return dvi
 
-# ----------------------- SETUP FOR CALCULATIONS -----------------------
+def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
+    """
+    Analytical solution to the coupled oscillator as a superposition of 
+    normal mode solutions
+
+    Keyword Arguments:
+    m1 (int/float): mass of mass 1
+    m2 (int/float): mass of mass 2
+    x10 (int/float): initial position of mass 1
+    x20 (int/float): initial position of mass 2
+    v10 (int/float): initial velocity of mass 1
+    v20 (int/float): initial velocity of mass 2
+    k (int/float): spring constant
+    t (int/float): current time
+    """
+    # Setting constants to make typing final variables less tedious
+    m_sum = m1 + m2
+    m_pro = m1 * m2
+    root = np.sqrt((m1**2) + (m2**2) - m_pro)
+    omega_p = (k/m_pro) * (m_sum + root)
+    omega_n = (k/m_pro) * (m_sum - root)   
+
+    # Ratio of the two amplitudes for the omega_p and omega_n frequencies
+    r_p = 2 - ((m1 * omega_p) / k)
+    r_n = 2 - ((m1 * omega_n) / k)
+
+    # Cosine co-efficients
+    C1 = (m2 / (2 * root)) * ((r_n * x10) - x20)
+    C2 = (m2 / (2 * root)) * (x20 - (r_p * x10))
+    # Sine co-efficients
+    S1 = (m2 / (2 * root)) * ((r_n * v10) - v20) / (2 * root * np.sqrt(omega_p))
+    S2 = (m2 / (2 * root)) * (v20 - (r_p * v10)) / (2 * root * np.sqrt(omega_n))
+
+    # Once again pre-calculating terms because writing everything inline got too long
+    cos_p = np.cos(np.sqrt(omega_p) * t)
+    cos_n = np.cos(np.sqrt(omega_n) * t)
+    sin_p = np.sin(np.sqrt(omega_p) * t)
+    sin_n = np.sin(np.sqrt(omega_n) * t)
+
+    # Final general solutions
+    x1 = (C1 * cos_p) + (S1 * sin_p) + (C2 * cos_n) + (S2 * sin_n)
+    x2 = (r_p * ((C1 * cos_p) + (S1 * sin_p))) + (r_n * ((C2 * cos_n) + (S2 * sin_n)))
+
+    return (x1, x2)
+
+# ----------------------- SETUP FOR CALCULATIONS & ANALYTICAL SOLUTIONS -----------------------
 tmax = 20
 t_arr = np.arange(start = 0, stop = tmax + dt, step = dt)
+
+# Arrays for analytic solutions
+#x1_as = np.array([x10])
+#x2_as = np.array([x20])
+
+# Calculate analytic solution
+x1_as, x2_as = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_arr)
+# Add new values
+#x1_as = np.append(x1_as, x1_asnp1)
+#x2_as = np.append(x2_as, x2_asnp1)
+
+
+# ----------------------- ARRAY CALCULATIONS FOR FIGURES -----------------------
 x1 = np.array([x10])
 x2 = np.array([x20])
 v1 = np.array([v10])
 v2 = np.array([v20])
 
-
-# ----------------------- ARRAY CALCULATIONS FOR FIGURES -----------------------
 for i in range(len(t_arr)-1):
     # nth positions
     x1n = x1[-1]
@@ -104,20 +160,18 @@ for i in range(len(t_arr)-1):
 
 
 plt.figure()
-fig, ax = plt.subplots()
-ax.plot(t_arr, x1, label = f'Mass 1 Euler')
-ax.plot(t_arr, x2, label = f'Mass 2 Euler')
-plt.legend()
+fig, (ax1, ax2) = plt.subplots(2, 1)
+ax1.plot(t_arr, x1, label = f'Mass 1 Euler')
+ax2.plot(t_arr, x2, label = f'Mass 2 Euler')
 
-#plt.tight_layout()
-#plt.show()
+ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
+ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
 
-#plt.figure()
-#fig, ax = plt.subplots()
-ax.plot(t_arr, x1r, label = f'Mass 1 RK4')
-ax.plot(t_arr, x2r, label = f'Mass 2 RK4')
-plt.legend()
+ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution')
+ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution')
 
+ax1.legend()
+ax2.legend()
 plt.tight_layout()
 plt.show()
 
