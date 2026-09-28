@@ -72,8 +72,8 @@ def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
     C1 = (m2 / (2 * root)) * ((r_n * x10) - x20)
     C2 = (m2 / (2 * root)) * (x20 - (r_p * x10))
     # Sine co-efficients
-    S1 = (m2 / (2 * root)) * ((r_n * v10) - v20) / (2 * root * np.sqrt(omega_p))
-    S2 = (m2 / (2 * root)) * (v20 - (r_p * v10)) / (2 * root * np.sqrt(omega_n))
+    S1 = (m2 / (2 * root)) * ((r_n * v10) - v20) / (np.sqrt(omega_p))
+    S2 = (m2 / (2 * root)) * (v20 - (r_p * v10)) / (np.sqrt(omega_n))
 
     # Once again pre-calculating terms because writing everything inline got too long
     cos_p = np.cos(np.sqrt(omega_p) * t)

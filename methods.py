@@ -49,9 +49,9 @@ def RK4(f, mi, mj, vi, vj, xi, xj, dt):
     dt (int/float): time interval
     """
     k1xi = vi
-    k1vi = dt * f(xi, xj, mi)
+    k1vi = f(xi, xj, mi)
     k1xj = vj
-    k1vj = dt * f(xj, xi, mj)
+    k1vj = f(xj, xi, mj)
 
     k2xi = vi + ((dt/2) * k1vi)
     k2vi = f((xi + ((dt/2) * k1xi)), (xj + ((dt/2) * k1xj)), mi)
@@ -95,28 +95,6 @@ def Reimann(f, xmin, xmax, dx, A=0, **kwargs):
         return A
     else:
         return Reimann(f, xmin + dx, xmax, dx, A, **kwargs)
-
-def expecVal(psi, xmin, xmax, dx, x_func = None, **kwargs):
-    """
-    Function that calculates the expectation value of a given quantity (default is x) to be plugged into Reimann integrator.
-
-    Keyword Arguments
-    psi (function): wavefunction
-    xmin (int/float): initial position wavefunction is evaluated at
-    xmax (int/float): final position wavefunction is evaluated at
-    dx (int/float): change in x between steps
-    x_func (function): function that you are taking the expectation value of-- x if not specified
-    """
-    def f(xmin, psi, x_func, **kwargs):
-        wf = psi(xmin, **kwargs)                   # find the value of the wavefunction at x
-        wfi = np.conjugate(wf)                  # get the complex conjugate of the wavefunction at x
-        if x_func is not None:
-            exp_val = wfi * x_func(xmin) * wf      # expectation value
-        else: 
-            exp_val = wfi * xmin * wf
-        return exp_val
-    exp_val_final = Reimann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
-    return exp_val_final
 
 
 def fourierTr(xmin, xmax, dx, fx, **kwargs):
