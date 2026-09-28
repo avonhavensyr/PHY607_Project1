@@ -53,20 +53,20 @@ def RK4(f, mi, mj, vi, vj, xi, xj, dt):
     k1xj = vj
     k1vj = f(xj, xi, mj)
 
-    k2xi = vi + ((dt/2) * k1vi)
-    k2vi = f((xi + ((dt/2) * k1xi)), (xj + ((dt/2) * k1xj)), mi)
-    k2xj = vj + ((dt/2) * k1vj)
-    k2vj = f((xj + ((dt/2) * k1xj)), (xi + ((dt/2) * k1xi)), mj)
+    k2xi = (vi + ((dt/2) * k1vi))
+    k2vi = (f((xi + ((dt/2) * k1xi)), (xj + ((dt/2) * k1xj)), mi))
+    k2xj = (vj + ((dt/2) * k1vj))
+    k2vj = (f((xj + ((dt/2) * k1xj)), (xi + ((dt/2) * k1xi)), mj))
 
-    k3xi = vi + ((dt/2) * k2vi)
-    k3vi = f((xi + ((dt/2) * k2xi)),(xj + ((dt/2) * k2xj)), mi)
-    k3xj = vj + ((dt/2) * k2vj)
-    k3vj = f((xj + ((dt/2) * k2xj)),(xi + ((dt/2) * k2xi)), mj)
+    k3xi = (vi + ((dt/2) * k2vi))
+    k3vi = (f((xi + ((dt/2) * k2xi)),(xj + ((dt/2) * k2xj)), mi))
+    k3xj = (vj + ((dt/2) * k2vj))
+    k3vj = (f((xj + ((dt/2) * k2xj)),(xi + ((dt/2) * k2xi)), mj))
 
-    k4xi = vi + ((dt/2) * k3vi)
-    k4vi = f((xi + ((dt/2) * k3xi)),(xj + ((dt/2) * k3xj)), mi)
-    k4xj = vj + ((dt/2) * k3vj)
-    k4vj = f((xj + ((dt/2) * k3xj)),(xi + ((dt/2) * k3xi)), mj)
+    k4xi = (vi + ((dt) * k3vi))
+    k4vi = (f((xi + ((dt) * k3xi)),(xj + ((dt/2) * k3xj)), mi))
+    k4xj = (vj + ((dt) * k3vj))
+    k4vj = (f((xj + ((dt) * k3xj)),(xi + ((dt/2) * k3xi)), mj))
 
     xi_new = xi + ((dt/6) * (k1xi + (2*k2xi) + (2*k3xi) + k4xi))
     vi_new = vi + ((dt/6) * (k1vi + (2*k2vi) + (2*k3vi) + k4vi))
