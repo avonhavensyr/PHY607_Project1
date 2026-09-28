@@ -49,7 +49,7 @@ def expecVal(psi, xmin, xmax, dx, x_func = None, **kwargs):
         else: 
             exp_val = wfi * xmin * wf
         return exp_val
-    exp_val_final = meth.Reimann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
+    exp_val_final = meth.recReimann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
     return exp_val_final
 
 def expecFunc(psi, xmin, xmax, dx, x_func = None, **kwargs):

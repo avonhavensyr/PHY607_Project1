@@ -78,7 +78,7 @@ def RK4(f, mi, mj, vi, vj, xi, xj, dt):
 
 # ----------------------- NUMERICAL INTEGRATORS -----------------------
 
-def reimannRec(f, xmin, xmax, dx, A=0, **kwargs):
+def recReimann(f, xmin, xmax, dx, A=0, **kwargs):
     """
     RECURSIVE Function that numerically integrates a given function, f, using the Reimann sum method
 
