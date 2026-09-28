@@ -4,30 +4,49 @@ PHYSICS 607 PROJECT 1
 METHODS
 """
 
+# ----------------------- LIBRARY DEPENDENCIES + CONSTANT -----------------------
+
 import matplotlib as plt
 import numpy as np
 
 hbar = 1
 
-def Euler(f, m, v, x, xi, dt):
+# ----------------------- ODE SOLVERS -----------------------
+
+def Euler(f, v, x, dt, **kwargs):
     """
     Function that evaluates a new value of a function and its derivative
     based previous input values and returns the new state as a vector using
     the symplectic Euler method
+
+    Keyword Arguments:
+    f (function): function that returns the derivative of v-- must take x as first argument
+    v (int/float): initial/current velocity value
+    x (int/float): initial/current position value
+    dt (int/float): time interval
     """
-    # going to use symplectic method
-    # starting with the numbers as singular values rather than as arrays like
-    # previous Euler solvers
-    dv = f(x, xi, m)
+
+    dv = f(x, **kwargs)
     v_new = v + (dv * dt)       # velocity from Euler method
-    x_new = x + (v_new * dt)    # position from Euler method
+    x_new = x + (v_new * dt)    
     return np.array([x_new, v_new])
 
 def RK4(f, mi, mj, vi, vj, xi, xj, dt):
     """
     Function that evaluates a new value of a function and its derivative
     based previous input values and returns the new state as a vector using
-    the fourth-order Runge-Kutta method
+    the fourth-order Runge-Kutta method FOR THE COUPLED HARMONIC OSCILLATOR
+    Note: not generalized to all problems
+
+    Keyword Arguments:
+    f (function): function that returns the derivative of v-- must take x as first argument
+    mi (int/float): mass of mass i
+    mj (int/float): mass of mass j
+    vi (int/float): initial/current velocity value of mass i
+    vj (int/float): initial/current velocity value of mass j
+    xi (int/float): initial/current position value of mass i
+    xj (int/float): initial/current position value of mass j
+    dt (int/float): time interval
     """
     k1xi = vi
     k1vi = dt * f(xi, xj, mi)
@@ -57,14 +76,18 @@ def RK4(f, mi, mj, vi, vj, xi, xj, dt):
 
     return (np.array([xi_new, vi_new]), np.array([xj_new, vj_new]))
 
+# ----------------------- NUMERICAL INTEGRATORS -----------------------
 
 def Reimann(f, xmin, xmax, dx, A=0, **kwargs):
     """
+    Function that numerically integrates a given function, f, using the Reimann sum method
+
+    Keywork Arguments:
     f (function): Function being integrated
     xmin (int/float): Value being integrated over
     xmax (int/float): Upper integration bound
     dx (int/floar): Step-size
-    A (int): starting area under curve
+    A (int): starting area under curve-- default 0
     """
     h = f(xmin, **kwargs)           # Find the height
     A += h * dx                     # Calculate the area of the Reimann sum rectangle
@@ -76,9 +99,13 @@ def Reimann(f, xmin, xmax, dx, A=0, **kwargs):
 def expecVal(psi, xmin, xmax, dx, x_func = None, **kwargs):
     """
     Function that calculates the expectation value of a given quantity (default is x) to be plugged into Reimann integrator.
+
+    Keyword Arguments
     psi (function): wavefunction
-    x (int/float): position wavefunction is evaluated at
-    x_func (function): function that you are taking the expectation value of– x if not specified
+    xmin (int/float): initial position wavefunction is evaluated at
+    xmax (int/float): final position wavefunction is evaluated at
+    dx (int/float): change in x between steps
+    x_func (function): function that you are taking the expectation value of-- x if not specified
     """
     def f(xmin, psi, x_func, **kwargs):
         wf = psi(xmin, **kwargs)                   # find the value of the wavefunction at x
@@ -95,6 +122,11 @@ def expecVal(psi, xmin, xmax, dx, x_func = None, **kwargs):
 def fourierTr(xmin, xmax, dx, fx, **kwargs):
     """
     Fourier Transform function that performs the integral using the Reimann numerical solver
+
+    xmin (int/float): initial position wavefunction is evaluated at
+    xmax (int/float): final position wavefunction is evaluated at
+    dx (int/float): change in x between steps
+
     """
     pmax = 1 / (xmax - xmin)
     pmin = -pmax
