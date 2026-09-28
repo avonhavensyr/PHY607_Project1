@@ -107,23 +107,44 @@ def squared(x):
     """
     return x**2
 
-# Energy levels to find <x^2> for
-n_lst = np.array([1, 2, 3, 4, 5, 6, 7, 8])
-# List of expectation values
-exp_lst = np.array([])
-for i in n_lst:
-    # get the expectation value of x squared
-    exp_x_squared = meth.expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
-    # add to list
-    exp_lst = np.append(exp_lst, exp_x_squared)
+
+# Trivial Test
+x_arr = np.arange(start = -a, stop = a + step, step = step)
+psi_x = psi_isw(x_arr, a, 1)
+psi_x_num = np.array([])
+
+A_tot = 0
+for i in x_arr:
+    A_tot += meth.Reimann(dpsi_isw, i, step, a = a, n = 1)
+    psi_x_num = np.append(psi_x_num, A_tot)
 
 plt.figure()
 fig, ax = plt.subplots()
-ax.scatter(n_lst, exp_lst)
+ax.plot(x_arr, psi_x, label = r'Analytic $\psi(x)$')
+ax.plot(x_arr, psi_x_num, label = r'Reimann Integrated $\psi(x)$')
 ax.set_xlabel('Energy Level')
 ax.set_ylabel(r'$\langle x\rangle$')
+plt.legend()
 plt.tight_layout()
 plt.show()
+
+# Energy levels to find <x^2> for
+# n_lst = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+# # List of expectation values
+# exp_lst = np.array([])
+# for i in n_lst:
+#     # get the expectation value of x squared
+#     exp_x_squared = meth.expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
+#     # add to list
+#     exp_lst = np.append(exp_lst, exp_x_squared)
+
+# plt.figure()
+# fig, ax = plt.subplots()
+# ax.scatter(n_lst, exp_lst)
+# ax.set_xlabel('Energy Level')
+# ax.set_ylabel(r'$\langle x\rangle$')
+# plt.tight_layout()
+# plt.show()
 
 # Griffiths 2.45
 # Nodes at n = 3: a/3, 2a/3

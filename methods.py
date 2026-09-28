@@ -78,9 +78,9 @@ def RK4(f, mi, mj, vi, vj, xi, xj, dt):
 
 # ----------------------- NUMERICAL INTEGRATORS -----------------------
 
-def Reimann(f, xmin, xmax, dx, A=0, **kwargs):
+def reimannRec(f, xmin, xmax, dx, A=0, **kwargs):
     """
-    Function that numerically integrates a given function, f, using the Reimann sum method
+    RECURSIVE Function that numerically integrates a given function, f, using the Reimann sum method
 
     Keywork Arguments:
     f (function): Function being integrated
@@ -96,6 +96,20 @@ def Reimann(f, xmin, xmax, dx, A=0, **kwargs):
     else:
         return Reimann(f, xmin + dx, xmax, dx, A, **kwargs)
 
+def Reimann(f, x, dx, A=0, **kwargs):
+    """
+    Function that numerically integrates a given function, f, using the Reimann sum method
+
+    Keywork Arguments:
+    f (function): Function being integrated
+    xmin (int/float): Value being integrated over
+    xmax (int/float): Upper integration bound
+    dx (int/floar): Step-size
+    A (int): starting area under curve-- default 0
+    """
+    h = f(x, **kwargs)           # Find the height
+    A += h * dx                     # Calculate the area of the Reimann sum rectangle
+    return A
 
 def fourierTr(xmin, xmax, dx, fx, **kwargs):
     """
