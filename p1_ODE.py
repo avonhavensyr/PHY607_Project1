@@ -36,7 +36,7 @@ v10 = 1
 v20 = 1
 # Initial Time + Time Step
 t0 = 0
-dt = 0.2
+dt = 0.5
 
 def f(x, xi, m):
     """
@@ -278,19 +278,12 @@ for n in range(len(t_arr) - 1):
     lerr1_r = np.append(lerr1_r, np.abs(x1_as[n+1] - x1np1))
     lerr2_r = np.append(lerr2_r, np.abs(x2_as[n+1] - x2np1))
 
-print(f'Average Local Error for Mass 1 (Euler): {np.mean(lerr1_e)}')
-print(f'Average Local Error for Mass 2 (Euler): {np.mean(lerr2_e)}')
+# I copied and pasted these to get my error lists
+print('Euler: ', [np.mean(lerr1_e), np.mean(lerr2_e), np.mean(gerr1_e), np.mean(gerr2_e)])
+print('RK4: ', [np.mean(lerr1_r), np.mean(lerr2_r), np.mean(gerr1_r), np.mean(gerr2_r)])
 
-print(f'Average Global Error for Mass 1 (Euler): {np.mean(gerr1_e)}')
-print(f'Average Global Error for Mass 2 (Euler): {np.mean(gerr2_e)}')
-
-print(f'Average Local Error for Mass 1 (RK4): {np.mean(lerr1_r)}')
-print(f'Average Local Error for Mass 2 (RK4): {np.mean(lerr2_r)}')
-
-print(f'Average Global Error for Mass 1(RK4): {np.mean(gerr1_r)}')
-print(f'Average Global Error for Mass 2(RK4): {np.mean(gerr2_r)}')
 # I THINK IT WORKS YIPPEE
-print
+
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
