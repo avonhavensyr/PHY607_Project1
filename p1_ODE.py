@@ -15,7 +15,7 @@ ODE Solver: Coupled Harmonic Oscillator
 
 # CONSTANTS
 m1 = 1
-m2 = 2
+m2 = 10
 k = 1
 
 # INITIAL CONDITIONS
@@ -28,7 +28,7 @@ v10 = 1
 v20 = 1
 # Initial Time + Time Step
 t0 = 0
-dt = 0.01
+dt = 0.2
 
 def f(x, xi, m):
     """
@@ -138,7 +138,6 @@ v1r = np.array([v10])
 v2r = np.array([v20])
 
 for i in range(len(t_arr)-1):
-
     x1n = x1r[-1]
     x2n = x2r[-1]
 
@@ -159,8 +158,7 @@ for i in range(len(t_arr)-1):
     v2r = np.append(v2r, v2np1)
 
 
-plt.figure()
-fig, (ax1, ax2) = plt.subplots(2, 1)
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 ax1.plot(t_arr, x1, label = f'Mass 1 Euler')
 ax2.plot(t_arr, x2, label = f'Mass 2 Euler')
 
