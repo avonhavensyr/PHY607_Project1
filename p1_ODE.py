@@ -167,7 +167,7 @@ for i in range(len(t_arr)-1):
     v1r = np.append(v1r, v1np1)
     v2r = np.append(v2r, v2np1)
 
-# ----------- SCIPY COMPARISON ---------------
+# ----------- SCIPY ARRAYS ---------------
 s0 = np.array([x10, x20, v10, v20])
 # Tuple input for SciPy RK4
 t_range = (t_arr[0], t_arr[-1])
@@ -179,6 +179,15 @@ x2sp = scipy.y[1]
 v1sp = scipy.y[2]
 v2sp = scipy.y[3]
 
+# ----------------------------- ERRORS ---------------------------
+# Truncation Errors: Euler
+gerr1_e, lerr1_e = meth.truncError(meth.Euler, x1e, x1_as, dt, xi = x2_as, m = m1)
+gerr2_e, lerr2_e = meth.truncError(meth.Euler, x2e, x2_as, dt, xi = x1_as, m = m2)
+
+
+
+
+# -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 ax1.plot(t_arr, x1e, label = f'Mass 1 Euler')
