@@ -131,9 +131,9 @@ def fourierTr(xmin, xmax, dx, fx, **kwargs):
 
 # ------------TRUNCATION ERRORS----------------
 # Wait actually no
-def truncError(f, x_num, x_an, dt, parse = None, idx = None, **kwargs):
+def gTruncError(func, x_num, x_an, dt, parse = None, idx = None, **kwargs):
     """
-    Function that calculates the truncation error for various 
+    Function that calculates the global truncation error for various 
     numerical models
 
     Keyword Arguments:
@@ -143,25 +143,7 @@ def truncError(f, x_num, x_an, dt, parse = None, idx = None, **kwargs):
     dt (int/float): step-size between nth and n+1th values of x
     NOTE: the two arrays MUST be calculated as a function of the same independent variable over the same interval and spacing
     """
-    # set up array for the local error    
-    l_err = np.array([])
 
-    # iterate over all but the first of the analytical values
-    for n, xn in enumerate(x_an):
-        if n == 0:
-            # There won't be an error for the first value since the initial conditions are fixed
-            l_err = np.append(l_err, 0)
-        else:
-            # In the case where the method returns a coupled pair of states
-            if parse:
-                # set the value of xnp1 to be a given index
-                xnp1 = f(xn, dt, **kwargs)[idx]
-            # get the n+1th value using the analytical solution for the nth value
-            else:
-                xnp1 = f(xn, dt, **kwargs)
-            # get the difference between numerical and analytical values. append local error to array
-            l_err = np.append(l_err, np.abs(xnp1 - x_an[n+1]))
-    # calculate the global error
     g_err = np.abs(x_an - x_num)
     return (l_err, g_err)
 

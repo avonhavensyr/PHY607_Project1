@@ -114,18 +114,18 @@ x1_as, x2_as = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_arr)
 
 
 # ----------------------- ARRAY CALCULATIONS FOR FIGURES -----------------------
-x1 = np.array([x10])
-x2 = np.array([x20])
-v1 = np.array([v10])
-v2 = np.array([v20])
+x1e = np.array([x10])
+x2e = np.array([x20])
+v1e = np.array([v10])
+v2e = np.array([v20])
 
 for i in range(len(t_arr)-1):
     # nth positions
-    x1n = x1[-1]
-    x2n = x2[-1]
+    x1n = x1e[-1]
+    x2n = x2e[-1]
     # nth velocities
-    v1n = v1[-1]
-    v2n = v2[-1]
+    v1n = v1e[-1]
+    v2n = v2e[-1]
     #n_1th state vectors
     s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
     s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
@@ -136,10 +136,10 @@ for i in range(len(t_arr)-1):
     v1np1 = s1np1[1]
     v2np1 = s2np1[1]
     # append n+1th values
-    x1e = np.append(x1, x1np1)
-    x2e = np.append(x2, x2np1)
-    v1e = np.append(v1, v1np1)
-    v2e = np.append(v2, v2np1)
+    x1e = np.append(x1e, x1np1)
+    x2e = np.append(x2e, x2np1)
+    v1e = np.append(v1e, v1np1)
+    v2e = np.append(v2e, v2np1)
 
 x1r = np.array([x10])
 x2r = np.array([x20])
@@ -185,14 +185,16 @@ gerr2_e = np.abs(x2_as - x2e)
 # Local Truncation Errors: Euler
 # Going to use a for loop
 
+lerr1_r = np.array([0])
+lerr2_r = np.array([0])
 # iterate over the length of t_arr for consistency with notation and all that
 for n in range(len(t_arr) - 1):
     x1n = x1_as[n]
     x2n = x2_as[n]
 
     #NOTE: NOT CORRECT ANALYTIC VELOCITIES! Already noted in overleaf doc
-    x1n = x1r[n]
-    x2n = x2r[n]
+    v1n = v1r[n]
+    v2n = v2r[n]
 
     s1np1, s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
     # extract xn+1
@@ -201,6 +203,9 @@ for n in range(len(t_arr) - 1):
     # extract vn+1
     v1np1 = s1np1[1]
     v2np1 = s2np1[1]
+    lerr1_r = np.append(lerr1_r, np.abs(x1_as[n+1] - x1np1))
+    lerr2_r = np.append(lerr2_r, np.abs(x2_as[n+1] - x2np1))
+# I THINK IT WORKS YIPPEE
 
 # Global Truncation Errors: RK4
 gerr1_r = np.abs(x1_as - x1r)
