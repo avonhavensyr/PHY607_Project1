@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
+from scipy.integrate import solve_ivp
 import methods as meth
 
 """
@@ -158,6 +158,7 @@ for i in range(len(t_arr)-1):
     v2r = np.append(v2r, v2np1)
 
 
+
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 ax1.plot(t_arr, x1, label = f'Mass 1 Euler')
 ax2.plot(t_arr, x2, label = f'Mass 2 Euler')
@@ -172,6 +173,22 @@ ax1.legend()
 ax2.legend()
 plt.tight_layout()
 plt.show()
+
+# ------------TRUNCATION ERRORS----------------
+
+
+# ----------- SCIPY COMPARISON ---------------
+# Put F into a form that will work for solve_ivp method
+fNew(t, s):
+"""
+Function that converts the state of the system into a form that 
+is usable for the solve_ivp
+"""
+
+# Tuple input for SciPy RK4
+t_range = (t_arr[0], t_arr[-1])
+# Compare to SciPy
+scipy_x1 = solve_ivp(f, t_range, x10, method = 'RK45', t_eval=t_arr)
 
 # TO DO:
 #   Energy Conservation
