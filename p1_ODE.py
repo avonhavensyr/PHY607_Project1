@@ -84,7 +84,6 @@ def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
     # Final general solutions
     x1 = (C1 * cos_p) + (S1 * sin_p) + (C2 * cos_n) + (S2 * sin_n)
     x2 = (r_p * ((C1 * cos_p) + (S1 * sin_p))) + (r_n * ((C2 * cos_n) + (S2 * sin_n)))
-
     return (x1, x2)
 
 # Put F into a form that will work for solve_ivp method
@@ -180,11 +179,15 @@ v1sp = scipy.y[2]
 v2sp = scipy.y[3]
 
 # ----------------------------- ERRORS ---------------------------
-# Truncation Errors: Euler
-gerr1_e, lerr1_e = meth.truncError(meth.Euler, x1e, x1_as, dt, x = x1_as, m = m1)
-gerr2_e, lerr2_e = meth.truncError(meth.Euler, x2e, x2_as, dt, xi = x1_as, m = m2)
+# Global Truncation Errors: Euler
+gerr1_e = np.abs(x1_as - x1e)
+gerr2_e = np.abs(x2_as - x2e)
+# Local Truncation Errors: Euler
+# Going to use a for loop
 
-gerr1_r, lerr1_r = meth.truncError(meth.RK4, x1r, x1_as, dt, parse = True, idx = 0, mi = m1, mj = m2, vi = v1, vj = v2, xi = x1_as, xj = x2_as)
+# Global Truncation Errors: RK4
+gerr1_r = np.abs(x1_as - x1r)
+gerr2_r = np.abs(x2_as - x2r)
 
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------

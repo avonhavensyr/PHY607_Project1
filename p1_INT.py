@@ -141,6 +141,11 @@ step = 0.01
 x_arr = np.arange(start = -a, stop = a + step, step = step)
 psi_x = psi_isw(x_arr, a, 1)
 psi_x_num = np.array([])
+
+# Global truncation error for the ground state
+g_err1 = np.abs(psi_x - psi_x_num)
+
+
 A_tot = 0
 for i in range(len(x_arr)):
     psi_x_num = np.append(psi_x_num, A_tot)
