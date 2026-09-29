@@ -222,29 +222,8 @@ Uas, Tas, Eas = coupledEnergy(m1, m2, v1r, v2r, x1_as, x2_as)
 # ----------------------------- ERRORS ---------------------------
 # Expected Errors
 # Fill all of the error arrays with 0s since there shouldn't be errors at the initial time
-lerr1_e_th = np.array([0])
-lerr2_e_th = np.array([0])
-gerr1_e_th = np.array([0])
-gerr2_e_th = np.array([0])
-lerr1_r_th = np.array([0])
-lerr2_r_th = np.array([0])
-gerr1_r_th = np.array([0])
-gerr2_r_th = np.array([0])
-# Expected Errors-- NOT FULLY ACCURATE
-# Local Euler: O(dx^2)
-lerr1_e_th = np.append(lerr1_e_th, np.full(len(t_arr), x10 * (dt**2)))
-lerr2_e_th = np.append(lerr2_e_th, np.full(len(t_arr), x20 * (dt**2)))
-# Global Euler: O(dx)
-gerr1_e_th = np.append(gerr1_e_th, np.full(len(t_arr), x10 * dt))
-gerr2_e_th = np.append(gerr2_e_th, np.full(len(t_arr), x20 * dt))
-# Local RK4: O(dx^5)
-lerr1_r_th = np.append(lerr1_r_th, np.full(len(t_arr), x10 * (dt**5)))
-lerr2_r_th = np.append(lerr2_r_th, np.full(len(t_arr), x20 * (dt**5)))
-# Local RK4: O(dx^4)
-gerr1_r_th = np.append(gerr1_r_th, np.full(len(t_arr), x10 * (dt**4)))
-gerr2_r_th = np.append(gerr2_r_th, np.full(len(t_arr), x20 * (dt**4)))
 
-
+# Actual Numerical Errors
 # Global Truncation Errors: Euler
 gerr1_e = np.abs(x1_as - x1e)
 gerr2_e = np.abs(x2_as - x2e)
@@ -280,6 +259,7 @@ gerr2_r = np.abs(x2_as - x2r)
 # Local Truncation Errors: RK4
 lerr1_r = np.array([0])
 lerr2_r = np.array([0])
+
 for n in range(len(t_arr) - 1):
     x1n = x1_as[n]
     x2n = x2_as[n]
@@ -400,6 +380,7 @@ ax3.plot(t_arr, lerr2_r, label = 'Local Error for Mass 2')
 ax4.set_title('Runge-Kutta 4: Local Error')
 ax4.plot(t_arr, gerr1_r, label = 'Global Error for Mass 1')
 ax4.plot(t_arr, gerr2_r, label = 'Global Error for Mass 2')
+
 
 ax1.legend()
 ax2.legend()
