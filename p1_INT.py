@@ -30,7 +30,7 @@ m = 1
 def expecVal(psi, xmin, xmax, dx, x_func = None, **kwargs):
     """
     Function that calculates the expectation value of a given quantity (default is x) to be plugged 
-    into recursive Reimann integrator.
+    into recursive Riemann integrator.
 
     Keyword Arguments
     psi (function): wavefunction
@@ -52,13 +52,13 @@ def expecVal(psi, xmin, xmax, dx, x_func = None, **kwargs):
         else: 
             exp_val = wfi * xmin * wf
         return exp_val
-    exp_val_final = meth.recReimann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
+    exp_val_final = meth.recRiemann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
     return exp_val_final
 
 def expecFunc(psi, xmin, xmax, dx, x_func = None, **kwargs):
     """
     Function that calculates the expectation value of a given quantity (default is x) at a single 
-    position to be plugged into Reimann integrator.
+    position to be plugged into Riemann integrator.
 
     Keyword Arguments
     psi (function): wavefunction
@@ -80,7 +80,7 @@ def expecFunc(psi, xmin, xmax, dx, x_func = None, **kwargs):
         else: 
             exp_val = wfi * xmin * wf
         return exp_val
-    exp_val_final = meth.Reimann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
+    exp_val_final = meth.Riemann(f, xmin, xmax, dx, x_func = x_func, psi = psi, **kwargs)
     return exp_val_final
 
 def psi_isw(x, a, n, **kwargs):
@@ -142,34 +142,40 @@ def squared(x):
 # Trivial Test
 step = 0.01
 x_arr = np.arange(start = -a, stop = a + step, step = step)
-psi_x = psi_isw(x_arr, a, 1)
-psi_x_num = np.array([])
+psi_x1 = psi_isw(x_arr, a, 1)
+psi_x1_num = np.array([])
 
 A_tot = 0
 for i in range(len(x_arr)):
-    psi_x_num = np.append(psi_x_num, A_tot)
-    A_tot += meth.Reimann(dpsi_isw, x_arr[i], step, a = a, n = 1)
+    psi_x1_num = np.append(psi_x1_num, A_tot)
+    A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = 1)
 
 
 # ----------------------------- ERRORS ---------------------------
 # Global truncation error for the ground state
-gerr1 = np.abs(psi_x - psi_x_num)
+gerr1 = np.abs(psi_x1 - psi_x1_num)
 # Local truncation error for the ground state
 lerr1 = np.array([])
 # copied from ODE side
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 # iterate over x_arr
 avg_lerr = np.array([])
-for i in range(len(x_arr) - 1):
-    # get error for different values
-    for dx in dx_arr:
+for dx in dx_arr:
+    lerr1 = np.array([0])
+    for i in range(len(x_arr) - 1):
         # numerical solution
-        psinp1 = meth.Reimann(dpsi_isw, x_arr[i], dx, a = a, n = 1)
-        # analytic step
-        psi_diff = psi_x[i+1] - psi_x[i]
+        psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = 1)
+        # change in psi_isw when xf-xi = dx
+        psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i] + dx, a, 1)
         # local error
         lerr1 = np.append(lerr1, np.abs(psinp1 - psi_diff))
-        avg_lerr = np.append(avg_lerr, np.mean(lerr1))
+    avg_lerr = np.append(avg_lerr, np.mean(lerr1))
+
+fig, ax = plt.subplots(figsize = (8, 5))
+ax.scatter(dx_arr, avg_lerr, label = r'Local Error ($n=1$)')
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel
+ax.legend()
 
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
@@ -217,15 +223,15 @@ def psitpsi(xmin, n1, n2, psi, a, **kwargs):
     psi_prod = psi1 * psi2
     return psi_prod
 
-int_psiprod = meth.recReimann(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
+int_psiprod = meth.recRiemann(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
 lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
 rhs = ((2*m)/hbar) * (E2 - E3) * int_psiprod
 
 fig, ax = plt.subplots()
-ax.set_title(rf'Reimann Integrator vs Analytic Solution: $\Delta x= $ {step}')
-ax.plot(x_arr, psi_x, label = r'Analytic $\psi(x)$')
-ax.plot(x_arr, psi_x_num, label = r'Reimann Integrated $\psi(x)$')
-ax.set_xlabel('Energy Level')
+ax.set_title(rf'Riemann Integrator vs Analytic Solution: $\Delta x= $ {step}')
+ax.plot(x_arr, psi_x1, label = r'Analytic $\psi(x)$')
+ax.plot(x_arr, psi_x1_num, label = r'Riemann Integrated $\psi(x)$')
+ax.set_xlabel('x')
 ax.set_ylabel(r'$\langle x\rangle$')
 plt.legend()
 plt.tight_layout()

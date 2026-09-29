@@ -78,9 +78,9 @@ def RK4(f, mi, mj, vi, vj, xi, xj, dt):
 
 # ----------------------- NUMERICAL INTEGRATORS -----------------------
 
-def recReimann(f, xmin, xmax, dx, A=0, **kwargs):
+def recRiemann(f, xmin, xmax, dx, A=0, **kwargs):
     """
-    RECURSIVE Function that numerically integrates a given function, f, using the Reimann sum method
+    RECURSIVE Function that numerically integrates a given function, f, using the Riemann sum method
 
     Keywork Arguments:
     f (function): Function being integrated
@@ -90,15 +90,15 @@ def recReimann(f, xmin, xmax, dx, A=0, **kwargs):
     A (int): starting area under curve-- default 0
     """
     h = f(xmin, **kwargs)           # Find the height
-    A += h * dx                     # Calculate the area of the Reimann sum rectangle
+    A += h * dx                     # Calculate the area of the Riemann sum rectangle
     if xmin > xmax:
         return A
     else:
-        return recReimann(f, xmin + dx, xmax, dx, A, **kwargs)
+        return recRiemann(f, xmin + dx, xmax, dx, A, **kwargs)
 
-def Reimann(f, x, dx, A=0, **kwargs):
+def Riemann(f, x, dx, A=0, **kwargs):
     """
-    Function that numerically integrates a given function, f, using the Reimann sum method
+    Function that numerically integrates a given function, f, using the Riemann sum method
 
     Keywork Arguments:
     f (function): Function being integrated
@@ -108,12 +108,12 @@ def Reimann(f, x, dx, A=0, **kwargs):
     A (int): starting area under curve-- default 0
     """
     h = f(x, **kwargs)           # Find the height
-    A += h * dx                     # Calculate the area of the Reimann sum rectangle
+    A += h * dx                     # Calculate the area of the Riemann sum rectangle
     return A
 
 def fourierTr(xmin, xmax, dx, fx, **kwargs):
     """
-    Fourier Transform function that performs the integral using the Reimann numerical solver
+    Fourier Transform function that performs the integral using the Riemann numerical solver
 
     xmin (int/float): initial position wavefunction is evaluated at
     xmax (int/float): final position wavefunction is evaluated at
@@ -126,6 +126,6 @@ def fourierTr(xmin, xmax, dx, fx, **kwargs):
     def f(xmin, pmin, fx, **kwargs):
         fp = c * np.exp((complex(0, -1) * pmin * xmin)/hbar) * fx(xmin, **kwargs)
         return fp 
-    fp_final = Reimann(f, xmin, xmax, dx, fx = fx, pmin = pmin, **kwargs)
+    fp_final = Riemann(f, xmin, xmax, dx, fx = fx, pmin = pmin, **kwargs)
     return fp_final
 

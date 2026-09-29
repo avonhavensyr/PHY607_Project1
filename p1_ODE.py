@@ -286,64 +286,79 @@ print('RK4: ', [np.mean(lerr1_r), np.mean(lerr2_r), np.mean(gerr1_r), np.mean(ge
 
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
-fig.suptitle(rf'Numerical Solvers vs Analytic Solutions: $\Delta t = ${dt}')
-ax1.set_title(r'$m_1$')
-ax2.set_title(r'$m_2$')
-ax1.plot(t_arr, x1e, label = r'$x_1(t)$ Euler', linestyle = '--')
-ax2.plot(t_arr, x2e, label = r'$x_2(t)$ Euler', linestyle = '--')
+# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# fig.suptitle(rf'Numerical Solvers vs Analytic Solutions: $\Delta t = ${dt}')
+# ax1.set_title(rf'$m_1$ = m')
+# ax2.set_title(rf'$m_2$ = {m2}m')
+# ax1.plot(t_arr, x1e, label = r'$x_1(t)$ Euler', linestyle = ':')
+# ax2.plot(t_arr, x2e, label = r'$x_2(t)$ Euler', linestyle = ':')
 
-ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', linestyle = '--')
-ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', linestyle = '--')
+# ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', linestyle = ':')
+# ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', linestyle = ':')
 
-ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution', linestyle = '--')
-ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution', linestyle = '--')
+# ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution', linestyle = ':')
+# ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution', linestyle = ':')
 
-ax1.legend()
-ax2.legend()
-plt.tight_layout()
-plt.savefig('solvers_v_an.png')
+# ax1.legend()
+# ax2.legend()
+# plt.tight_layout()
+# plt.savefig('solvers_v_an.png')
 
-# ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
-ax1.set_title(rf'SciPy Solvers vs Analytic Solutions: $\Delta t = ${dt}')
+# fig, ax = plt.subplots(figsize = (8,5))
+# fig.suptitle(rf'Numerical Solvers vs Analytic Solutions: $\Delta t = ${dt}')
+# ax.set_title(r'$m_1=m_2=m$')
+# ax.plot(t_arr, x1e, label = r'$x_1(t)$ Euler', linestyle = '-')
+# ax.plot(t_arr, x2e, label = r'$x_2(t)$ Euler', linestyle = '--')
 
-ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution', color = 'C2')
-ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution', color = 'C2')
+# ax.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', linestyle = '-')
+# ax.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', linestyle = '--')
 
-#---------- SCIPY solve_ivp SOLUTIONS ------------
-ax1.plot(t_arr, x1sp, label = r'$x_1(t)$ solve_ivp RK45', color = 'C3')
-ax2.plot(t_arr, x2sp, label = r'$x_2(t)$ solve_ivp RK45', color = 'C3')
+# ax.legend()
+# ax.legend()
+# plt.tight_layout()
+#plt.savefig('solvers_v_an.png')
 
-ax1.legend()
-ax2.legend()
-plt.tight_layout()
-plt.savefig('an_v_scipy.png')
+# # ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
+# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# ax1.set_title(rf'$m_1$ = $m$')
+# ax2.set_title(rf'$m_2$ = {m2}$m$')
+# fig.suptitle(rf'SciPy Solvers vs Analytic Solutions: $\Delta t = ${dt}')
 
-# ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
-ax1.set_title(rf'Numerical Solvers vs SciPy Solvers: $\Delta t = ${dt}')
+# ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution', color = 'C2')
+# ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution', color = 'C2')
 
-ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', color = 'C1')
-ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', color = 'C1')
+# #---------- SCIPY solve_ivp SOLUTIONS ------------
+# ax1.plot(t_arr, x1sp, label = r'$x_1(t)$ SciPy RK45', color = 'C3', linestyle = '--')
+# ax2.plot(t_arr, x2sp, label = r'$x_2(t)$ SciPy RK45', color = 'C3', linestyle = '--')
+
+# ax1.legend()
+# ax2.legend()
+# plt.tight_layout()
+# plt.savefig('an_v_scipy.png')
+
+# # # ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
+# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# ax1.set_title(rf'$m_1$ = m')
+# ax2.set_title(rf'$m_2$ = {m2}m')
+# fig.suptitle(rf'Numerical Solvers vs SciPy Solvers: $\Delta t = ${dt}')
+
+# ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', color = 'C1', linestyle = '--')
+# ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', color = 'C1', linestyle = '-')
 
 
-ax1.plot(t_arr, x1sp, label = r'$x_1(t)$ solve_ivp RK45', color = 'C3')
-ax2.plot(t_arr, x2sp, label = r'$x_2(t)$ solve_ivp RK45', color = 'C3')
+# ax1.plot(t_arr, x1sp, label = r'$x_1(t)$ solve_ivp RK45', color = 'C3', linestyle = '--')
+# ax2.plot(t_arr, x2sp, label = r'$x_2(t)$ solve_ivp RK45', color = 'C3', linestyle = '--')
 
-ax1.legend()
-ax2.legend()
-plt.tight_layout()
-plt.savefig('rk_v_scipy.png')
+# ax1.legend()
+# ax2.legend()
+# plt.tight_layout()
+# plt.savefig('rk_v_scipy.png')
 
-# ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
-#---------- I: M1 = M2 LIMITING CASE ------------
-
-
-#---------- II: ENERGY CONSERVATION ------------
-ax1.set_title(rf'Energy conservation: $\Delta t = ${dt}')
+# #---------- II: ENERGY CONSERVATION ------------
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize = (8,12))
+fig.suptitle(rf'Energy conservation: $\Delta t = ${dt}, $m_2=${m2/m1}$m_1$')
+
 ax1.set_title('Symplectic Euler')
 ax1.plot(t_arr, Ue, label = r'$U(t)$')
 ax1.plot(t_arr, Te, label = r'$T(t)$')
@@ -365,59 +380,59 @@ ax3.legend()
 
 plt.tight_layout()
 
-plt.savefig('energy_cons.png')
+plt.savefig('energy_cons_dt0p6.png')
 
-# ---------------- ERROR PROPAGATION ----------------
-dt_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
-O_1 = dt_arr
-O_2 = dt_arr ** 2
-O_4 = dt_arr ** 4
-O_5 = dt_arr ** 5
+# # ---------------- ERROR PROPAGATION ----------------
+# dt_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+# O_1 = dt_arr
+# O_2 = dt_arr ** 2
+# O_4 = dt_arr ** 4
+# O_5 = dt_arr ** 5
 
-lerr1_e_avg = np.array([3.6369e-05, 9.0811e-04, 3.6294e-03, 8.1709e-03, 1.4514e-02, 2.2608e-02,
-                        3.2578e-02, 4.4229e-02, 5.7531e-02, 7.2090e-02, 8.9394e-02])
-lerr2_e_avg = np.array([1.4091e-05, 3.5070e-04, 1.3957e-03, 3.1354e-03, 5.5260e-03, 8.5943e-03,
-                        1.2355e-02, 1.6851e-02, 2.1685e-02, 2.7520e-02, 3.3582e-02])
-gerr1_e_avg = np.array([2.1538e-03, 1.1371e-02, 2.4296e-02, 3.8733e-02, 5.4985e-02, 7.3061e-02,
-                        9.3019e-02, 1.1440e-01, 1.3773e-01, 1.6344e-01, 1.9179e-01])
-gerr2_e_avg = np.array([1.2245e-03, 6.0758e-03, 1.2043e-02, 1.7967e-02, 2.3675e-02, 2.9345e-02,
-                        3.5065e-02, 4.0914e-02, 4.5829e-02, 5.1773e-02, 5.6375e-02])
+# lerr1_e_avg = np.array([3.6369e-05, 9.0811e-04, 3.6294e-03, 8.1709e-03, 1.4514e-02, 2.2608e-02,
+#                         3.2578e-02, 4.4229e-02, 5.7531e-02, 7.2090e-02, 8.9394e-02])
+# lerr2_e_avg = np.array([1.4091e-05, 3.5070e-04, 1.3957e-03, 3.1354e-03, 5.5260e-03, 8.5943e-03,
+#                         1.2355e-02, 1.6851e-02, 2.1685e-02, 2.7520e-02, 3.3582e-02])
+# gerr1_e_avg = np.array([2.1538e-03, 1.1371e-02, 2.4296e-02, 3.8733e-02, 5.4985e-02, 7.3061e-02,
+#                         9.3019e-02, 1.1440e-01, 1.3773e-01, 1.6344e-01, 1.9179e-01])
+# gerr2_e_avg = np.array([1.2245e-03, 6.0758e-03, 1.2043e-02, 1.7967e-02, 2.3675e-02, 2.9345e-02,
+#                         3.5065e-02, 4.0914e-02, 4.5829e-02, 5.1773e-02, 5.6375e-02])
 
-lerr1_r_avg = np.array([2.4987e-11, 7.7724e-08, 2.4722e-06, 1.8807e-05, 7.7992e-05, 2.3522e-04,
-                        5.8242e-04, 1.2590e-03, 2.3702e-03, 4.2588e-03, 6.9235e-03])
-lerr2_r_avg = np.array([1.3474e-12, 4.1889e-09, 1.3324e-07, 1.0131e-06, 4.1975e-06, 1.2665e-05,
-                        3.1356e-05, 6.7820e-05, 1.2730e-04, 2.2871e-04, 3.7245e-04])
-gerr1_r_avg = np.array([1.7727e-09, 1.1089e-06, 1.7764e-05, 8.9834e-05, 2.8467e-04, 6.9467e-04,
-                        1.4418e-03, 2.6477e-03, 4.5522e-03, 7.2094e-03, 1.0997e-02])
-gerr2_r_avg = np.array([9.5651e-11, 5.9831e-08, 9.5831e-07, 4.8477e-06, 1.5362e-05, 3.7563e-05,
-                        7.7765e-05, 1.4287e-04, 2.4583e-04, 3.9051e-04, 5.9955e-04])
+# lerr1_r_avg = np.array([2.4987e-11, 7.7724e-08, 2.4722e-06, 1.8807e-05, 7.7992e-05, 2.3522e-04,
+#                         5.8242e-04, 1.2590e-03, 2.3702e-03, 4.2588e-03, 6.9235e-03])
+# lerr2_r_avg = np.array([1.3474e-12, 4.1889e-09, 1.3324e-07, 1.0131e-06, 4.1975e-06, 1.2665e-05,
+#                         3.1356e-05, 6.7820e-05, 1.2730e-04, 2.2871e-04, 3.7245e-04])
+# gerr1_r_avg = np.array([1.7727e-09, 1.1089e-06, 1.7764e-05, 8.9834e-05, 2.8467e-04, 6.9467e-04,
+#                         1.4418e-03, 2.6477e-03, 4.5522e-03, 7.2094e-03, 1.0997e-02])
+# gerr2_r_avg = np.array([9.5651e-11, 5.9831e-08, 9.5831e-07, 4.8477e-06, 1.5362e-05, 3.7563e-05,
+#                         7.7765e-05, 1.4287e-04, 2.4583e-04, 3.9051e-04, 5.9955e-04])
 
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (12,8))
-ax1.set_title('Symplectic Euler: Local Error')
-ax1.loglog(dt_arr, lerr1_e_avg, label = 'Local Error for Mass 1')
-ax1.loglog(dt_arr, lerr2_e_avg, label = 'Local Error for Mass 2')
-ax1.loglog(dt_arr, O_2, label = r'$\mathcal{O}(\Delta t^2)$')
+# fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (12,8))
+# ax1.set_title('Symplectic Euler: Local Error')
+# ax1.loglog(dt_arr, lerr1_e_avg, label = 'Local Error for Mass 1')
+# ax1.loglog(dt_arr, lerr2_e_avg, label = 'Local Error for Mass 2')
+# ax1.loglog(dt_arr, O_2, label = r'$\mathcal{O}(\Delta t^2)$')
 
-ax2.set_title('Symplectic Euler: Global Error')
-ax2.loglog(dt_arr, gerr1_e_avg, label = 'Global Error for Mass 1')
-ax2.loglog(dt_arr, gerr2_e_avg, label = 'Global Error for Mass 2')
-ax2.loglog(dt_arr, O_1, label = r'$\mathcal{O}(\Delta t)$')
+# ax2.set_title('Symplectic Euler: Global Error')
+# ax2.loglog(dt_arr, gerr1_e_avg, label = 'Global Error for Mass 1')
+# ax2.loglog(dt_arr, gerr2_e_avg, label = 'Global Error for Mass 2')
+# ax2.loglog(dt_arr, O_1, label = r'$\mathcal{O}(\Delta t)$')
 
-ax3.set_title('Runge-Kutta 4: Local Error')
-ax3.loglog(dt_arr, lerr1_r_avg, label = 'Local Error for Mass 1')
-ax3.loglog(dt_arr, lerr2_r_avg, label = 'Local Error for Mass 2')
-ax3.loglog(dt_arr, O_5, label = r'$\mathcal{O}(\Delta t^5)$')
+# ax3.set_title('Runge-Kutta 4: Local Error')
+# ax3.loglog(dt_arr, lerr1_r_avg, label = 'Local Error for Mass 1')
+# ax3.loglog(dt_arr, lerr2_r_avg, label = 'Local Error for Mass 2')
+# ax3.loglog(dt_arr, O_5, label = r'$\mathcal{O}(\Delta t^5)$')
 
-ax4.set_title('Runge-Kutta 4: Global Error')
-ax4.loglog(dt_arr, gerr1_r_avg, label = 'Global Error for Mass 1')
-ax4.loglog(dt_arr, gerr2_r_avg, label = 'Global Error for Mass 2')
-ax4.loglog(dt_arr, O_4, label = r'$\mathcal{O}(\Delta t^4)$')
+# ax4.set_title('Runge-Kutta 4: Global Error')
+# ax4.loglog(dt_arr, gerr1_r_avg, label = 'Global Error for Mass 1')
+# ax4.loglog(dt_arr, gerr2_r_avg, label = 'Global Error for Mass 2')
+# ax4.loglog(dt_arr, O_4, label = r'$\mathcal{O}(\Delta t^4)$')
 
-ax1.legend()
-ax2.legend()
-ax3.legend()
-ax4.legend()
+# ax1.legend()
+# ax2.legend()
+# ax3.legend()
+# ax4.legend()
 
-plt.tight_layout()
-plt.savefig('ODE_err.png')
+# plt.tight_layout()
+# plt.savefig('ODE_err.png')
 plt.show()
