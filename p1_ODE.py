@@ -86,6 +86,26 @@ def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
     x2 = (r_p * ((C1 * cos_p) + (S1 * sin_p))) + (r_n * ((C2 * cos_n) + (S2 * sin_n)))
     return (x1, x2)
 
+def coupledEnergy(mi, mj, vi, vj, xi, xj, dt):
+    """
+    Function to compute the energy of the coupled oscillator
+
+    Keyword arguments:
+    mi (int/float): mass of mass i
+    mj (int/float): mass of mass j
+    vi (int/float): initial/current velocity value of mass i
+    vj (int/float): initial/current velocity value of mass j
+    xi (int/float): initial/current position value of mass i
+    xj (int/float): initial/current position value of mass j
+    """
+    # Potential energy (taken as -grad(-kxi)) for masses mi and mj
+    Uij = k * ((xi**2) + (xj**2) - (xi * xj))
+    # Kinetic energy for masses mi and mj
+    Tij = (0.5 * mi * (vi**2)) + (0.5 * mj * (vj**2))
+    Eij = Uij + Tij
+    return np.array([Uij, Tij, Eij])
+
+
 # Put F into a form that will work for solve_ivp method
 def fNew(t, s, mi, mj):
     """
@@ -177,6 +197,10 @@ x1sp = scipy.y[0]
 x2sp = scipy.y[1]
 v1sp = scipy.y[2]
 v2sp = scipy.y[3]
+
+
+
+
 
 # ----------------------------- ERRORS ---------------------------
 # Global Truncation Errors: Euler
