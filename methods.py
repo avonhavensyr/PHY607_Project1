@@ -128,3 +128,21 @@ def fourierTr(xmin, xmax, dx, fx, **kwargs):
         return fp 
     fp_final = Reimann(f, xmin, xmax, dx, fx = fx, pmin = pmin, **kwargs)
     return fp_final
+
+# ------------TRUNCATION ERRORS----------------
+def truncError(x_num, x_an, local = False):
+    """
+    Function that calculates the truncation error for various 
+    numerical models
+
+    Keyword Arguments:
+    x_num (array): array containing the values from a numerical simulation
+    x_an (array): array containing the values from the analytical solution
+    local (bool): function compputes the average local truncation error if True. Default False (ie: global truncation error)
+    NOTE: the two arrays MUST be calculated as a function of the same independent variable over the same interval and spacing
+    """
+
+    if local:
+        pass
+    else:
+        pass
