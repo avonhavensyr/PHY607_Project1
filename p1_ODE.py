@@ -179,7 +179,7 @@ plt.show()
 
 # ----------- SCIPY COMPARISON ---------------
 # Put F into a form that will work for solve_ivp method
-def fNew(t, s, masses):
+def fNew(t, s, mi, mj):
     """
     Function that converts the state of the system into a form that 
     is usable for SciPy's solve_ivp RK45 method
@@ -187,22 +187,22 @@ def fNew(t, s, masses):
     Keyword Arguements:
     t (float/int): current time at position n
     s (array): current state vector of position n-- takes the form [xi, xj, vi, vj]
-    masses (array): masses mi and mj-- I have a feeling this thing is finnicky with the length of the input and output arrays.
+    mi (int/float): mass of mi
+    mj (inf/float): mass of mj
     """
     # Separate state vector into variables
     xi, xj, vi, vj = s
-    mi, mj = masses
     # Use function f to get the accelerations of mi and mj
     dvi = f(xi, xj, mi)
     dvj = f(xj, xi, mj)
     return np.array([vi, vj, dvi, dvj])
 
-
-
+# I really don't know why the input and output have different variables, but I greatly underestimated this project and my life is in the hands of askpython.com
+s0 = np.array([x10, x20, v10, v20])
 # Tuple input for SciPy RK4
 t_range = (t_arr[0], t_arr[-1])
 # Compare to SciPy
-scipy_x1 = solve_ivp(f, t_range, x10, method = 'RK45', t_eval=t_arr)
+scipy = solve_ivp(f, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
 
 # TO DO:
 #   Energy Conservation
