@@ -87,19 +87,31 @@ def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
 
     return (x1, x2)
 
+# Put F into a form that will work for solve_ivp method
+def fNew(t, s, mi, mj):
+    """
+    Function that converts the state of the system into a form that 
+    is usable for SciPy's solve_ivp RK45 method
+
+    Keyword Arguements:
+    t (float/int): current time at position n
+    s (array): current state vector of position n-- takes the form [xi, xj, vi, vj]
+    mi (int/float): mass of mi
+    mj (inf/float): mass of mj
+    """
+    # Separate state vector into variables
+    xi, xj, vi, vj = s
+    # Use function f to get the accelerations of mi and mj
+    dvi = f(xi, xj, mi)
+    dvj = f(xj, xi, mj)
+    return np.array([vi, vj, dvi, dvj])
+
 # ----------------------- SETUP FOR CALCULATIONS & ANALYTICAL SOLUTIONS -----------------------
 tmax = 20
 t_arr = np.arange(start = 0, stop = tmax + dt, step = dt)
 
-# Arrays for analytic solutions
-#x1_as = np.array([x10])
-#x2_as = np.array([x20])
-
 # Calculate analytic solution
 x1_as, x2_as = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_arr)
-# Add new values
-#x1_as = np.append(x1_as, x1_asnp1)
-#x2_as = np.append(x2_as, x2_asnp1)
 
 
 # ----------------------- ARRAY CALCULATIONS FOR FIGURES -----------------------
@@ -157,8 +169,19 @@ for i in range(len(t_arr)-1):
     v1r = np.append(v1r, v1np1)
     v2r = np.append(v2r, v2np1)
 
+# ----------- SCIPY COMPARISON ---------------
+s0 = np.array([x10, x20, v10, v20])
+# Tuple input for SciPy RK4
+t_range = (t_arr[0], t_arr[-1])
+# Compare to SciPy
+scipy = solve_ivp(fNew, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
 
+x1sp = scipy.y[0]
+x2sp = scipy.y[1]
+v1sp = scipy.y[2]
+v2sp = scipy.y[3]
 
+#--------------- MY SOLVERS VS ANALYTIC ----------------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 ax1.plot(t_arr, x1, label = f'Mass 1 Euler')
 ax2.plot(t_arr, x2, label = f'Mass 2 Euler')
@@ -173,40 +196,6 @@ ax1.legend()
 ax2.legend()
 plt.tight_layout()
 
-# ----------- SCIPY COMPARISON ---------------
-# Put F into a form that will work for solve_ivp method
-def fNew(t, s, mi, mj):
-    """
-    Function that converts the state of the system into a form that 
-    is usable for SciPy's solve_ivp RK45 method
-
-    Keyword Arguements:
-    t (float/int): current time at position n
-    s (array): current state vector of position n-- takes the form [xi, xj, vi, vj]
-    mi (int/float): mass of mi
-    mj (inf/float): mass of mj
-    """
-    # Separate state vector into variables
-    xi, xj, vi, vj = s
-    # Use function f to get the accelerations of mi and mj
-    dvi = f(xi, xj, mi)
-    dvj = f(xj, xi, mj)
-    return np.array([vi, vj, dvi, dvj])
-
-# I really don't know why the input and output have different variables, but I greatly underestimated this project and my life is in the hands of askpython.com
-s0 = np.array([x10, x20, v10, v20])
-# Tuple input for SciPy RK4
-t_range = (t_arr[0], t_arr[-1])
-# Compare to SciPy
-scipy = solve_ivp(fNew, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
-# print(np.shape(scipy.y))      # 4 arrays of length 101
-
-x1sp = scipy.y[0]
-x2sp = scipy.y[1]
-v1sp = scipy.y[2]
-v2sp = scipy.y[3]
-
-
 # ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 
@@ -220,8 +209,6 @@ ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
 ax1.legend()
 ax2.legend()
 plt.tight_layout()
-
-
 
 # ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
