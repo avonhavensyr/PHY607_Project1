@@ -15,7 +15,6 @@ PROJECT I
 Numerical Integrator: Infinite Square Well
 """
 
-
 # –––––––––––– PROBLEM-SPECIFIC CONDITIONS AND FUNCTIONS ––––––––––––
 
 # CONSTANTS
@@ -140,7 +139,6 @@ def squared(x):
     """
     return x**2
 
-
 # Trivial Test
 step = 0.01
 x_arr = np.arange(start = -a, stop = a + step, step = step)
@@ -153,36 +151,32 @@ for i in range(len(x_arr)):
     A_tot += meth.Reimann(dpsi_isw, x_arr[i], step, a = a, n = 1)
 
 
-
 # ----------------------------- ERRORS ---------------------------
 # Global truncation error for the ground state
-g_err1 = np.abs(psi_x - psi_x_num)
+gerr1 = np.abs(psi_x - psi_x_num)
+# Local truncation error for the ground state
+lerr1 = np.array([])
+# copied from ODE side
+dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+# iterate over x_arr
+avg_lerr = np.array([])
+for i in range(len(x_arr) - 1):
+    # get error for different values
+    for dx in dx_arr:
+        # numerical solution
+        psinp1 = meth.Reimann(dpsi_isw, x_arr[i], dx, a = a, n = 1)
+        # analytic step
+        psi_diff = psi_x[i+1] - psi_x[i]
+        # local error
+        lerr1 = np.append(lerr1, np.abs(psinp1 - psi_diff))
+        avg_lerr = np.append(avg_lerr, np.mean(lerr1))
 
-
-
-
-# Energy levels to find <x^2> for
-n_lst = np.arange(20)       # go up to n=20
-# List of expectation values
-exp_lst = np.array([])
-for i in n_lst:
-    # get the expectation value of x squared
-    exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
-    # add to list
-    exp_lst = np.append(exp_lst, exp_x_squared)
-
-plt.figure()
-fig, ax = plt.subplots()
-ax.scatter(n_lst, exp_lst)
-ax.set_xlabel('Energy Level')
-ax.set_ylabel(r'$\langle x\rangle$')
-plt.tight_layout()
-plt.show()
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
 # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
+
 # Energy levels to find <x^2> for
-n_lst = np.arange(20)       # go up to n=20
+n_lst = np.arange(start = 1, stop = 21)       # go up to n=20
 # List of expectation values
 exp_lst = np.array([])
 for i in n_lst:
@@ -190,14 +184,18 @@ for i in n_lst:
     exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
     # add to list
     exp_lst = np.append(exp_lst, exp_x_squared)
-
+# value the expectation value should converge to
+con_val = (a**2) / 3
+# make figure
 fig, ax = plt.subplots()
-ax.scatter(n_lst, exp_lst)
-ax.set_xlabel('Energy Level')
+print(con_val)
+ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
+ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values')
+ax.set_xlabel('n')
 ax.set_ylabel(r'$\langle x\rangle$')
+ax.legend()
 plt.tight_layout()
-plt.show()
-
+plt.savefig('xsq_conv.png')
 
 # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
 # Nodes at n = 3: a/3, 2a/3
@@ -213,33 +211,28 @@ m = 1
 E3 = E_isw(3, a)
 E2 = E_isw(2, a)
 
-# def psitpsi(xmin, n1, n2, psi, a, **kwargs):
-#     psi1 = psi_isw(xmin, a, n1)
-#     psi2 = psi_isw(xmin, a, n2)
-#     psi_prod = psi1 * psi2
-#     return psi_prod
+def psitpsi(xmin, n1, n2, psi, a, **kwargs):
+    psi1 = psi_isw(xmin, a, n1)
+    psi2 = psi_isw(xmin, a, n2)
+    psi_prod = psi1 * psi2
+    return psi_prod
 
-# int_psiprod = meth.reimannRec(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
-# lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
-# rhs = ((2*m)/hbar) * (E2 - E3) * int_psiprod
+int_psiprod = meth.recReimann(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
+lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
+rhs = ((2*m)/hbar) * (E2 - E3) * int_psiprod
 
-# plt.figure()
-# fig, ax = plt.subplots()
-# ax.plot(x_arr, psi_x, label = r'Analytic $\psi(x)$')
-# ax.plot(x_arr, psi_x_num, label = r'Reimann Integrated $\psi(x)$')
-# ax.set_xlabel('Energy Level')
-# ax.set_ylabel(r'$\langle x\rangle$')
-# plt.legend()
-# plt.tight_layout()
-# plt.savefig('psiint_v_psian.png')
-# plt.show()
+fig, ax = plt.subplots()
+ax.set_title(rf'Reimann Integrator vs Analytic Solution: $\Delta x= $ {step}')
+ax.plot(x_arr, psi_x, label = r'Analytic $\psi(x)$')
+ax.plot(x_arr, psi_x_num, label = r'Reimann Integrated $\psi(x)$')
+ax.set_xlabel('Energy Level')
+ax.set_ylabel(r'$\langle x\rangle$')
+plt.legend()
+plt.tight_layout()
+plt.savefig('psiint_v_psian.png')
+plt.show()
 
-#print(E2)
-#print(E3)
-# print(f'Left: {lhs}')
-# print(f'Right: {rhs}')
-
-# To Do:
-#   Improve comments– got kinda lazy there
-#   Look into Griffiths problem further– do more psi states probably
-#   Try part a with the Euler/RK4 calculators and see how the results match up with the integrator
+print(E2)
+print(E3)
+print(f'Left: {lhs}')
+print(f'Right: {rhs}')

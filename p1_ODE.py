@@ -36,7 +36,7 @@ v10 = 1
 v20 = 1
 # Initial Time + Time Step
 t0 = 0
-dt = 0.2
+dt = 0.6
 
 def f(x, xi, m):
     """
@@ -287,15 +287,17 @@ print('RK4: ', [np.mean(lerr1_r), np.mean(lerr2_r), np.mean(gerr1_r), np.mean(ge
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
-ax1.set_title(rf'Numerical Solvers vs Analytic Solutions: $\Delta t = ${dt}')
-ax1.plot(t_arr, x1e, label = r'$x_1(t)$ Euler')
-ax2.plot(t_arr, x2e, label = r'$x_2(t)$ Euler')
+fig.suptitle(rf'Numerical Solvers vs Analytic Solutions: $\Delta t = ${dt}')
+ax1.set_title(r'$m_1$')
+ax2.set_title(r'$m_2$')
+ax1.plot(t_arr, x1e, label = r'$x_1(t)$ Euler', linestyle = '--')
+ax2.plot(t_arr, x2e, label = r'$x_2(t)$ Euler', linestyle = '--')
 
-ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4')
-ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4')
+ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', linestyle = '--')
+ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', linestyle = '--')
 
-ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution')
-ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution')
+ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution', linestyle = '--')
+ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution', linestyle = '--')
 
 ax1.legend()
 ax2.legend()
@@ -335,7 +337,10 @@ plt.tight_layout()
 plt.savefig('rk_v_scipy.png')
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
-#---------- I: ENERGY CONSERVATION ------------
+#---------- I: M1 = M2 LIMITING CASE ------------
+
+
+#---------- II: ENERGY CONSERVATION ------------
 ax1.set_title(rf'Energy conservation: $\Delta t = ${dt}')
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize = (8,12))
