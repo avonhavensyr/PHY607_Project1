@@ -172,7 +172,7 @@ ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution')
 ax1.legend()
 ax2.legend()
 plt.tight_layout()
-plt.show()
+#plt.show()
 
 # ------------TRUNCATION ERRORS----------------
 
@@ -202,7 +202,27 @@ s0 = np.array([x10, x20, v10, v20])
 # Tuple input for SciPy RK4
 t_range = (t_arr[0], t_arr[-1])
 # Compare to SciPy
-scipy = solve_ivp(f, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
+scipy = solve_ivp(fNew, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
+#print(np.shape(scipy))
+# I was confused about why the shape was 0 but I actually dont know what it's supposed to be so I'm copying the prints from the askpython.com examples
+print(scipy.y[0])
+
+# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# # ax1.plot(t_arr, x1, label = f'Mass 1 Euler')
+# # ax2.plot(t_arr, x2, label = f'Mass 2 Euler')
+
+# ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
+# ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
+
+# ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
+# ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
+
+# ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution')
+# ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution')
+
+# ax1.legend()
+# ax2.legend()
+# plt.tight_layout()
 
 # TO DO:
 #   Energy Conservation
