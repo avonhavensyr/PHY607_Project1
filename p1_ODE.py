@@ -50,7 +50,7 @@ def f(x, xi, m):
     dvi = ((1 / m) * ((-2 * k * x) + (k * xi)))
     return dvi
 
-def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
+def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t, test = False):
     """
     Analytical solution to the coupled oscillator as a superposition of 
     normal mode solutions
@@ -64,6 +64,7 @@ def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
     v20 (int/float): initial velocity of mass 2
     k (int/float): spring constant
     t (int/float): current time
+    test (boolean): returns extra values if True-- default is False
     """
     # Setting constants to make typing final variables less tedious
     m_sum = m1 + m2
@@ -92,7 +93,10 @@ def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
     # Final general solutions
     x1 = (C1 * cos_p) + (S1 * sin_p) + (C2 * cos_n) + (S2 * sin_n)
     x2 = (r_p * ((C1 * cos_p) + (S1 * sin_p))) + (r_n * ((C2 * cos_n) + (S2 * sin_n)))
-    return (x1, x2)
+    if test:
+        return (x1, x2, omega_p, omega_n)
+    else:
+        return (x1, x2)
 
 def coupledEnergy(mi, mj, vi, vj, xi, xj):
     """
@@ -216,6 +220,19 @@ Ur, Tr, Er = coupledEnergy(m1, m2, v1r, v2r, x1r, x2r)
 Uas, Tas, Eas = coupledEnergy(m1, m2, v1r, v2r, x1_as, x2_as)
 
 # ----------------------------- ERRORS ---------------------------
+# Expected Errors
+lerr1_e_th = np.array([0])
+lerr2_e_th = np.array([0])
+
+gerr1_e_th = np.array([0])
+gerr2_e_th = np.array([0])
+
+lerr1_r_th = np.array([0])
+lerr2_r_th = np.array([0])
+
+gerr1_r_th = np.array([0])
+gerr2_r_th = np.array([0])
+
 # Global Truncation Errors: Euler
 gerr1_e = np.abs(x1_as - x1e)
 gerr2_e = np.abs(x2_as - x2e)
@@ -268,10 +285,20 @@ for n in range(len(t_arr) - 1):
     v2np1 = s2np1[1]
     lerr1_r = np.append(lerr1_r, np.abs(x1_as[n+1] - x1np1))
     lerr2_r = np.append(lerr2_r, np.abs(x2_as[n+1] - x2np1))
-print(len(lerr1_r))
-print(len(lerr2_r))
-# I THINK IT WORKS YIPPEE
 
+print(f'Average Local Error for Mass 1 (Euler): {lerr1_e}')
+print(f'Average Local Error for Mass 2 (Euler): {lerr2_e}')
+
+print(f'Average Global Error for Mass 1 (Euler): {gerr1_e}')
+print(f'Average Global Error for Mass 2 (Euler): {gerr2_e}')
+
+print(f'Average Local Error for Mass 1 (RK4): {lerr1_r}')
+print(f'Average Local Error for Mass 2 (RK4): {lerr2_r}')
+
+print(f'Average Global Error for Mass 1(RK4): {gerr1_r}')
+print(f'Average Global Error for Mass 2(RK4): {gerr2_r}')
+# I THINK IT WORKS YIPPEE
+print
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
@@ -310,7 +337,8 @@ fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', color = 'C1')
 ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', color = 'C1')
 
-#---------- SCIPY solve_ivp SOLUTIONS ------------
+# ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
+#---------- I: ENERGY CONSERVATION ------------
 ax1.plot(t_arr, x1sp, label = r'$x_1(t)$ solve_ivp RK45', color = 'C3')
 ax2.plot(t_arr, x2sp, label = r'$x_2(t)$ solve_ivp RK45', color = 'C3')
 
@@ -342,5 +370,30 @@ ax3.legend()
 plt.tight_layout()
 
 plt.savefig('energy_cons.png')
+
+# ---------------- ERROR PROPAGATION ----------------
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (16,16))
+ax1.set_title('Symplectic Euler: Local Error')
+ax1.plot(t_arr, lerr1_e, label = 'Local Error for Mass 1')
+ax1.plot(t_arr, lerr2_e, label = 'Local Error for Mass 2')
+
+ax2.set_title('Symplectic Euler: Global Error')
+ax2.plot(t_arr, gerr1_e, label = 'Global Error for Mass 1')
+ax2.plot(t_arr, gerr2_e, label = 'Global Error for Mass 2')
+
+ax3.set_title('Runge-Kutta 4: Local Error')
+ax3.plot(t_arr, lerr1_r, label = 'Local Error for Mass 1')
+ax3.plot(t_arr, lerr2_r, label = 'Local Error for Mass 2')
+
+ax4.set_title('Runge-Kutta 4: Local Error')
+ax4.plot(t_arr, gerr1_r, label = 'Global Error for Mass 1')
+ax4.plot(t_arr, gerr2_r, label = 'Global Error for Mass 2')
+
+ax1.legend()
+ax2.legend()
+ax3.legend()
+ax4.legend()
+
+plt.tight_layout()
 
 plt.show()
