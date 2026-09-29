@@ -183,11 +183,37 @@ v2sp = scipy.y[3]
 gerr1_e = np.abs(x1_as - x1e)
 gerr2_e = np.abs(x2_as - x2e)
 # Local Truncation Errors: Euler
-# Going to use a for loop
+lerr1_e = np.array([0])
+lerr2_e = np.array([0])
+for n in range(len(t_arr) - 1):
+    # nth positions
+    x1n = x1_as[n]
+    x2n = x2_as[n]
+    # nth velocities
+    v1n = v1r[n]
+    v2n = v2r[n]
+    #n_1th state vectors
+    s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
+    s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
+    # extract xn+1
+    x1np1 = s1np1[0]
+    x2np1 = s2np1[0]
+    # extract vn+1
+    v1np1 = s1np1[1]
+    v2np1 = s2np1[1]
+    # append n+1th values
+    lerr1_e = np.append(lerr1_e, np.abs(x1_as[n+1] - x1np1))
+    lerr2_e = np.append(lerr2_e, np.abs(x2_as[n+1] - x2np1))
+print(len(lerr1_e))
+print(len(lerr2_e))
+# THIS ONE SEEMS TO WORK TOO HOORAY
 
+# Global Truncation Errors: RK4
+gerr1_r = np.abs(x1_as - x1r)
+gerr2_r = np.abs(x2_as - x2r)
+# Local Truncation Errors: RK4
 lerr1_r = np.array([0])
 lerr2_r = np.array([0])
-# iterate over the length of t_arr for consistency with notation and all that
 for n in range(len(t_arr) - 1):
     x1n = x1_as[n]
     x2n = x2_as[n]
@@ -205,11 +231,9 @@ for n in range(len(t_arr) - 1):
     v2np1 = s2np1[1]
     lerr1_r = np.append(lerr1_r, np.abs(x1_as[n+1] - x1np1))
     lerr2_r = np.append(lerr2_r, np.abs(x2_as[n+1] - x2np1))
+print(len(lerr1_r))
+print(len(lerr2_r))
 # I THINK IT WORKS YIPPEE
-
-# Global Truncation Errors: RK4
-gerr1_r = np.abs(x1_as - x1r)
-gerr2_r = np.abs(x2_as - x2r)
 
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
