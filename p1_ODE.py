@@ -172,10 +172,6 @@ ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution')
 ax1.legend()
 ax2.legend()
 plt.tight_layout()
-#plt.show()
-
-# ------------TRUNCATION ERRORS----------------
-
 
 # ----------- SCIPY COMPARISON ---------------
 # Put F into a form that will work for solve_ivp method
@@ -203,29 +199,43 @@ s0 = np.array([x10, x20, v10, v20])
 t_range = (t_arr[0], t_arr[-1])
 # Compare to SciPy
 scipy = solve_ivp(fNew, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
-#print(np.shape(scipy))
-# I was confused about why the shape was 0 but I actually dont know what it's supposed to be so I'm copying the prints from the askpython.com examples
-print(scipy.y[0])
+# print(np.shape(scipy.y))      # 4 arrays of length 101
 
-# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
-# # ax1.plot(t_arr, x1, label = f'Mass 1 Euler')
-# # ax2.plot(t_arr, x2, label = f'Mass 2 Euler')
+x1sp = scipy.y[0]
+x2sp = scipy.y[1]
+v1sp = scipy.y[2]
+v2sp = scipy.y[3]
 
-# ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
-# ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
 
-# ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
-# ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
+# ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 
-# ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution')
-# ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution')
+ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution', color = 'C2')
+ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution', color = 'C2')
 
-# ax1.legend()
-# ax2.legend()
-# plt.tight_layout()
+#---------- SCIPY solve_ivp SOLUTIONS ------------
+ax1.plot(t_arr, x1sp, label = f'Mass 1 solve_ivp RK45', color = 'C3')
+ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
 
-# TO DO:
-#   Energy Conservation
-#   Test against analytic solutions
-#   Compare with PEP8 formatting guidelines
-#   Make into separate files (Obviously)
+ax1.legend()
+ax2.legend()
+plt.tight_layout()
+
+
+
+# ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+
+ax1.plot(t_arr, x1r, label = f'Mass 1 RK4', color = 'C1')
+ax2.plot(t_arr, x2r, label = f'Mass 2 RK4', color = 'C1')
+
+#---------- SCIPY solve_ivp SOLUTIONS ------------
+ax1.plot(t_arr, x1sp, label = f'Mass 1 solve_ivp RK45', color = 'C3')
+ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
+
+ax1.legend()
+ax2.legend()
+plt.tight_layout()
+
+plt.show()
+
