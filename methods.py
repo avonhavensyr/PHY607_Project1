@@ -141,8 +141,10 @@ def truncError(x_num, x_an, local = False):
     local (bool): function compputes the average local truncation error if True. Default False (ie: global truncation error)
     NOTE: the two arrays MUST be calculated as a function of the same independent variable over the same interval and spacing
     """
-
     if local:
-        pass
+        # % error of numerical solution from analytical solution
+        diff = abs(x_num - x_an) / x_an
+        # take the average
+        err = np.average(diff)
     else:
         pass
