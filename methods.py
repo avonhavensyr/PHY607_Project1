@@ -131,7 +131,7 @@ def fourierTr(xmin, xmax, dx, fx, **kwargs):
 
 # ------------TRUNCATION ERRORS----------------
 # Wait actually no
-def truncError(f, x_num, x_an):
+def truncError(f, x_num, x_an, dt, **kwargs):
     """
     Function that calculates the truncation error for various 
     numerical models
@@ -140,12 +140,23 @@ def truncError(f, x_num, x_an):
     f (function): function with the numerical method being tested
     x_num (array): array containing the values from a numerical simulation
     x_an (array): array containing the values from the analytical solution
+    dt (int/float): step-size between nth and n+1th values of x
     NOTE: the two arrays MUST be calculated as a function of the same independent variable over the same interval and spacing
     """
-    # changing this so it returns both the local and the global
-    # I think I have to get the nth value analytically, get the n+1th value NUMERICALLY FROM THE ANALYTIAL nth one and then subtract THAT from the analytic n+1
-    # shoutout wikipedia I forgot what truncation errors were after learning about them in undergrad comp sci
-    
-    #THIS ONE is the global
+    # set up array for the local error    
+    l_err = np.array([])
+
+    # iterate over all but the first of the analytical values
+    for n, xn in enumerate(x_an):
+        if n == 0:
+            # There won't be an error for the first value since the initial conditions are fixed
+            l_err = np.append(l_err, 0)
+        else:
+            # get the n+1th value using the analytical solution for the nth value
+            xnp1 = f(xn, dt, **kwargs)
+            # get the difference between numerical and analytical values. append local error to array
+            l_err = np.append(l_err, np.abs(xnp1 - x_an[n+1]))
+    # calculate the global error
     g_err = np.abs(x_an - x_num)
+    return (l_err, g_err)
 
