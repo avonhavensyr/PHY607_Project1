@@ -94,7 +94,7 @@ def recReimann(f, xmin, xmax, dx, A=0, **kwargs):
     if xmin > xmax:
         return A
     else:
-        return Reimann(f, xmin + dx, xmax, dx, A, **kwargs)
+        return recReimann(f, xmin + dx, xmax, dx, A, **kwargs)
 
 def Reimann(f, x, dx, A=0, **kwargs):
     """
@@ -128,22 +128,4 @@ def fourierTr(xmin, xmax, dx, fx, **kwargs):
         return fp 
     fp_final = Reimann(f, xmin, xmax, dx, fx = fx, pmin = pmin, **kwargs)
     return fp_final
-
-# ------------TRUNCATION ERRORS----------------
-# Wait actually no
-def gTruncError(func, x_num, x_an, dt, parse = None, idx = None, **kwargs):
-    """
-    Function that calculates the global truncation error for various 
-    numerical models
-
-    Keyword Arguments:
-    f (function): function with the numerical method being tested
-    x_num (array): array containing the values from a numerical simulation
-    x_an (array): array containing the values from the analytical solution
-    dt (int/float): step-size between nth and n+1th values of x
-    NOTE: the two arrays MUST be calculated as a function of the same independent variable over the same interval and spacing
-    """
-
-    g_err = np.abs(x_an - x_num)
-    return (l_err, g_err)
 
