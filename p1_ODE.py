@@ -287,6 +287,7 @@ print('RK4: ', [np.mean(lerr1_r), np.mean(lerr2_r), np.mean(gerr1_r), np.mean(ge
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+ax1.set_title(rf'Numerical Solvers vs Analytic Solutions: $\Delta t = ${dt}')
 ax1.plot(t_arr, x1e, label = r'$x_1(t)$ Euler')
 ax2.plot(t_arr, x2e, label = r'$x_2(t)$ Euler')
 
@@ -303,6 +304,7 @@ plt.savefig('solvers_v_an.png')
 
 # ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+ax1.set_title(rf'SciPy Solvers vs Analytic Solutions: $\Delta t = ${dt}')
 
 ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution', color = 'C2')
 ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution', color = 'C2')
@@ -318,12 +320,12 @@ plt.savefig('an_v_scipy.png')
 
 # ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+ax1.set_title(rf'Numerical Solvers vs SciPy Solvers: $\Delta t = ${dt}')
 
 ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', color = 'C1')
 ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', color = 'C1')
 
-# ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
-#---------- I: ENERGY CONSERVATION ------------
+
 ax1.plot(t_arr, x1sp, label = r'$x_1(t)$ solve_ivp RK45', color = 'C3')
 ax2.plot(t_arr, x2sp, label = r'$x_2(t)$ solve_ivp RK45', color = 'C3')
 
@@ -331,6 +333,10 @@ ax1.legend()
 ax2.legend()
 plt.tight_layout()
 plt.savefig('rk_v_scipy.png')
+
+# ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
+#---------- I: ENERGY CONSERVATION ------------
+ax1.set_title(rf'Energy conservation: $\Delta t = ${dt}')
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize = (8,12))
 ax1.set_title('Symplectic Euler')
