@@ -1,8 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
 import methods as meth
 
+# Adding the rcParams from my undergrad research plotting file
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Times New Roman']
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['font.size'] = 12
+plt.rcParams['axes.labelsize'] = 14
+plt.rcParams['legend.fontsize'] = 11
 """
 PROJECT I
 
@@ -141,11 +147,6 @@ x_arr = np.arange(start = -a, stop = a + step, step = step)
 psi_x = psi_isw(x_arr, a, 1)
 psi_x_num = np.array([])
 
-# ----------------------------- ERRORS ---------------------------
-# Global truncation error for the ground state
-g_err1 = np.abs(psi_x - psi_x_num)
-
-
 A_tot = 0
 for i in range(len(x_arr)):
     psi_x_num = np.append(psi_x_num, A_tot)
@@ -153,27 +154,49 @@ for i in range(len(x_arr)):
 
 
 
-# Energy levels to find <x^2> for
-# n_lst = np.array([1, 2, 3, 4, 5, 6, 7, 8])
-# # List of expectation values
-# exp_lst = np.array([])
-# for i in n_lst:
-#     # get the expectation value of x squared
-#     exp_x_squared = meth.expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
-#     # add to list
-#     exp_lst = np.append(exp_lst, exp_x_squared)
+# ----------------------------- ERRORS ---------------------------
+# Global truncation error for the ground state
+g_err1 = np.abs(psi_x - psi_x_num)
 
-# plt.figure()
-# fig, ax = plt.subplots()
-# ax.scatter(n_lst, exp_lst)
-# ax.set_xlabel('Energy Level')
-# ax.set_ylabel(r'$\langle x\rangle$')
-# plt.tight_layout()
-# plt.show()
+
+
+
+# Energy levels to find <x^2> for
+n_lst = np.arange(20)       # go up to n=20
+# List of expectation values
+exp_lst = np.array([])
+for i in n_lst:
+    # get the expectation value of x squared
+    exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
+    # add to list
+    exp_lst = np.append(exp_lst, exp_x_squared)
+
+plt.figure()
+fig, ax = plt.subplots()
+ax.scatter(n_lst, exp_lst)
+ax.set_xlabel('Energy Level')
+ax.set_ylabel(r'$\langle x\rangle$')
+plt.tight_layout()
+plt.show()
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
-# ---------------- I: Basic Expectation Values -------------------
+# ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
+# Energy levels to find <x^2> for
+n_lst = np.arange(20)       # go up to n=20
+# List of expectation values
+exp_lst = np.array([])
+for i in n_lst:
+    # get the expectation value of x squared
+    exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
+    # add to list
+    exp_lst = np.append(exp_lst, exp_x_squared)
 
+fig, ax = plt.subplots()
+ax.scatter(n_lst, exp_lst)
+ax.set_xlabel('Energy Level')
+ax.set_ylabel(r'$\langle x\rangle$')
+plt.tight_layout()
+plt.show()
 
 
 # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
@@ -190,26 +213,26 @@ m = 1
 E3 = E_isw(3, a)
 E2 = E_isw(2, a)
 
-def psitpsi(xmin, n1, n2, psi, a, **kwargs):
-    psi1 = psi_isw(xmin, a, n1)
-    psi2 = psi_isw(xmin, a, n2)
-    psi_prod = psi1 * psi2
-    return psi_prod
+# def psitpsi(xmin, n1, n2, psi, a, **kwargs):
+#     psi1 = psi_isw(xmin, a, n1)
+#     psi2 = psi_isw(xmin, a, n2)
+#     psi_prod = psi1 * psi2
+#     return psi_prod
 
-int_psiprod = meth.reimannRec(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
-lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
-rhs = ((2*m)/hbar) * (E2 - E3) * int_psiprod
+# int_psiprod = meth.reimannRec(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
+# lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
+# rhs = ((2*m)/hbar) * (E2 - E3) * int_psiprod
 
-plt.figure()
-fig, ax = plt.subplots()
-ax.plot(x_arr, psi_x, label = r'Analytic $\psi(x)$')
-ax.plot(x_arr, psi_x_num, label = r'Reimann Integrated $\psi(x)$')
-ax.set_xlabel('Energy Level')
-ax.set_ylabel(r'$\langle x\rangle$')
-plt.legend()
-plt.tight_layout()
-plt.savefig('psiint_v_psian.png')
-plt.show()
+# plt.figure()
+# fig, ax = plt.subplots()
+# ax.plot(x_arr, psi_x, label = r'Analytic $\psi(x)$')
+# ax.plot(x_arr, psi_x_num, label = r'Reimann Integrated $\psi(x)$')
+# ax.set_xlabel('Energy Level')
+# ax.set_ylabel(r'$\langle x\rangle$')
+# plt.legend()
+# plt.tight_layout()
+# plt.savefig('psiint_v_psian.png')
+# plt.show()
 
 #print(E2)
 #print(E3)
