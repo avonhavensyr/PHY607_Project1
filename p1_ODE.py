@@ -185,6 +185,23 @@ gerr2_e = np.abs(x2_as - x2e)
 # Local Truncation Errors: Euler
 # Going to use a for loop
 
+# iterate over the length of t_arr for consistency with notation and all that
+for n in range(len(t_arr) - 1):
+    x1n = x1_as[n]
+    x2n = x2_as[n]
+
+    #NOTE: NOT CORRECT ANALYTIC VELOCITIES! Already noted in overleaf doc
+    x1n = x1r[n]
+    x2n = x2r[n]
+
+    s1np1, s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
+    # extract xn+1
+    x1np1 = s1np1[0]
+    x2np1 = s2np1[0]
+    # extract vn+1
+    v1np1 = s1np1[1]
+    v2np1 = s2np1[1]
+
 # Global Truncation Errors: RK4
 gerr1_r = np.abs(x1_as - x1r)
 gerr2_r = np.abs(x2_as - x2r)
@@ -204,6 +221,7 @@ gerr2_r = np.abs(x2_as - x2r)
 # ax1.legend()
 # ax2.legend()
 # plt.tight_layout()
+# plt.savefig('solvers_v_an.png')
 
 # # ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
 # fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
@@ -218,6 +236,7 @@ gerr2_r = np.abs(x2_as - x2r)
 # ax1.legend()
 # ax2.legend()
 # plt.tight_layout()
+# plt.savefig('an_v_scipy.png')
 
 # # ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
 # fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
@@ -232,6 +251,7 @@ gerr2_r = np.abs(x2_as - x2r)
 # ax1.legend()
 # ax2.legend()
 # plt.tight_layout()
+# plt.savefig('rk_v_scipy.png')
 
 # plt.show()
 
