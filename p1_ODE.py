@@ -137,12 +137,10 @@ for i in range(len(t_arr)-1):
     v1np1 = s1np1[1]
     v2np1 = s2np1[1]
     # append n+1th values
-    x1 = np.append(x1, x1np1)
-    x2 = np.append(x2, x2np1)
-    v1 = np.append(v1, v1np1)
-    v2 = np.append(v2, v2np1)
-
-
+    x1e = np.append(x1, x1np1)
+    x2e = np.append(x2, x2np1)
+    v1e = np.append(v1, v1np1)
+    v2e = np.append(v2, v2np1)
 
 x1r = np.array([x10])
 x2r = np.array([x20])
@@ -183,8 +181,8 @@ v2sp = scipy.y[3]
 
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
-ax1.plot(t_arr, x1, label = f'Mass 1 Euler')
-ax2.plot(t_arr, x2, label = f'Mass 2 Euler')
+ax1.plot(t_arr, x1e, label = f'Mass 1 Euler')
+ax2.plot(t_arr, x2e, label = f'Mass 2 Euler')
 
 ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
 ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
