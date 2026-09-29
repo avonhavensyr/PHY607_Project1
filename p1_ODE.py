@@ -3,6 +3,14 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import methods as meth
 
+# Adding the rcParams from my undergrad research plotting file
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Times New Roman']
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['font.size'] = 12
+plt.rcParams['axes.labelsize'] = 14
+plt.rcParams['legend.fontsize'] = 11
+
 """
 PROJECT I
 Draft: Includes everything for the ODE problem in one file. 
@@ -86,9 +94,9 @@ def coupledOscillator(m1, m2, x10, x20, v10, v20, k, t):
     x2 = (r_p * ((C1 * cos_p) + (S1 * sin_p))) + (r_n * ((C2 * cos_n) + (S2 * sin_n)))
     return (x1, x2)
 
-def coupledEnergy(mi, mj, vi, vj, xi, xj, dt):
+def coupledEnergy(mi, mj, vi, vj, xi, xj):
     """
-    Function to compute the energy of the coupled oscillator
+    Function to compute the potential, kinetic, and total energy of the coupled oscillator
 
     Keyword arguments:
     mi (int/float): mass of mass i
@@ -102,6 +110,7 @@ def coupledEnergy(mi, mj, vi, vj, xi, xj, dt):
     Uij = k * ((xi**2) + (xj**2) - (xi * xj))
     # Kinetic energy for masses mi and mj
     Tij = (0.5 * mi * (vi**2)) + (0.5 * mj * (vj**2))
+    # Total Energy
     Eij = Uij + Tij
     return np.array([Uij, Tij, Eij])
 
@@ -198,9 +207,13 @@ x2sp = scipy.y[1]
 v1sp = scipy.y[2]
 v2sp = scipy.y[3]
 
-
-
-
+# ----------------------------- ENERGY ---------------------------
+# Euler
+Ue, Te, Ee = coupledEnergy(m1, m2, v1e, v2e, x1e, x2e)
+# RK4
+Ur, Tr, Er = coupledEnergy(m1, m2, v1r, v2r, x1r, x2r)
+# Analytic
+Uas, Tas, Eas = coupledEnergy(m1, m2, v1r, v2r, x1_as, x2_as)
 
 # ----------------------------- ERRORS ---------------------------
 # Global Truncation Errors: Euler
@@ -261,50 +274,73 @@ print(len(lerr2_r))
 
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
-# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
-# ax1.plot(t_arr, x1e, label = f'Mass 1 Euler')
-# ax2.plot(t_arr, x2e, label = f'Mass 2 Euler')
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+ax1.plot(t_arr, x1e, label = r'$x_1(t)$ Euler')
+ax2.plot(t_arr, x2e, label = r'$x_2(t)$ Euler')
 
-# ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
-# ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
+ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4')
+ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4')
 
-# ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution')
-# ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution')
+ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution')
+ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution')
 
-# ax1.legend()
-# ax2.legend()
-# plt.tight_layout()
-# plt.savefig('solvers_v_an.png')
+ax1.legend()
+ax2.legend()
+plt.tight_layout()
+plt.savefig('solvers_v_an.png')
 
-# # ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
-# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 
-# ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution', color = 'C2')
-# ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution', color = 'C2')
+ax1.plot(t_arr, x1_as, label = r'$x_1(t)$ Analytic Solution', color = 'C2')
+ax2.plot(t_arr, x2_as, label = r'$x_2(t)$ Analytic Solution', color = 'C2')
 
-# #---------- SCIPY solve_ivp SOLUTIONS ------------
-# ax1.plot(t_arr, x1sp, label = f'Mass 1 solve_ivp RK45', color = 'C3')
-# ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
+#---------- SCIPY solve_ivp SOLUTIONS ------------
+ax1.plot(t_arr, x1sp, label = r'$x_1(t)$ solve_ivp RK45', color = 'C3')
+ax2.plot(t_arr, x2sp, label = r'$x_2(t)$ solve_ivp RK45', color = 'C3')
 
-# ax1.legend()
-# ax2.legend()
-# plt.tight_layout()
-# plt.savefig('an_v_scipy.png')
+ax1.legend()
+ax2.legend()
+plt.tight_layout()
+plt.savefig('an_v_scipy.png')
 
-# # ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
-# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 
-# ax1.plot(t_arr, x1r, label = f'Mass 1 RK4', color = 'C1')
-# ax2.plot(t_arr, x2r, label = f'Mass 2 RK4', color = 'C1')
+ax1.plot(t_arr, x1r, label = r'$x_1(t)$ RK4', color = 'C1')
+ax2.plot(t_arr, x2r, label = r'$x_2(t)$ RK4', color = 'C1')
 
-# #---------- SCIPY solve_ivp SOLUTIONS ------------
-# ax1.plot(t_arr, x1sp, label = f'Mass 1 solve_ivp RK45', color = 'C3')
-# ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
+#---------- SCIPY solve_ivp SOLUTIONS ------------
+ax1.plot(t_arr, x1sp, label = r'$x_1(t)$ solve_ivp RK45', color = 'C3')
+ax2.plot(t_arr, x2sp, label = r'$x_2(t)$ solve_ivp RK45', color = 'C3')
 
-# ax1.legend()
-# ax2.legend()
-# plt.tight_layout()
-# plt.savefig('rk_v_scipy.png')
+ax1.legend()
+ax2.legend()
+plt.tight_layout()
+plt.savefig('rk_v_scipy.png')
 
-# plt.show()
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize = (8,12))
+ax1.set_title('Symplectic Euler')
+ax1.plot(t_arr, Ue, label = r'$U(t)$')
+ax1.plot(t_arr, Te, label = r'$T(t)$')
+ax1.plot(t_arr, Ee, label = r'$E(t)$')
 
+ax2.set_title('Runge-Kutta 4')
+ax2.plot(t_arr, Ur, label = r'$U(t)$')
+ax2.plot(t_arr, Tr, label = r'$T(t)$')
+ax2.plot(t_arr, Er, label = r'$E(t)$')
+
+ax3.set_title('Analytic Solution')
+ax3.plot(t_arr, Uas, label = r'$U(t)$')
+ax3.plot(t_arr, Tas, label = r'$T(t)$')
+ax3.plot(t_arr, Eas, label = r'$E(t)$')
+
+ax1.legend()
+ax2.legend()
+ax3.legend()
+
+plt.tight_layout()
+
+plt.savefig('energy_cons.png')
+
+plt.show()
