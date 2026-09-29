@@ -131,7 +131,7 @@ def fourierTr(xmin, xmax, dx, fx, **kwargs):
 
 # ------------TRUNCATION ERRORS----------------
 # Wait actually no
-def truncError(f, x_num, x_an, dt, **kwargs):
+def truncError(f, x_num, x_an, dt, parse = None, idx = None, **kwargs):
     """
     Function that calculates the truncation error for various 
     numerical models
@@ -152,8 +152,13 @@ def truncError(f, x_num, x_an, dt, **kwargs):
             # There won't be an error for the first value since the initial conditions are fixed
             l_err = np.append(l_err, 0)
         else:
+            # In the case where the method returns a coupled pair of states
+            if parse:
+                # set the value of xnp1 to be a given index
+                xnp1 = f(xn, dt, **kwargs)[idx]
             # get the n+1th value using the analytical solution for the nth value
-            xnp1 = f(xn, dt, **kwargs)
+            else:
+                xnp1 = f(xn, dt, **kwargs)
             # get the difference between numerical and analytical values. append local error to array
             l_err = np.append(l_err, np.abs(xnp1 - x_an[n+1]))
     # calculate the global error
