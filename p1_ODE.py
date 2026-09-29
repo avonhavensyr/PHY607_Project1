@@ -278,17 +278,17 @@ for n in range(len(t_arr) - 1):
     lerr1_r = np.append(lerr1_r, np.abs(x1_as[n+1] - x1np1))
     lerr2_r = np.append(lerr2_r, np.abs(x2_as[n+1] - x2np1))
 
-print(f'Average Local Error for Mass 1 (Euler): {lerr1_e}')
-print(f'Average Local Error for Mass 2 (Euler): {lerr2_e}')
+print(f'Average Local Error for Mass 1 (Euler): {np.mean(lerr1_e)}')
+print(f'Average Local Error for Mass 2 (Euler): {np.mean(lerr2_e)}')
 
-print(f'Average Global Error for Mass 1 (Euler): {gerr1_e}')
-print(f'Average Global Error for Mass 2 (Euler): {gerr2_e}')
+print(f'Average Global Error for Mass 1 (Euler): {np.mean(gerr1_e)}')
+print(f'Average Global Error for Mass 2 (Euler): {np.mean(gerr2_e)}')
 
-print(f'Average Local Error for Mass 1 (RK4): {lerr1_r}')
-print(f'Average Local Error for Mass 2 (RK4): {lerr2_r}')
+print(f'Average Local Error for Mass 1 (RK4): {np.mean(lerr1_r)}')
+print(f'Average Local Error for Mass 2 (RK4): {np.mean(lerr2_r)}')
 
-print(f'Average Global Error for Mass 1(RK4): {gerr1_r}')
-print(f'Average Global Error for Mass 2(RK4): {gerr2_r}')
+print(f'Average Global Error for Mass 1(RK4): {np.mean(gerr1_r)}')
+print(f'Average Global Error for Mass 2(RK4): {np.mean(gerr2_r)}')
 # I THINK IT WORKS YIPPEE
 print
 # -------------------------PLOTS-----------------------------------
@@ -380,7 +380,6 @@ ax3.plot(t_arr, lerr2_r, label = 'Local Error for Mass 2')
 ax4.set_title('Runge-Kutta 4: Local Error')
 ax4.plot(t_arr, gerr1_r, label = 'Global Error for Mass 1')
 ax4.plot(t_arr, gerr2_r, label = 'Global Error for Mass 2')
-
 
 ax1.legend()
 ax2.legend()
