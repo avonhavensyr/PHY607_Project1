@@ -181,55 +181,54 @@ v2sp = scipy.y[3]
 
 # ----------------------------- ERRORS ---------------------------
 # Truncation Errors: Euler
-gerr1_e, lerr1_e = meth.truncError(meth.Euler, x1e, x1_as, dt, xi = x2_as, m = m1)
+gerr1_e, lerr1_e = meth.truncError(meth.Euler, x1e, x1_as, dt, x = x1_as, m = m1)
 gerr2_e, lerr2_e = meth.truncError(meth.Euler, x2e, x2_as, dt, xi = x1_as, m = m2)
 
-
-
+gerr1_r, lerr1_r = meth.truncError(meth.RK4, x1r, x1_as, dt, parse = True, idx = 0, mi = m1, mj = m2, vi = v1, vj = v2, xi = x1_as, xj = x2_as)
 
 # -------------------------PLOTS-----------------------------------
 #--------------- MY SOLVERS VS ANALYTIC ----------------------
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
-ax1.plot(t_arr, x1e, label = f'Mass 1 Euler')
-ax2.plot(t_arr, x2e, label = f'Mass 2 Euler')
+# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# ax1.plot(t_arr, x1e, label = f'Mass 1 Euler')
+# ax2.plot(t_arr, x2e, label = f'Mass 2 Euler')
 
-ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
-ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
+# ax1.plot(t_arr, x1r, label = f'Mass 1 RK4')
+# ax2.plot(t_arr, x2r, label = f'Mass 2 RK4')
 
-ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution')
-ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution')
+# ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution')
+# ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution')
 
-ax1.legend()
-ax2.legend()
-plt.tight_layout()
+# ax1.legend()
+# ax2.legend()
+# plt.tight_layout()
 
-# ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# # ---------------- SCIPY SOLVER VS ANALYTIC SOLUTION ----------------
+# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 
-ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution', color = 'C2')
-ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution', color = 'C2')
+# ax1.plot(t_arr, x1_as, label = f'Mass 1 Analytic Solution', color = 'C2')
+# ax2.plot(t_arr, x2_as, label = f'Mass 2 Analytic Solution', color = 'C2')
 
-#---------- SCIPY solve_ivp SOLUTIONS ------------
-ax1.plot(t_arr, x1sp, label = f'Mass 1 solve_ivp RK45', color = 'C3')
-ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
+# #---------- SCIPY solve_ivp SOLUTIONS ------------
+# ax1.plot(t_arr, x1sp, label = f'Mass 1 solve_ivp RK45', color = 'C3')
+# ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
 
-ax1.legend()
-ax2.legend()
-plt.tight_layout()
+# ax1.legend()
+# ax2.legend()
+# plt.tight_layout()
 
-# ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
+# # ---------------- SCIPY SOLVER VS MY RK4 CODE ----------------
+# fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (8,8))
 
-ax1.plot(t_arr, x1r, label = f'Mass 1 RK4', color = 'C1')
-ax2.plot(t_arr, x2r, label = f'Mass 2 RK4', color = 'C1')
+# ax1.plot(t_arr, x1r, label = f'Mass 1 RK4', color = 'C1')
+# ax2.plot(t_arr, x2r, label = f'Mass 2 RK4', color = 'C1')
 
-#---------- SCIPY solve_ivp SOLUTIONS ------------
-ax1.plot(t_arr, x1sp, label = f'Mass 1 solve_ivp RK45', color = 'C3')
-ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
+# #---------- SCIPY solve_ivp SOLUTIONS ------------
+# ax1.plot(t_arr, x1sp, label = f'Mass 1 solve_ivp RK45', color = 'C3')
+# ax2.plot(t_arr, x2sp, label = f'Mass 2solve_ivp RK45', color = 'C3')
 
-ax1.legend()
-ax2.legend()
-plt.tight_layout()
+# ax1.legend()
+# ax2.legend()
+# plt.tight_layout()
 
-plt.show()
+# plt.show()
 
