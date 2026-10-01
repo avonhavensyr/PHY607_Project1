@@ -151,6 +151,7 @@ for i in range(len(x_arr)):
     A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = 1)
 
 
+
 # ----------------------------- ERRORS ---------------------------
 # Global truncation error for the ground state
 gerr1 = np.abs(psi_x1 - psi_x1_num)
@@ -159,14 +160,10 @@ lerr1 = np.array([])
 # copied from ODE side
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 
-# make arrays for the first three energy levels
-avg_lerr1 = np.array([])
-avg_lerr2 = np.array([])
-avg_lerr3 = np.array([])
-avg_lerr4 = np.array([])
 
-level_lst = [avg_lerr1, avg_lerr2, avg_lerr3]
-for lvl, arr in enumerate(level_lst):
+n_levels = 10       # number of energy levels
+n_states = [np.array([]) for i in range(n_levels)]
+for lvl, arr in enumerate(n_states):
     for dx in dx_arr:
         lerr = np.array([0])
         for i in range(len(x_arr) - 1):
@@ -176,43 +173,37 @@ for lvl, arr in enumerate(level_lst):
             psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
             # local error
             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
-        level_lst[lvl] = np.append(level_lst[lvl], np.mean(lerr))
+        n_states[lvl] = np.append(n_states[lvl], np.mean(lerr))
 
 # Plot quadratic curves that align with the expected local error for a reimann integrator
 c1 = 0.08
 th_lerr1 = c1 * (dx_arr ** 2)
 
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'Local Error of the Ground State')
+# ax.scatter(dx_arr, n_states[0], label = rf'$n=1$')
+# ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
+# ax.set_xlabel(r'$\Delta x$')
+# ax.set_ylabel(r'Local Error')
 
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Local Error of the Ground State')
-ax.scatter(dx_arr, level_lst[0], label = rf'$n=1$')
-ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+# ax.legend()
 
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
+# plt.tight_layout()
+# plt.savefig('n_lerr_comp.png')
 
-ax.legend()
+# ex_n_states = n_states[1:]      # extract only the exited states
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'Log Local Error for Excited States')
+# for lvl, arr in enumerate(ex_n_states):
+#     ax.loglog(dx_arr, ex_n_states[lvl], label = rf'$n=${lvl+2}')
+# ax.set_xlabel(r'$\Delta x$')
+# ax.set_ylabel(r'Local Error')
 
-plt.tight_layout()
-plt.savefig('n_lerr_comp.png')
+# ax.legend()
 
-
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Log Local Error for $n=1,\ 2,\ 3$')
-ax.loglog(dx_arr, level_lst[0], label = rf'$n=1$')
-ax.loglog(dx_arr, level_lst[1], label = rf'$n=2$')
-ax.loglog(dx_arr, level_lst[2], label = rf'$n=3$')
-ax.loglog(dx_arr, level_lst[3], label = rf'$n=4$')
-
-
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
-
-ax.legend()
-
-plt.tight_layout()
-plt.savefig('n_lerr_comp.png')
+# plt.tight_layout()
+# plt.savefig('n_lerr_comp.png')
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
 # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
 
