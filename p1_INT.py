@@ -172,7 +172,7 @@ for arr in level_lst:
             # numerical solution
             psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = 1)
             # change in psi_isw when xf-xi = dx
-            psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i] + dx, a, 1)
+            psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
             # local error
             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
         arr = np.append(arr, np.mean(lerr))
