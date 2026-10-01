@@ -177,9 +177,12 @@ for lvl, arr in enumerate(level_lst):
             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
         level_lst[lvl] = np.append(level_lst[lvl], np.mean(lerr))
 
+sqar = dx_arr ** 2
+
 fig, ax = plt.subplots(figsize = (8, 5))
 ax.set_title(r'$n=1$')
-ax.scatter(dx_arr, avg_lerr1)
+ax.scatter(dx_arr, level_lst[0])
+ax.plot(dx_arr, sqar)
 ax.set_xlabel(r'$\Delta x$')
 ax.set_ylabel(r'Local Error')
 
