@@ -141,29 +141,50 @@ def squared(x):
 
 # Trivial Test
 step = 0.01
-x_arr = np.arange(start = -a, stop = a + step, step = step)
-psi_x1 = psi_isw(x_arr, a, 1)
-psi_x1_num = np.array([])
 
-A_tot = 0
-for i in range(len(x_arr)):
-    psi_x1_num = np.append(psi_x1_num, A_tot)
-    A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = 1)
+n_levels = 10       # number of energy levels
+# analytical states
+n_states = [np.array([]) for i in range(n_levels)]
+# numerical approximations
+n_approx = [np.array([]) for i in range(n_levels)]
+# discrete x values
+x_arr = np.arange(start = -a, stop = a + step, step = step)
+
+# get the numerical and analytical values for each psi_n
+for lvl, arr in enumerate(n_states):
+    psi_an = psi_isw(x_arr, a, lvl + 1)
+    n_states = np.append(n_states, psi_an)
+    psi_num = np.array([])
+    A_tot = 0
+    for i in range(len(x_arr)):
+        psi_num = np.append(psi_num, A_tot)
+        A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = lvl + 1)
+    n_approx = np.append(n_approx, psi_num)
+
+fig, ax = plt.subplots()
+ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
+ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
+
+# for lvl, arr in enumerate(n_states):
+#     ax.plot(x_arr,)
 
 
 
 # ----------------------------- ERRORS ---------------------------
 # Global truncation error for the ground state
-gerr1 = np.abs(psi_x1 - psi_x1_num)
+n_gerr = [np.array([]) for i in range(n_levels)]
+for lvl, arr in enumerate(n_states):
+    gerr = np.abs(n_states[lvl] - n_approx[lvl])
+    n_gerr = np.append(n_gerr, gerr)
+
+print(n_gerr)
 # Local truncation error for the ground state
 lerr1 = np.array([])
 # copied from ODE side
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 
-
-n_levels = 10       # number of energy levels
-n_states = [np.array([]) for i in range(n_levels)]
-for lvl, arr in enumerate(n_states):
+n_lerr = [np.array([]) for i in range(n_levels)]
+for lvl, arr in enumerate(n_lerr):
     for dx in dx_arr:
         lerr = np.array([0])
         for i in range(len(x_arr) - 1):
@@ -173,7 +194,7 @@ for lvl, arr in enumerate(n_states):
             psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
             # local error
             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
-        n_states[lvl] = np.append(n_states[lvl], np.mean(lerr))
+        n_lerr[lvl] = np.append(n_lerr[lvl], np.mean(lerr))
 
 # Plot quadratic curves that align with the expected local error for a reimann integrator
 c1 = 0.08
@@ -220,16 +241,16 @@ for i in n_lst:
 # value the expectation value should converge to
 con_val = (a**2) / 3
 # make figure
-fig, ax = plt.subplots()
-ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
-ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
-ax.set_xlabel('n')
-ax.set_ylabel(r'$\langle x\rangle$')
-ax.legend()
-plt.tight_layout()
-plt.savefig('xsq_conv.png')
+# fig, ax = plt.subplots()
+# ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
+# ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
+# ax.set_xlabel('n')
+# ax.set_ylabel(r'$\langle x\rangle$')
+# ax.legend()
+# plt.tight_layout()
+# plt.savefig('xsq_conv.png')
 
-plt.show()
+# plt.show()
 
 # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
 # Nodes at n = 3: a/3, 2a/3
