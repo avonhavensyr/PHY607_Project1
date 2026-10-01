@@ -165,6 +165,9 @@ fig, ax = plt.subplots()
 ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
 ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
 
+ax.legend()
+plt.tight_layout
+plt.show()
 # for lvl, arr in enumerate(n_states):
 #     ax.plot(x_arr,)
 
