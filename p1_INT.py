@@ -165,23 +165,23 @@ avg_lerr2 = np.array([])
 avg_lerr3 = np.array([])
 
 level_lst = [avg_lerr1, avg_lerr2, avg_lerr3]
-for arr in level_lst:
+for lvl, arr in enumerate(level_lst):
     for dx in dx_arr:
         lerr = np.array([0])
         for i in range(len(x_arr) - 1):
             # numerical solution
-            psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = 1)
+            psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = lvl + 1)
             # change in psi_isw when xf-xi = dx
             psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
             # local error
             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
-        arr = np.append(arr, np.mean(lerr))
+        level_lst[lvl] = np.append(level_lst[lvl], np.mean(lerr))
 
-# fig, ax = plt.subplots(figsize = (8, 5))
-# ax.set_title(r'$n=1$')
-# ax.scatter(dx_arr, avg_lerr1)
-# ax.set_xlabel(r'$\Delta x$')
-# ax.set_ylabel(r'Local Error')
+fig, ax = plt.subplots(figsize = (8, 5))
+ax.set_title(r'$n=1$')
+ax.scatter(dx_arr, avg_lerr1)
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel(r'Local Error')
 
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
