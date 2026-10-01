@@ -163,6 +163,7 @@ dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 avg_lerr1 = np.array([])
 avg_lerr2 = np.array([])
 avg_lerr3 = np.array([])
+avg_lerr4 = np.array([])
 
 level_lst = [avg_lerr1, avg_lerr2, avg_lerr3]
 for lvl, arr in enumerate(level_lst):
@@ -179,28 +180,39 @@ for lvl, arr in enumerate(level_lst):
 
 # Plot quadratic curves that align with the expected local error for a reimann integrator
 c1 = 0.08
-c2 = 1
-c3 = 1
 th_lerr1 = c1 * (dx_arr ** 2)
-th_lerr2 = c2 * (dx_arr ** 2)
-th_lerr3 = c3 * (dx_arr ** 2)
+
 
 
 fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'$n=1$')
+ax.set_title(r'Local Error of the Ground State')
 ax.scatter(dx_arr, level_lst[0], label = rf'$n=1$')
-ax.scatter(dx_arr, level_lst[1], label = rf'$n=2$')
-ax.scatter(dx_arr, level_lst[2], label = rf'$n=3$')
-
 ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
-ax.plot(dx_arr, th_lerr2, linestyle = '--', label = rf'{c2}$\Delta x^2$')
-ax.plot(dx_arr, th_lerr3, linestyle = '--', label = rf'{c3}$\Delta x^2$')
 
 ax.set_xlabel(r'$\Delta x$')
 ax.set_ylabel(r'Local Error')
+
 ax.legend()
 
+plt.tight_layout()
+plt.savefig('n_lerr_comp.png')
 
+
+fig, ax = plt.subplots(figsize = (8, 5))
+ax.set_title(r'Log Local Error for $n=1,\ 2,\ 3$')
+ax.loglog(dx_arr, level_lst[0], label = rf'$n=1$')
+ax.loglog(dx_arr, level_lst[1], label = rf'$n=2$')
+ax.loglog(dx_arr, level_lst[2], label = rf'$n=3$')
+ax.loglog(dx_arr, level_lst[3], label = rf'$n=4$')
+
+
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel(r'Local Error')
+
+ax.legend()
+
+plt.tight_layout()
+plt.savefig('n_lerr_comp.png')
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
 # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
 
