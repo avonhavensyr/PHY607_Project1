@@ -158,24 +158,30 @@ gerr1 = np.abs(psi_x1 - psi_x1_num)
 lerr1 = np.array([])
 # copied from ODE side
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
-# iterate over x_arr
-avg_lerr = np.array([])
-for dx in dx_arr:
-    lerr1 = np.array([0])
-    for i in range(len(x_arr) - 1):
-        # numerical solution
-        psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = 1)
-        # change in psi_isw when xf-xi = dx
-        psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i] + dx, a, 1)
-        # local error
-        lerr1 = np.append(lerr1, np.abs(psinp1 - psi_diff))
-    avg_lerr = np.append(avg_lerr, np.mean(lerr1))
 
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'$n=1$')
-ax.scatter(dx_arr, avg_lerr)
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
+# make arrays for the first three energy levels
+avg_lerr1 = np.array([])
+avg_lerr2 = np.array([])
+avg_lerr3 = np.array([])
+
+level_lst = [avg_lerr1, avg_lerr2, avg_lerr3]
+for arr in level_lst:
+    for dx in dx_arr:
+        lerr = np.array([0])
+        for i in range(len(x_arr) - 1):
+            # numerical solution
+            psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = 1)
+            # change in psi_isw when xf-xi = dx
+            psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i] + dx, a, 1)
+            # local error
+            lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
+        arr = np.append(arr, np.mean(lerr))
+
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'$n=1$')
+# ax.scatter(dx_arr, avg_lerr1)
+# ax.set_xlabel(r'$\Delta x$')
+# ax.set_ylabel(r'Local Error')
 
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
