@@ -153,13 +153,13 @@ x_arr = np.arange(start = -a, stop = a + step, step = step)
 # get the numerical and analytical values for each psi_n
 for lvl, arr in enumerate(n_states):
     psi_an = psi_isw(x_arr, a, lvl + 1)
-    n_states = np.append(n_states, psi_an)
+    n_states[lvl] = psi_an
     psi_num = np.array([])
     A_tot = 0
     for i in range(len(x_arr)):
         psi_num = np.append(psi_num, A_tot)
         A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = lvl + 1)
-    n_approx = np.append(n_approx, psi_num)
+    n_approx[lvl] = psi_num
 
 fig, ax = plt.subplots()
 ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
