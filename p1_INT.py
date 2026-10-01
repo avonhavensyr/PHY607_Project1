@@ -177,14 +177,28 @@ for lvl, arr in enumerate(level_lst):
             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
         level_lst[lvl] = np.append(level_lst[lvl], np.mean(lerr))
 
-sqar = dx_arr ** 2
+# Plot quadratic curves that align with the expected local error for a reimann integrator
+c1 = 0.08
+c2 = 1
+c3 = 1
+th_lerr1 = c1 * (dx_arr ** 2)
+th_lerr2 = c2 * (dx_arr ** 2)
+th_lerr3 = c3 * (dx_arr ** 2)
+
 
 fig, ax = plt.subplots(figsize = (8, 5))
 ax.set_title(r'$n=1$')
-ax.scatter(dx_arr, level_lst[0])
-ax.plot(dx_arr, sqar)
+ax.scatter(dx_arr, level_lst[0], label = rf'$n=1$')
+ax.scatter(dx_arr, level_lst[1], label = rf'$n=2$')
+ax.scatter(dx_arr, level_lst[2], label = rf'$n=3$')
+
+ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+ax.plot(dx_arr, th_lerr2, linestyle = '--', label = rf'{c2}$\Delta x^2$')
+ax.plot(dx_arr, th_lerr3, linestyle = '--', label = rf'{c3}$\Delta x^2$')
+
 ax.set_xlabel(r'$\Delta x$')
 ax.set_ylabel(r'Local Error')
+ax.legend()
 
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
