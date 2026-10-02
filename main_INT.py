@@ -175,10 +175,9 @@ for lvl, arr in enumerate(n_states):
 # ----------------------------- ERRORS ---------------------------
 # Global truncation error for the ground state
 n_gerr = [np.array([]) for i in range(n_levels)]
-for lvl, arr in enumerate(n_states):
+for lvl in range(n_levels):
     gerr = np.abs(n_states[lvl] - n_approx[lvl])
     n_gerr = np.append(n_gerr, gerr)
-
 print(n_gerr)
 # Local truncation error for the ground state
 lerr1 = np.array([])
