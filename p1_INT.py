@@ -107,6 +107,12 @@ def dpsi_isw(x, a, n, **kwargs):
     dpsi = np.sqrt(2 / a) * ((n * np.pi) / a) * np.cos((n * np.pi * x) / a)
     return dpsi
 
+def psiProd(xmin, n1, n2, psi, a, **kwargs):
+    psi1 = psi_isw(xmin, a, n1)
+    psi2 = psi_isw(xmin, a, n2)
+    psi_prod = psi1 * psi2
+    return psi_prod
+
 def d2psi_is2(x, a, n, **kwargs):
     """
     Second derivative of the position wavefunction for the infinite square well
@@ -180,7 +186,7 @@ lerr1 = np.array([])
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 
 n_lerr = [np.array([]) for i in range(n_levels)]
-for lvl, arr in enumerate(n_lerr):
+for lvl, arr in enumerate(n_lerr[1:]):
     for dx in dx_arr:
         lerr = np.array([0])
         for i in range(len(x_arr) - 1):
@@ -250,26 +256,36 @@ nodes = [(a/3, (2*a)/3), ((2 * a)/5, (4 * a)/5), ((4 * a)/9, (8 * a)/9)]
 dpsi1 = []
 psi2 = []
 
+lhs_lst = []
+rhs_lst = []
+
 for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
+    # dpsi1 values
     dp11 = dpsi_isw(x = x2, a = a, n = n1)
     dp12 = dpsi_isw(x = x1, a = a, n = n1)
     dpsi1.append((dp11, dp12))
-
+    # psi1 values
     p21 = psi_isw(x = x2, a = a, n = n2)
     p22 = psi_isw(x = x1, a = a, n = n2)
     psi2.append((p21, p22))
+    # energies for n1 and n2
+    En1 = E_isw(n1, a)
+    En2 = E_isw(n2, a)
+    int_psiprod = meth.recRiemann(psiProd, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
+    lhs = (dp12 * p22) - (dp11 * p21)
+    rhs = ((2*m)/hbar) * (En1 - En2) * int_psiprod
 
-psi_21 = psi_isw(x = x1, a = a, n = 2)
-psi_22 = psi_isw(x = x2, a = a, n = 2)
-m = 1
-E3 = E_isw(3, a)
-E2 = E_isw(2, a)
+    lhs_lst.append(lhs)
+    rhs_lst.append(rhs)
 
-def psitpsi(xmin, n1, n2, psi, a, **kwargs):
-    psi1 = psi_isw(xmin, a, n1)
-    psi2 = psi_isw(xmin, a, n2)
-    psi_prod = psi1 * psi2
-    return psi_prod
+print(f'Pairs: {pairs}')
+print(f'Nodes: {nodes}')
+print(f'Left Hand Side: {lhs_lst}')
+print(f'Right Hand Side: {rhs_lst}')
+for p, pair in enumerate(pairs):
+    print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
+
+
 
 # int_psiprod = meth.recRiemann(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
 # lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
