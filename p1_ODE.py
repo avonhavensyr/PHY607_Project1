@@ -23,7 +23,7 @@ ODE Solver: Coupled Harmonic Oscillator
 
 # CONSTANTS
 m1 = 1
-m2 = 1
+m2 = 10
 k = 1
 
 # INITIAL CONDITIONS
@@ -319,7 +319,66 @@ ax4.legend(loc = 'lower left')
 
 plt.tight_layout()
 plt.savefig('ode_lim_case1.png')
-plt.show()
+
+
+
+
+
+#---------- II: Energe Conservation ------------
+
+fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(8, 10))
+
+ax1.set_title(rf'Symplectic Euler: $\Delta t=${dt_arr[s_idx]}')
+ax1.plot(t_lst[s_idx], sUe, label = r'$U(t)$')
+ax1.plot(t_lst[s_idx], sTe, label = r'$T(t)$')
+ax1.plot(t_lst[s_idx], sEe, label = r'$E(t)$')
+
+ax2.set_title(rf'Symplectic Euler: $\Delta t=${dt_arr[l_idx]}')
+ax2.plot(t_lst[l_idx], lUe, label = r'$U(t)$')
+ax2.plot(t_lst[l_idx], lTe, label = r'$T(t)$')
+ax2.plot(t_lst[l_idx], lEe, label = r'$E(t)$')
+
+# Row 2: Runge-Kutta 4
+ax3.set_title(rf'Runge-Kutta 4: $\Delta t=${dt_arr[s_idx]}')
+ax3.plot(t_lst[s_idx], sUr, label = r'$U(t)$')
+ax3.plot(t_lst[s_idx], sTr, label = r'$T(t)$')
+ax3.plot(t_lst[s_idx], sEr, label = r'$E(t)$')
+
+ax4.set_title(rf'Runge-Kutta 4: $\Delta t=${dt_arr[l_idx]}')
+ax4.plot(t_lst[l_idx], lUr, label = r'$U(t)$')
+ax4.plot(t_lst[l_idx], lTr, label = r'$T(t)$')
+ax4.plot(t_lst[l_idx], lEr, label = r'$E(t)$')
+
+# Row 3: Analytic
+ax5.set_title(rf'Analytic: $\Delta t=${dt_arr[s_idx]}')
+ax5.plot(t_lst[s_idx], sUas, label = r'$U(t)$')
+ax5.plot(t_lst[s_idx], sTas, label = r'$T(t)$')
+ax5.plot(t_lst[s_idx], sEas, label = r'$E(t)$')
+
+ax6.set_title(rf'Analytic: $\Delta t=${dt_arr[l_idx]}')
+ax6.plot(t_lst[l_idx], lUas, label = r'$U(t)$')
+ax6.plot(t_lst[l_idx], lTas, label = r'$T(t)$')
+ax6.plot(t_lst[l_idx], lEas, label = r'$E(t)$')
+
+
+# ax3.set_title('Analytic Solution')
+# ax3.plot(t_arr, Uas, label = r'$U(t)$')
+# ax3.plot(t_arr, Tas, label = r'$T(t)$')
+# ax3.plot(t_arr, Eas, label = r'$E(t)$')
+
+ax1.legend()
+ax2.legend()
+ax3.legend()
+ax4.legend()
+ax5.legend()
+ax6.legend()
+
+
+#ax3.legend()
+
+plt.tight_layout()
+
+plt.savefig('ode_energy_cons.png')
 
 
 # # ----------------------------- ERRORS ---------------------------
@@ -457,33 +516,7 @@ plt.show()
 # plt.tight_layout()
 # plt.savefig('rk_v_scipy.png')
 
-# #---------- II: ENERGY CONSERVATION ------------
 
-# fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize = (8,12))
-# fig.suptitle(rf'Energy conservation: $\Delta t = ${dt}, $m_2=${m2/m1}$m_1$')
-
-# ax1.set_title('Symplectic Euler')
-# ax1.plot(t_arr, Ue, label = r'$U(t)$')
-# ax1.plot(t_arr, Te, label = r'$T(t)$')
-# ax1.plot(t_arr, Ee, label = r'$E(t)$')
-
-# ax2.set_title('Runge-Kutta 4')
-# ax2.plot(t_arr, Ur, label = r'$U(t)$')
-# ax2.plot(t_arr, Tr, label = r'$T(t)$')
-# ax2.plot(t_arr, Er, label = r'$E(t)$')
-
-# ax3.set_title('Analytic Solution')
-# ax3.plot(t_arr, Uas, label = r'$U(t)$')
-# ax3.plot(t_arr, Tas, label = r'$T(t)$')
-# ax3.plot(t_arr, Eas, label = r'$E(t)$')
-
-# ax1.legend()
-# ax2.legend()
-# ax3.legend()
-
-# plt.tight_layout()
-
-# plt.savefig('energy_cons_dt0p6.png')
 
 # # ---------------- ERROR PROPAGATION ----------------
 # dt_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
