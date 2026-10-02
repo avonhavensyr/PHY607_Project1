@@ -23,7 +23,7 @@ ODE Solver: Coupled Harmonic Oscillator
 
 # CONSTANTS
 m1 = 1
-m2 = 10
+m2 = 1
 k = 1
 
 # INITIAL CONDITIONS
@@ -367,8 +367,7 @@ print(gerr1_e[0])
 
 # ----------------------- PLOTS-----------------------
 
-
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8), sharex = True)
 
 ax1.set_title(rf'Mass 1: $\Delta t=${dt_arr[s_idx]}')
 ax1.plot(t_lst[s_idx], x1a[s_idx], label = 'Analytic', ls = '-')
@@ -399,13 +398,15 @@ ax2.legend(loc = 'lower left')
 ax3.legend(loc = 'lower left')
 ax4.legend(loc = 'lower left')
 
+fig.supxlabel('t')
 
 plt.tight_layout()
-plt.savefig('ode_lim_case1.png')
+#plt.savefig('NEWode_comparisons.png')
+plt.savefig('NEWlim_case1.png')
 
-#---------- II: Energe Conservation ------------
 
-fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(8, 10))
+#---------- II: Energy Conservation ------------
+fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(8, 10), sharex = True)
 
 ax1.set_title(rf'Symplectic Euler: $\Delta t=${dt_arr[s_idx]}')
 ax1.plot(t_lst[s_idx], sUe, label = r'$U(t)$')
@@ -439,6 +440,8 @@ ax6.plot(t_lst[l_idx], lUas, label = r'$U(t)$')
 ax6.plot(t_lst[l_idx], lTas, label = r'$T(t)$')
 ax6.plot(t_lst[l_idx], lEas, label = r'$E(t)$')
 
+fig.supxlabel('t')
+
 ax1.legend()
 ax2.legend()
 ax3.legend()
@@ -446,12 +449,9 @@ ax4.legend()
 ax5.legend()
 ax6.legend()
 
-
-#ax3.legend()
-
 plt.tight_layout()
 
-plt.savefig('ode_energy_cons.png')
+plt.savefig('NEWode_energy_cons.png')
 
 # ---------------- ERROR PROPAGATION ----------------
 O_1 = dt_arr
@@ -459,9 +459,6 @@ O_2 = dt_arr ** 2
 O_4 = dt_arr ** 4
 O_5 = dt_arr ** 5
 
-#do: global error, avg local error per dt, local error forall dt
-#tup1: euler
-#tup2: rk4
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
 fig.suptitle('Mass 1')
 ax1.set_title('Symplectic Euler: Average Local & Global Error')
@@ -469,10 +466,10 @@ ax2.set_title('Symplectic Euler: Local Error')
 ax3.set_title('RK4: Average Local & Global Error')
 ax4.set_title('RK4: Local Error')
 
-ax1.loglog(dt_arr, O_1, label = r'$\mathcal{O}(\Delta t)$',color = 'C1',ls='--')
-ax1.loglog(dt_arr, O_2, label = r'$\mathcal{O}(\Delta t^2)$',color = 'C0',ls='--')
-ax3.loglog(dt_arr, O_4, label = r'$\mathcal{O}(\Delta t^4)$',color = 'C1',ls='--')
-ax3.loglog(dt_arr, O_5, label = r'$\mathcal{O}(\Delta t^5)$',color = 'C0',ls='--')
+ax1.loglog(dt_arr, O_1, label = r'$\mathcal{O}(\Delta t)$',color = 'C0',ls='--')
+ax1.loglog(dt_arr, O_2, label = r'$\mathcal{O}(\Delta t^2)$',color = 'C1',ls='--')
+ax3.loglog(dt_arr, O_4, label = r'$\mathcal{O}(\Delta t^4)$',color = 'C0',ls='--')
+ax3.loglog(dt_arr, O_5, label = r'$\mathcal{O}(\Delta t^5)$',color = 'C1',ls='--')
 
 ax1.loglog(dt_arr, avg_gerr1_e, label = 'Global Error')
 ax1.loglog(dt_arr, avg_lerr1_e, label = 'Average Local Error')
@@ -488,7 +485,57 @@ ax2.legend()
 ax3.legend()
 ax4.legend()
 
+ax1.set_xlabel(r'$\Delta t$')
+ax3.set_xlabel(r'$\Delta t$')
+ax1.set_ylabel(r'Error')
+ax3.set_ylabel(r'Error')
+
+ax2.set_xlabel(r't')
+ax4.set_xlabel(r't')
+ax2.set_ylabel(r'Error')
+ax4.set_ylabel(r'Error')
 
 plt.tight_layout()
-plt.savefig('ODE_err.png')
+plt.savefig('ODE_err1.png')
+plt.show()
+
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
+fig.suptitle('Mass 2')
+ax1.set_title('Symplectic Euler: Average Local & Global Error')
+ax2.set_title('Symplectic Euler: Local Error')
+ax3.set_title('RK4: Average Local & Global Error')
+ax4.set_title('RK4: Local Error')
+
+ax1.loglog(dt_arr, O_1, label = r'$\mathcal{O}(\Delta t)$',color = 'C0',ls='--')
+ax1.loglog(dt_arr, O_2, label = r'$\mathcal{O}(\Delta t^2)$',color = 'C1',ls='--')
+ax3.loglog(dt_arr, O_4, label = r'$\mathcal{O}(\Delta t^4)$',color = 'C0',ls='--')
+ax3.loglog(dt_arr, O_5, label = r'$\mathcal{O}(\Delta t^5)$',color = 'C1',ls='--')
+
+ax1.loglog(dt_arr, avg_gerr2_e, label = 'Global Error')
+ax1.loglog(dt_arr, avg_lerr2_e, label = 'Average Local Error')
+ax3.loglog(dt_arr, avg_gerr2_r, label = 'Global Error')
+ax3.loglog(dt_arr, avg_lerr2_r, label = 'Average Local Error')
+
+for i, dt in enumerate(dt_arr):
+    ax2.loglog(t_lst[i], lerr2_e[i], label = rf'$\Delta t=${dt}')
+    ax4.loglog(t_lst[i], lerr2_r[i], label = rf'$\Delta t=${dt}')
+
+ax1.legend()
+ax2.legend()
+ax3.legend()
+ax4.legend()
+
+ax1.set_xlabel(r'$\Delta t$')
+ax3.set_xlabel(r'$\Delta t$')
+ax1.set_ylabel(r'Error')
+ax3.set_ylabel(r'Error')
+
+ax2.set_xlabel(r't')
+ax4.set_xlabel(r't')
+ax2.set_ylabel(r'Error')
+ax4.set_ylabel(r'Error')
+
+plt.tight_layout()
+plt.savefig('ODE_err2.png')
 plt.show()
