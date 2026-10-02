@@ -23,7 +23,7 @@ ODE Solver: Coupled Harmonic Oscillator
 
 # CONSTANTS
 m1 = 1
-m2 = 1
+m2 = 10
 k = 1
 
 # INITIAL CONDITIONS
