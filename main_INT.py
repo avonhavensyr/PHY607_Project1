@@ -219,14 +219,14 @@ for i in n_lst:
 con_val = (a**2) / 3
 
 #make figure
-fig, ax = plt.subplots()
-ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
-ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
-ax.set_xlabel('n')
-ax.set_ylabel(r'$\langle x\rangle$')
-ax.legend()
-plt.tight_layout()
-plt.savefig('NEWint_lim_case1.png')
+# fig, ax = plt.subplots()
+# ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
+# ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
+# ax.set_xlabel('n')
+# ax.set_ylabel(r'$\langle x\rangle$')
+# ax.legend()
+# plt.tight_layout()
+# plt.savefig('NEWint_lim_case1.png')
 
 
 
@@ -262,12 +262,12 @@ for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
     lhs_lst.append(lhs)
     rhs_lst.append(rhs)
 
-print(f'Pairs: {pairs}')
-print(f'Nodes: {nodes}')
-print(f'Left Hand Side: {lhs_lst}')
-print(f'Right Hand Side: {rhs_lst}')
-for p, pair in enumerate(pairs):
-    print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
+# print(f'Pairs: {pairs}')
+# print(f'Nodes: {nodes}')
+# print(f'Left Hand Side: {lhs_lst}')
+# print(f'Right Hand Side: {rhs_lst}')
+# for p, pair in enumerate(pairs):
+#     print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
 
 
 fig, ax = plt.subplots(figsize = (8, 5))
@@ -282,10 +282,10 @@ ax.legend()
 
 #n_gerr_avg = [np.a]
 
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Global Error of the Ground State')
-ax.scatter(x_arr, n_gerr[0], label = rf'$n=1$')
-#ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'Global Error of the Ground State')
+# ax.scatter(x_arr, n_gerr[0], label = rf'$n=1$')
+# #ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
 ax.set_xlabel(r'$\Delta x$')
 ax.set_ylabel(r'Local Error')
@@ -336,4 +336,4 @@ fig.supylabel(r'$\psi_n')
 
 plt.tight_layout()
 plt.savefig('NEWint_comparisons.png')
-plt.show()
+#plt.show()
