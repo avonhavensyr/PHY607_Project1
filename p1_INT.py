@@ -205,19 +205,30 @@ th_lerr1 = c1 * (dx_arr ** 2)
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
 # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
 
+# Energy levels to find <x^2> for
+n_lst = np.arange(1, 26)       # go up to n=20
+step = 0.02
+# List of expectation values
+exp_lst = np.array([])
+for i in n_lst:
+    # get the expectation value of x squared
+    exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
+    # add to list
+    exp_lst = np.append(exp_lst, exp_x_squared)
+# value the expectation value should converge to
+con_val = (a**2) / 3
 
+#make figure
+fig, ax = plt.subplots()
+ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
+ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
+ax.set_xlabel('n')
+ax.set_ylabel(r'$\langle x\rangle$')
+ax.legend()
+plt.tight_layout()
+plt.savefig('xsq_conv.png')
 
-# make figure
-# fig, ax = plt.subplots()
-# ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
-# ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
-# ax.set_xlabel('n')
-# ax.set_ylabel(r'$\langle x\rangle$')
-# ax.legend()
-# plt.tight_layout()
-# plt.savefig('xsq_conv.png')
-
-# plt.show()
+plt.show()
 
 # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
 # Nodes at n = 3: a/3, 2a/3
