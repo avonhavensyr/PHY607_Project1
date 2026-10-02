@@ -219,16 +219,16 @@ for i in n_lst:
 con_val = (a**2) / 3
 
 #make figure
-fig, ax = plt.subplots()
-ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
-ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
-ax.set_xlabel('n')
-ax.set_ylabel(r'$\langle x\rangle$')
-ax.legend()
-plt.tight_layout()
-plt.savefig('xsq_conv.png')
+# fig, ax = plt.subplots()
+# ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
+# ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
+# ax.set_xlabel('n')
+# ax.set_ylabel(r'$\langle x\rangle$')
+# ax.legend()
+# plt.tight_layout()
+# plt.savefig('xsq_conv.png')
 
-plt.show()
+#plt.show()
 
 # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
 # Nodes at n = 3: a/3, 2a/3
@@ -262,66 +262,66 @@ for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
     lhs_lst.append(lhs)
     rhs_lst.append(rhs)
 
-print(f'Pairs: {pairs}')
-print(f'Nodes: {nodes}')
-print(f'Left Hand Side: {lhs_lst}')
-print(f'Right Hand Side: {rhs_lst}')
-for p, pair in enumerate(pairs):
-    print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
+# print(f'Pairs: {pairs}')
+# print(f'Nodes: {nodes}')
+# print(f'Left Hand Side: {lhs_lst}')
+# print(f'Right Hand Side: {rhs_lst}')
+# for p, pair in enumerate(pairs):
+#     print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
 
 
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Local Error of the Ground State')
-ax.scatter(dx_arr, n_lerr[0], label = rf'$n=1$')
-ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'Local Error of the Ground State')
+# ax.scatter(dx_arr, n_lerr[0], label = rf'$n=1$')
+# ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
+# ax.set_xlabel(r'$\Delta x$')
+# ax.set_ylabel(r'Local Error')
 
-ax.legend()
+# ax.legend()
 
-plt.tight_layout()
-plt.savefig('n_lerr_comp.png')
+# plt.tight_layout()
+# plt.savefig('n_lerr_comp.png')
 
-ex_n_lerr = n_lerr[1:]      # extract only the exited states
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Log Local Error for Excited States')
-for lvl, arr in enumerate(ex_n_lerr):
-    ax.loglog(dx_arr, ex_n_lerr[lvl], label = rf'$n=${lvl+2}')
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
+# ex_n_lerr = n_lerr[1:]      # extract only the exited states
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'Log Local Error for Excited States')
+# for lvl, arr in enumerate(ex_n_lerr):
+#     ax.loglog(dx_arr, ex_n_lerr[lvl], label = rf'$n=${lvl+2}')
+# ax.set_xlabel(r'$\Delta x$')
+# ax.set_ylabel(r'Local Error')
 
-ax.legend()
+# ax.legend()
 
-plt.tight_layout()
-plt.savefig('NEWn_lerr_comp.png')
+# plt.tight_layout()
+# plt.savefig('NEWn_lerr_comp.png')
 
 
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
+# fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
 
-ax1.set_title(rf'$n=1$')
-ax1.plot(x_arr, n_states[0], label = rf'Analytical', ls = '-')
-ax1.plot(x_arr, n_approx[0], label = rf'Numerical', ls = '--')
-ax1.legend(loc = 'lower left')
+# ax1.set_title(rf'$n=1$')
+# ax1.plot(x_arr, n_states[0], label = rf'Analytical', ls = '-')
+# ax1.plot(x_arr, n_approx[0], label = rf'Numerical', ls = '--')
+# ax1.legend(loc = 'lower left')
 
-ax2.set_title(rf'$n=1$')
-ax2.plot(x_arr, n_states[1], label = rf'Analytical', ls = '-')
-ax2.plot(x_arr, n_approx[1], label = rf'Numerical', ls = '--')
-ax2.legend(loc = 'lower left')
+# ax2.set_title(rf'$n=1$')
+# ax2.plot(x_arr, n_states[1], label = rf'Analytical', ls = '-')
+# ax2.plot(x_arr, n_approx[1], label = rf'Numerical', ls = '--')
+# ax2.legend(loc = 'lower left')
 
-ax3.set_title(rf'$n=1$')
-ax3.plot(x_arr, n_states[2], label = rf'Analytical', ls = '-')
-ax3.plot(x_arr, n_approx[2], label = rf'Numerical', ls = '--')
-ax3.legend(loc = 'lower left')
+# ax3.set_title(rf'$n=1$')
+# ax3.plot(x_arr, n_states[2], label = rf'Analytical', ls = '-')
+# ax3.plot(x_arr, n_approx[2], label = rf'Numerical', ls = '--')
+# ax3.legend(loc = 'lower left')
 
-ax4.set_title(rf'$n=1$')
-ax4.plot(x_arr, n_states[3], label = rf'Analytical', ls = '-')
-ax4.plot(x_arr, n_approx[3], label = rf'Numerical', ls = '--')
-ax4.legend(loc = 'lower left')
+# ax4.set_title(rf'$n=1$')
+# ax4.plot(x_arr, n_states[3], label = rf'Analytical', ls = '-')
+# ax4.plot(x_arr, n_approx[3], label = rf'Numerical', ls = '--')
+# ax4.legend(loc = 'lower left')
 
-fig.supxlabel('x')
-fig.supylabel(r'$\psi_n')
+# fig.supxlabel('x')
+# fig.supylabel(r'$\psi_n')
 
-plt.tight_layout()
-plt.savefig('NEWint_comparisons.png')
-plt.show()
+# plt.tight_layout()
+# plt.savefig('NEWint_comparisons.png')
+# #plt.show()
