@@ -164,16 +164,6 @@ for lvl, arr in enumerate(n_states):
 #ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
 #ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
 
-for lvl, arr in enumerate(n_states[:4]):
-    fig, ax = plt.subplots(figsize = (5,4))
-    ax.set_title(rf'$n=${lvl+1}')
-    ax.plot(x_arr, n_states[lvl], label = rf'Analytical', color = f'C{lvl}', ls = '--')
-    ax.plot(x_arr, n_approx[lvl], label = rf'Numerical', color = f'C{lvl+1}', ls = ':')
-    ax.legend()
-plt.tight_layout
-plt.show()
-
-
 
 
 # ----------------------------- ERRORS ---------------------------
@@ -206,46 +196,38 @@ for lvl, arr in enumerate(n_lerr):
 c1 = 0.08
 th_lerr1 = c1 * (dx_arr ** 2)
 
-# fig, ax = plt.subplots(figsize = (8, 5))
-# ax.set_title(r'Local Error of the Ground State')
-# ax.scatter(dx_arr, n_states[0], label = rf'$n=1$')
-# ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+fig, ax = plt.subplots(figsize = (8, 5))
+ax.set_title(r'Local Error of the Ground State')
+ax.scatter(dx_arr, n_states[0], label = rf'$n=1$')
+ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
-# ax.set_xlabel(r'$\Delta x$')
-# ax.set_ylabel(r'Local Error')
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel(r'Local Error')
 
-# ax.legend()
+ax.legend()
 
-# plt.tight_layout()
-# plt.savefig('n_lerr_comp.png')
+plt.tight_layout()
+plt.savefig('n_lerr_comp.png')
 
-# ex_n_states = n_states[1:]      # extract only the exited states
-# fig, ax = plt.subplots(figsize = (8, 5))
-# ax.set_title(r'Log Local Error for Excited States')
-# for lvl, arr in enumerate(ex_n_states):
-#     ax.loglog(dx_arr, ex_n_states[lvl], label = rf'$n=${lvl+2}')
-# ax.set_xlabel(r'$\Delta x$')
-# ax.set_ylabel(r'Local Error')
+ex_n_states = n_states[1:]      # extract only the exited states
+fig, ax = plt.subplots(figsize = (8, 5))
+ax.set_title(r'Log Local Error for Excited States')
+for lvl, arr in enumerate(ex_n_states):
+    ax.loglog(dx_arr, ex_n_states[lvl], label = rf'$n=${lvl+2}')
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel(r'Local Error')
 
-# ax.legend()
+ax.legend()
 
-# plt.tight_layout()
-# plt.savefig('n_lerr_comp.png')
+plt.tight_layout()
+plt.savefig('NEWn_lerr_comp.png')
+
+
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
 # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
 
-# Energy levels to find <x^2> for
-n_lst = np.arange(1, 26)       # go up to n=20
-step = 0.02
-# List of expectation values
-exp_lst = np.array([])
-for i in n_lst:
-    # get the expectation value of x squared
-    exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
-    # add to list
-    exp_lst = np.append(exp_lst, exp_x_squared)
-# value the expectation value should converge to
-con_val = (a**2) / 3
+
+
 # make figure
 # fig, ax = plt.subplots()
 # ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
@@ -260,28 +242,34 @@ con_val = (a**2) / 3
 
 # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
 # Nodes at n = 3: a/3, 2a/3
-# x1 = a/3
-# x2 = (2 * a)/3
-# # Tuples:
-# pairs = [(3, 2), (5, 6), (8, 9)]
-# # Node Pairs:
-# nodes = [(a/3, (2*a)/3), ((2 * a)/5, (4 * a)/5), ((4 * a)/9, (8 * a)/9)]
+# Tuples:
+pairs = [(3, 2), (5, 6), (8, 9)]
+# Node Pairs:
+nodes = [(a/3, (2*a)/3), ((2 * a)/5, (4 * a)/5), ((4 * a)/9, (8 * a)/9)]
 
-# for (i, j) in pairs:
-#     dpsi_32 = dpsi_isw(x = x2, a = a, n = 3)
-#     psi_31 = dpsi_isw(x = x1, a = a, n = 3)
+dpsi1 = []
+psi2 = []
 
-# psi_21 = psi_isw(x = x1, a = a, n = 2)
-# psi_22 = psi_isw(x = x2, a = a, n = 2)
-# m = 1
-# E3 = E_isw(3, a)
-# E2 = E_isw(2, a)
+for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
+    dp11 = dpsi_isw(x = x2, a = a, n = n1)
+    dp12 = dpsi_isw(x = x1, a = a, n = n1)
+    dpsi1.append((dp11, dp12))
 
-# def psitpsi(xmin, n1, n2, psi, a, **kwargs):
-#     psi1 = psi_isw(xmin, a, n1)
-#     psi2 = psi_isw(xmin, a, n2)
-#     psi_prod = psi1 * psi2
-#     return psi_prod
+    p21 = psi_isw(x = x2, a = a, n = n2)
+    p22 = psi_isw(x = x1, a = a, n = n2)
+    psi2.append((p21, p22))
+
+psi_21 = psi_isw(x = x1, a = a, n = 2)
+psi_22 = psi_isw(x = x2, a = a, n = 2)
+m = 1
+E3 = E_isw(3, a)
+E2 = E_isw(2, a)
+
+def psitpsi(xmin, n1, n2, psi, a, **kwargs):
+    psi1 = psi_isw(xmin, a, n1)
+    psi2 = psi_isw(xmin, a, n2)
+    psi_prod = psi1 * psi2
+    return psi_prod
 
 # int_psiprod = meth.recRiemann(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
 # lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
@@ -302,3 +290,29 @@ con_val = (a**2) / 3
 # print(E3)
 # print(f'Left: {lhs}')
 # print(f'Right: {rhs}')
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8))
+
+ax1.set_title(rf'$n=1$')
+ax1.plot(x_arr, n_states[0], label = rf'Analytical', ls = '-')
+ax1.plot(x_arr, n_approx[0], label = rf'Numerical', ls = '--')
+ax1.legend()
+
+ax2.set_title(rf'$n=1$')
+ax2.plot(x_arr, n_states[1], label = rf'Analytical', ls = '-')
+ax2.plot(x_arr, n_approx[1], label = rf'Numerical', ls = '--')
+ax2.legend()
+
+ax3.set_title(rf'$n=1$')
+ax3.plot(x_arr, n_states[2], label = rf'Analytical', ls = '-')
+ax3.plot(x_arr, n_approx[2], label = rf'Numerical', ls = '--')
+ax3.legend()
+
+ax4.set_title(rf'$n=1$')
+ax4.plot(x_arr, n_states[3], label = rf'Analytical', ls = '-')
+ax4.plot(x_arr, n_approx[3], label = rf'Numerical', ls = '--')
+ax4.legend()
+
+plt.tight_layout()
+plt.savefig('NEWint_comparisons.png')
+plt.show()
