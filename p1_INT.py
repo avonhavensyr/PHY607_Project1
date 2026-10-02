@@ -226,9 +226,9 @@ ax.set_xlabel('n')
 ax.set_ylabel(r'$\langle x\rangle$')
 ax.legend()
 plt.tight_layout()
-plt.savefig('xsq_conv.png')
+plt.savefig('NEWint_lim_case1.png')
 
-plt.show()
+
 
 # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
 # Nodes at n = 3: a/3, 2a/3
@@ -280,8 +280,21 @@ ax.set_ylabel(r'Local Error')
 
 ax.legend()
 
+#n_gerr_avg = [np.a]
+
+fig, ax = plt.subplots(figsize = (8, 5))
+ax.set_title(r'Global Error of the Ground State')
+ax.scatter(x_arr, n_gerr[0], label = rf'$n=1$')
+#ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel(r'Local Error')
+
+ax.legend()
+
+
 plt.tight_layout()
-plt.savefig('n_lerr_comp.png')
+plt.savefig('NEWg_lerr_comp.png')
 
 ex_n_lerr = n_lerr[1:]      # extract only the exited states
 fig, ax = plt.subplots(figsize = (8, 5))
@@ -294,7 +307,7 @@ ax.set_ylabel(r'Local Error')
 ax.legend()
 
 plt.tight_layout()
-plt.savefig('NEWn_lerr_comp.png')
+plt.savefig('NEWe_lerr_comp.png')
 
 
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
