@@ -281,6 +281,63 @@ lUr, lTr, lEr = coupledEnergy(m1, m2, v1r[l_idx], v2r[l_idx], x1r[l_idx], x2r[l_
 # Analytic
 lUas, lTas, lEas = coupledEnergy(m1, m2, v1r[l_idx], v2r[l_idx], x1a[l_idx], x2a[l_idx])
 
+# ----------------------------- ERRORS ---------------------------
+# Expected Errors
+# Fill all of the error arrays with 0s since there shouldn't be errors at the initial time
+
+# Global Truncation Errors
+for i, dt in enumerate(dt_arr):
+    # SI Euler
+    gerr1_e = np.abs(x1a[i] - x1e[i])
+    gerr2_e = np.abs(x2a[i] - x2e[i])
+    # RK4
+    gerr1_r = np.abs(x1a[i] - x1r[i])
+    gerr2_r = np.abs(x2a[i] - x2r[i])
+# Local Truncation Errors
+# SI Euler
+lerr1_e = [np.array([0]) for dt in dt_arr]
+lerr2_e = [np.array([0]) for dt in dt_arr]
+# RK4
+lerr1_r = [np.array([0]) for dt in dt_arr]
+lerr2_r = [np.array([0]) for dt in dt_arr]
+print(len(lerr1_e))
+print(len(dt_arr))
+print(len(t_lst[0]))
+
+for i, dt in enumerate(dt_arr):
+    for n in range(len(t_lst[i]) - 1):
+        # nth positions
+        x1n = x1a[i][n]
+        x2n = x2a[i][n]
+        # nth velocities
+        v1n = v1r[i][n]
+        v2n = v2r[i][n]
+        #n_1th state vectors
+        s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
+        s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
+        # extract xn+1
+        x1np1 = s1np1[0]
+        x2np1 = s2np1[0]
+        # extract vn+1
+        v1np1 = s1np1[1]
+        v2np1 = s2np1[1]
+        # append n+1th values
+        lerr1_e[i] = np.append(lerr1_e[i], np.abs(x1a[i][n+1] - x1np1))
+        lerr2_e[i] = np.append(lerr2_e[i], np.abs(x2a[i][n+1] - x2np1))
+print(len(lerr1_e))
+print(len(lerr2_e))
+# THIS ONE SEEMS TO WORK TOO HOORAY
+
+# Global Truncation Errors: RK4
+# Local Truncation Errors: RK4
+
+
+
+
+
+
+
+
 
 # ----------------------- PLOTS-----------------------
 
@@ -320,10 +377,6 @@ ax4.legend(loc = 'lower left')
 plt.tight_layout()
 plt.savefig('ode_lim_case1.png')
 
-
-
-
-
 #---------- II: Energe Conservation ------------
 
 fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(8, 10))
@@ -360,12 +413,6 @@ ax6.plot(t_lst[l_idx], lUas, label = r'$U(t)$')
 ax6.plot(t_lst[l_idx], lTas, label = r'$T(t)$')
 ax6.plot(t_lst[l_idx], lEas, label = r'$E(t)$')
 
-
-# ax3.set_title('Analytic Solution')
-# ax3.plot(t_arr, Uas, label = r'$U(t)$')
-# ax3.plot(t_arr, Tas, label = r'$T(t)$')
-# ax3.plot(t_arr, Eas, label = r'$E(t)$')
-
 ax1.legend()
 ax2.legend()
 ax3.legend()
@@ -381,46 +428,7 @@ plt.tight_layout()
 plt.savefig('ode_energy_cons.png')
 
 
-# # ----------------------------- ERRORS ---------------------------
-# # Expected Errors
-# # Fill all of the error arrays with 0s since there shouldn't be errors at the initial time
 
-# # Actual Numerical Errors
-# # Global Truncation Errors: Euler
-# gerr1_e = np.abs(x1_as - x1e)
-# gerr2_e = np.abs(x2_as - x2e)
-# # Local Truncation Errors: Euler
-# lerr1_e = np.array([0])
-# lerr2_e = np.array([0])
-# for n in range(len(t_arr) - 1):
-#     # nth positions
-#     x1n = x1_as[n]
-#     x2n = x2_as[n]
-#     # nth velocities
-#     v1n = v1r[n]
-#     v2n = v2r[n]
-#     #n_1th state vectors
-#     s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
-#     s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
-#     # extract xn+1
-#     x1np1 = s1np1[0]
-#     x2np1 = s2np1[0]
-#     # extract vn+1
-#     v1np1 = s1np1[1]
-#     v2np1 = s2np1[1]
-#     # append n+1th values
-#     lerr1_e = np.append(lerr1_e, np.abs(x1_as[n+1] - x1np1))
-#     lerr2_e = np.append(lerr2_e, np.abs(x2_as[n+1] - x2np1))
-# print(len(lerr1_e))
-# print(len(lerr2_e))
-# # THIS ONE SEEMS TO WORK TOO HOORAY
-
-# # Global Truncation Errors: RK4
-# gerr1_r = np.abs(x1_as - x1r)
-# gerr2_r = np.abs(x2_as - x2r)
-# # Local Truncation Errors: RK4
-# lerr1_r = np.array([0])
-# lerr2_r = np.array([0])
 
 # for n in range(len(t_arr) - 1):
 #     x1n = x1_as[n]
@@ -571,4 +579,4 @@ plt.savefig('ode_energy_cons.png')
 
 # plt.tight_layout()
 # plt.savefig('ODE_err.png')
-plt.show()
+#plt.show()
