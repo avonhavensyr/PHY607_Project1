@@ -36,7 +36,6 @@ v10 = 1
 v20 = 1
 # Initial Time + Time Step
 t0 = 0
-dt = 0.6
 
 def f(x, xi, m):
     """
@@ -140,36 +139,45 @@ def fNew(t, s, mi, mj):
 
 # ----------------------- SETUP FOR CALCULATIONS & ANALYTICAL SOLUTIONS -----------------------
 tmax = 20
-t_arr = np.arange(start = 0, stop = tmax + dt, step = dt)
-
-# Calculate analytic solution
-x1_as, x2_as = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_arr)
-
 dt_arr = np.array([0.001, 0.005, 0.1, 0.25, 0.5, 0.75, 1])
 
-# Dictionary of arrays for the Symplectic Euler Model
+t_arr = []
+for dt in dt_arr:
+    t_arr.append(np.arange(start = 0, stop = tmax + dt, step = dt))
+
+# Calculate analytic solution
+#x1_as, x2_as = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_arr)
+
+
+# Dictionary of lists of arrays for the Symplectic Euler Model
 euler_arr = {'x1': [np.array([x10]) for i in dt_arr],
              'v1': [np.array([v10]) for i in dt_arr],
              'x2': [np.array([x10]) for i in dt_arr],
              'v2': [np.array([v10]) for i in dt_arr],
              }
 
-# Dictionary of arrays for the RK4 Model
+# Dictionary of lists of arrays for the RK4 Model
 rk4_arr = {'x1': [np.array([x10]) for i in dt_arr],
              'v1': [np.array([v10]) for i in dt_arr],
              'x2': [np.array([x10]) for i in dt_arr],
              'v2': [np.array([v10]) for i in dt_arr],
              }
 
-# Dictionary of arrays for the analytic solutions
+# Dictionary of lists of arrays for the analytic solution
 an_arr = {'x1': [np.array([x10]) for i in dt_arr],
              'v1': [np.array([v10]) for i in dt_arr],
              'x2': [np.array([x10]) for i in dt_arr],
              'v2': [np.array([v10]) for i in dt_arr],
              }
 
-#x1_e = [np.array([x10]) for i in dt_arr]
+test = euler_arr['x1'][0]
+print(test)
 
+# # get results for multiple dt values
+# for i, dt in enumerate(dt_arr):
+#     x1 = euler_arr['x1']
+#     for j in range(len(t_arr)-1):
+#         x1n = euler_arr['x1']
 
 # ----------------------- ARRAY CALCULATIONS FOR FIGURES -----------------------
 x1e = np.array([x10])
@@ -177,135 +185,135 @@ x2e = np.array([x20])
 v1e = np.array([v10])
 v2e = np.array([v20])
 
-for i in range(len(t_arr)-1):
-    # nth positions
-    x1n = x1e[-1]
-    x2n = x2e[-1]
-    # nth velocities
-    v1n = v1e[-1]
-    v2n = v2e[-1]
-    #n_1th state vectors
-    s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
-    s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
-    # extract xn+1
-    x1np1 = s1np1[0]
-    x2np1 = s2np1[0]
-    # extract vn+1
-    v1np1 = s1np1[1]
-    v2np1 = s2np1[1]
-    # append n+1th values
-    x1e = np.append(x1e, x1np1)
-    x2e = np.append(x2e, x2np1)
-    v1e = np.append(v1e, v1np1)
-    v2e = np.append(v2e, v2np1)
+# for i in range(len(t_arr)-1):
+#     # nth positions
+#     x1n = x1e[-1]
+#     x2n = x2e[-1]
+#     # nth velocities
+#     v1n = v1e[-1]
+#     v2n = v2e[-1]
+#     #n_1th state vectors
+#     s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
+#     s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
+#     # extract xn+1
+#     x1np1 = s1np1[0]
+#     x2np1 = s2np1[0]
+#     # extract vn+1
+#     v1np1 = s1np1[1]
+#     v2np1 = s2np1[1]
+#     # append n+1th values
+#     x1e = np.append(x1e, x1np1)
+#     x2e = np.append(x2e, x2np1)
+#     v1e = np.append(v1e, v1np1)
+#     v2e = np.append(v2e, v2np1)
 
-x1r = np.array([x10])
-x2r = np.array([x20])
-v1r = np.array([v10])
-v2r = np.array([v20])
+# x1r = np.array([x10])
+# x2r = np.array([x20])
+# v1r = np.array([v10])
+# v2r = np.array([v20])
 
-for i in range(len(t_arr)-1):
-    x1n = x1r[-1]
-    x2n = x2r[-1]
+# for i in range(len(t_arr)-1):
+#     x1n = x1r[-1]
+#     x2n = x2r[-1]
 
-    v1n = v1r[-1]
-    v2n = v2r[-1]
-    # n+1th state vectors
-    s1np1, s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
-    # extract xn+1
-    x1np1 = s1np1[0]
-    x2np1 = s2np1[0]
-    # extract vn+1
-    v1np1 = s1np1[1]
-    v2np1 = s2np1[1]
-    # append n+1th values
-    x1r = np.append(x1r, x1np1)
-    x2r = np.append(x2r, x2np1)
-    v1r = np.append(v1r, v1np1)
-    v2r = np.append(v2r, v2np1)
+#     v1n = v1r[-1]
+#     v2n = v2r[-1]
+#     # n+1th state vectors
+#     s1np1, s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
+#     # extract xn+1
+#     x1np1 = s1np1[0]
+#     x2np1 = s2np1[0]
+#     # extract vn+1
+#     v1np1 = s1np1[1]
+#     v2np1 = s2np1[1]
+#     # append n+1th values
+#     x1r = np.append(x1r, x1np1)
+#     x2r = np.append(x2r, x2np1)
+#     v1r = np.append(v1r, v1np1)
+#     v2r = np.append(v2r, v2np1)
 
-# ----------- SCIPY ARRAYS ---------------
-s0 = np.array([x10, x20, v10, v20])
-# Tuple input for SciPy RK4
-t_range = (t_arr[0], t_arr[-1])
-# Compare to SciPy
-scipy = solve_ivp(fNew, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
+# # ----------- SCIPY ARRAYS ---------------
+# s0 = np.array([x10, x20, v10, v20])
+# # Tuple input for SciPy RK4
+# t_range = (t_arr[0], t_arr[-1])
+# # Compare to SciPy
+# scipy = solve_ivp(fNew, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
 
-x1sp = scipy.y[0]
-x2sp = scipy.y[1]
-v1sp = scipy.y[2]
-v2sp = scipy.y[3]
+# x1sp = scipy.y[0]
+# x2sp = scipy.y[1]
+# v1sp = scipy.y[2]
+# v2sp = scipy.y[3]
 
-# ----------------------------- ENERGY ---------------------------
-# Euler
-Ue, Te, Ee = coupledEnergy(m1, m2, v1e, v2e, x1e, x2e)
-# RK4
-Ur, Tr, Er = coupledEnergy(m1, m2, v1r, v2r, x1r, x2r)
-# Analytic
-Uas, Tas, Eas = coupledEnergy(m1, m2, v1r, v2r, x1_as, x2_as)
+# # ----------------------------- ENERGY ---------------------------
+# # Euler
+# Ue, Te, Ee = coupledEnergy(m1, m2, v1e, v2e, x1e, x2e)
+# # RK4
+# Ur, Tr, Er = coupledEnergy(m1, m2, v1r, v2r, x1r, x2r)
+# # Analytic
+# Uas, Tas, Eas = coupledEnergy(m1, m2, v1r, v2r, x1_as, x2_as)
 
-# ----------------------------- ERRORS ---------------------------
-# Expected Errors
-# Fill all of the error arrays with 0s since there shouldn't be errors at the initial time
+# # ----------------------------- ERRORS ---------------------------
+# # Expected Errors
+# # Fill all of the error arrays with 0s since there shouldn't be errors at the initial time
 
-# Actual Numerical Errors
-# Global Truncation Errors: Euler
-gerr1_e = np.abs(x1_as - x1e)
-gerr2_e = np.abs(x2_as - x2e)
-# Local Truncation Errors: Euler
-lerr1_e = np.array([0])
-lerr2_e = np.array([0])
-for n in range(len(t_arr) - 1):
-    # nth positions
-    x1n = x1_as[n]
-    x2n = x2_as[n]
-    # nth velocities
-    v1n = v1r[n]
-    v2n = v2r[n]
-    #n_1th state vectors
-    s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
-    s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
-    # extract xn+1
-    x1np1 = s1np1[0]
-    x2np1 = s2np1[0]
-    # extract vn+1
-    v1np1 = s1np1[1]
-    v2np1 = s2np1[1]
-    # append n+1th values
-    lerr1_e = np.append(lerr1_e, np.abs(x1_as[n+1] - x1np1))
-    lerr2_e = np.append(lerr2_e, np.abs(x2_as[n+1] - x2np1))
-print(len(lerr1_e))
-print(len(lerr2_e))
-# THIS ONE SEEMS TO WORK TOO HOORAY
+# # Actual Numerical Errors
+# # Global Truncation Errors: Euler
+# gerr1_e = np.abs(x1_as - x1e)
+# gerr2_e = np.abs(x2_as - x2e)
+# # Local Truncation Errors: Euler
+# lerr1_e = np.array([0])
+# lerr2_e = np.array([0])
+# for n in range(len(t_arr) - 1):
+#     # nth positions
+#     x1n = x1_as[n]
+#     x2n = x2_as[n]
+#     # nth velocities
+#     v1n = v1r[n]
+#     v2n = v2r[n]
+#     #n_1th state vectors
+#     s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
+#     s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
+#     # extract xn+1
+#     x1np1 = s1np1[0]
+#     x2np1 = s2np1[0]
+#     # extract vn+1
+#     v1np1 = s1np1[1]
+#     v2np1 = s2np1[1]
+#     # append n+1th values
+#     lerr1_e = np.append(lerr1_e, np.abs(x1_as[n+1] - x1np1))
+#     lerr2_e = np.append(lerr2_e, np.abs(x2_as[n+1] - x2np1))
+# print(len(lerr1_e))
+# print(len(lerr2_e))
+# # THIS ONE SEEMS TO WORK TOO HOORAY
 
-# Global Truncation Errors: RK4
-gerr1_r = np.abs(x1_as - x1r)
-gerr2_r = np.abs(x2_as - x2r)
-# Local Truncation Errors: RK4
-lerr1_r = np.array([0])
-lerr2_r = np.array([0])
+# # Global Truncation Errors: RK4
+# gerr1_r = np.abs(x1_as - x1r)
+# gerr2_r = np.abs(x2_as - x2r)
+# # Local Truncation Errors: RK4
+# lerr1_r = np.array([0])
+# lerr2_r = np.array([0])
 
-for n in range(len(t_arr) - 1):
-    x1n = x1_as[n]
-    x2n = x2_as[n]
+# for n in range(len(t_arr) - 1):
+#     x1n = x1_as[n]
+#     x2n = x2_as[n]
 
-    #NOTE: NOT CORRECT ANALYTIC VELOCITIES! Already noted in overleaf doc
-    v1n = v1r[n]
-    v2n = v2r[n]
+#     #NOTE: NOT CORRECT ANALYTIC VELOCITIES! Already noted in overleaf doc
+#     v1n = v1r[n]
+#     v2n = v2r[n]
 
-    s1np1, s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
-    # extract xn+1
-    x1np1 = s1np1[0]
-    x2np1 = s2np1[0]
-    # extract vn+1
-    v1np1 = s1np1[1]
-    v2np1 = s2np1[1]
-    lerr1_r = np.append(lerr1_r, np.abs(x1_as[n+1] - x1np1))
-    lerr2_r = np.append(lerr2_r, np.abs(x2_as[n+1] - x2np1))
+#     s1np1, s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
+#     # extract xn+1
+#     x1np1 = s1np1[0]
+#     x2np1 = s2np1[0]
+#     # extract vn+1
+#     v1np1 = s1np1[1]
+#     v2np1 = s2np1[1]
+#     lerr1_r = np.append(lerr1_r, np.abs(x1_as[n+1] - x1np1))
+#     lerr2_r = np.append(lerr2_r, np.abs(x2_as[n+1] - x2np1))
 
-# I copied and pasted these to get my error lists
-print('Euler: ', [np.mean(lerr1_e), np.mean(lerr2_e), np.mean(gerr1_e), np.mean(gerr2_e)])
-print('RK4: ', [np.mean(lerr1_r), np.mean(lerr2_r), np.mean(gerr1_r), np.mean(gerr2_r)])
+# # I copied and pasted these to get my error lists
+# print('Euler: ', [np.mean(lerr1_e), np.mean(lerr2_e), np.mean(gerr1_e), np.mean(gerr2_e)])
+# print('RK4: ', [np.mean(lerr1_r), np.mean(lerr2_r), np.mean(gerr1_r), np.mean(gerr2_r)])
 
 # I THINK IT WORKS YIPPEE
 
