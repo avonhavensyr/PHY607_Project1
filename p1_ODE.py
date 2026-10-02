@@ -300,32 +300,43 @@ lerr2_e = [np.array([0]) for dt in dt_arr]
 # RK4
 lerr1_r = [np.array([0]) for dt in dt_arr]
 lerr2_r = [np.array([0]) for dt in dt_arr]
-print(len(lerr1_e))
-print(len(dt_arr))
-print(len(t_lst[0]))
 
 for i, dt in enumerate(dt_arr):
     for n in range(len(t_lst[i]) - 1):
         # nth positions
         x1n = x1a[i][n]
         x2n = x2a[i][n]
+        # NOTE: NOT CORRECT ANALYTIC VELOCITIES! Already noted in overleaf doc
         # nth velocities
         v1n = v1r[i][n]
         v2n = v2r[i][n]
+        # EULER
         #n_1th state vectors
-        s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
-        s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
+        e_s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
+        e_s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
         # extract xn+1
-        x1np1 = s1np1[0]
-        x2np1 = s2np1[0]
+        x1e_np1 = e_s1np1[0]
+        x2e_np1 = e_s2np1[0]
         # extract vn+1
-        v1np1 = s1np1[1]
-        v2np1 = s2np1[1]
+        v1e_np1 = e_s1np1[1]
+        v2e_np1 = e_s2np1[1]
         # append n+1th values
-        lerr1_e[i] = np.append(lerr1_e[i], np.abs(x1a[i][n+1] - x1np1))
-        lerr2_e[i] = np.append(lerr2_e[i], np.abs(x2a[i][n+1] - x2np1))
-print(len(lerr1_e))
-print(len(lerr2_e))
+        lerr1_e[i] = np.append(lerr1_e[i], np.abs(x1a[i][n+1] - x1e_np1))
+        lerr2_e[i] = np.append(lerr2_e[i], np.abs(x2a[i][n+1] - x2e_np1))
+
+        # RK4
+        r_s1np1, r_s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
+        # extract xn+1
+        x1r_np1 = s1np1[0]
+        x2r_np1 = s2np1[0]
+        # extract vn+1
+        v1r_np1 = r_s1np1[1]
+        v2r_np1 = r_s2np1[1]
+        lerr1_r = np.append(lerr1_r, np.abs(x1a[i][n+1] - x1r_np1))
+        lerr2_r = np.append(lerr2_r, np.abs(x2a[i][n+1] - x2r_np1))
+
+print(len(gerr1_e))
+
 # THIS ONE SEEMS TO WORK TOO HOORAY
 
 # Global Truncation Errors: RK4
@@ -426,31 +437,6 @@ ax6.legend()
 plt.tight_layout()
 
 plt.savefig('ode_energy_cons.png')
-
-
-
-
-# for n in range(len(t_arr) - 1):
-#     x1n = x1_as[n]
-#     x2n = x2_as[n]
-
-#     #NOTE: NOT CORRECT ANALYTIC VELOCITIES! Already noted in overleaf doc
-#     v1n = v1r[n]
-#     v2n = v2r[n]
-
-#     s1np1, s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
-#     # extract xn+1
-#     x1np1 = s1np1[0]
-#     x2np1 = s2np1[0]
-#     # extract vn+1
-#     v1np1 = s1np1[1]
-#     v2np1 = s2np1[1]
-#     lerr1_r = np.append(lerr1_r, np.abs(x1_as[n+1] - x1np1))
-#     lerr2_r = np.append(lerr2_r, np.abs(x2_as[n+1] - x2np1))
-
-# # I copied and pasted these to get my error lists
-# print('Euler: ', [np.mean(lerr1_e), np.mean(lerr2_e), np.mean(gerr1_e), np.mean(gerr2_e)])
-# print('RK4: ', [np.mean(lerr1_r), np.mean(lerr2_r), np.mean(gerr1_r), np.mean(gerr2_r)])
 
 # I THINK IT WORKS YIPPEE
 
