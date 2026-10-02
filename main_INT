@@ -309,7 +309,6 @@ ax.legend()
 plt.tight_layout()
 plt.savefig('NEWe_lerr_comp.png')
 
-
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
 
 ax1.set_title(rf'$n=1$')
