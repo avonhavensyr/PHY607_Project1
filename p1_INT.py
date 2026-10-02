@@ -186,7 +186,7 @@ lerr1 = np.array([])
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 
 n_lerr = [np.array([]) for i in range(n_levels)]
-for lvl, arr in enumerate(n_lerr[1:]):
+for lvl, arr in enumerate(n_lerr):
     for dx in dx_arr:
         lerr = np.array([0])
         for i in range(len(x_arr) - 1):
@@ -201,33 +201,6 @@ for lvl, arr in enumerate(n_lerr[1:]):
 # Plot quadratic curves that align with the expected local error for a reimann integrator
 c1 = 0.08
 th_lerr1 = c1 * (dx_arr ** 2)
-
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Local Error of the Ground State')
-ax.scatter(dx_arr, n_states[0], label = rf'$n=1$')
-ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
-
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
-
-ax.legend()
-
-plt.tight_layout()
-plt.savefig('n_lerr_comp.png')
-
-ex_n_states = n_states[1:]      # extract only the exited states
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Log Local Error for Excited States')
-for lvl, arr in enumerate(ex_n_states):
-    ax.loglog(dx_arr, ex_n_states[lvl], label = rf'$n=${lvl+2}')
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
-
-ax.legend()
-
-plt.tight_layout()
-plt.savefig('NEWn_lerr_comp.png')
-
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
 # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
@@ -286,48 +259,57 @@ for p, pair in enumerate(pairs):
     print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
 
 
+fig, ax = plt.subplots(figsize = (8, 5))
+ax.set_title(r'Local Error of the Ground State')
+ax.scatter(dx_arr, n_lerr[0], label = rf'$n=1$')
+ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
-# int_psiprod = meth.recRiemann(psitpsi, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
-# lhs = (dpsi_32 * psi_22) - (dpsi_31 * psi_21)
-# rhs = ((2*m)/hbar) * (E2 - E3) * int_psiprod
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel(r'Local Error')
 
-# fig, ax = plt.subplots()
-# ax.set_title(rf'Riemann Integrator vs Analytic Solution: $\Delta x= $ {step}')
-# ax.plot(x_arr, psi_x1, label = r'Analytic $\psi(x)$')
-# ax.plot(x_arr, psi_x1_num, label = r'Riemann Integrated $\psi(x)$')
-# ax.set_xlabel('x')
-# ax.set_ylabel(r'$\langle x\rangle$')
-# plt.legend()
-# plt.tight_layout()
-# plt.savefig('psiint_v_psian.png')
-# plt.show()
+ax.legend()
 
-# print(E2)
-# print(E3)
-# print(f'Left: {lhs}')
-# print(f'Right: {rhs}')
+plt.tight_layout()
+plt.savefig('n_lerr_comp.png')
 
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8))
+ex_n_lerr = n_lerr[1:]      # extract only the exited states
+fig, ax = plt.subplots(figsize = (8, 5))
+ax.set_title(r'Log Local Error for Excited States')
+for lvl, arr in enumerate(ex_n_lerr):
+    ax.loglog(dx_arr, ex_n_lerr[lvl], label = rf'$n=${lvl+2}')
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel(r'Local Error')
+
+ax.legend()
+
+plt.tight_layout()
+plt.savefig('NEWn_lerr_comp.png')
+
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
 
 ax1.set_title(rf'$n=1$')
 ax1.plot(x_arr, n_states[0], label = rf'Analytical', ls = '-')
 ax1.plot(x_arr, n_approx[0], label = rf'Numerical', ls = '--')
-ax1.legend()
+ax1.legend(loc = 'lower left')
 
 ax2.set_title(rf'$n=1$')
 ax2.plot(x_arr, n_states[1], label = rf'Analytical', ls = '-')
 ax2.plot(x_arr, n_approx[1], label = rf'Numerical', ls = '--')
-ax2.legend()
+ax2.legend(loc = 'lower left')
 
 ax3.set_title(rf'$n=1$')
 ax3.plot(x_arr, n_states[2], label = rf'Analytical', ls = '-')
 ax3.plot(x_arr, n_approx[2], label = rf'Numerical', ls = '--')
-ax3.legend()
+ax3.legend(loc = 'lower left')
 
 ax4.set_title(rf'$n=1$')
 ax4.plot(x_arr, n_states[3], label = rf'Analytical', ls = '-')
 ax4.plot(x_arr, n_approx[3], label = rf'Numerical', ls = '--')
-ax4.legend()
+ax4.legend(loc = 'lower left')
+
+fig.supxlabel('x')
+fig.supylabel(r'$\psi_n')
 
 plt.tight_layout()
 plt.savefig('NEWint_comparisons.png')
