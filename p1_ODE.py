@@ -145,6 +145,31 @@ t_arr = np.arange(start = 0, stop = tmax + dt, step = dt)
 # Calculate analytic solution
 x1_as, x2_as = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_arr)
 
+dt_arr = np.array([0.001, 0.005, 0.1, 0.25, 0.5, 0.75, 1])
+
+# Dictionary of arrays for the Symplectic Euler Model
+euler_arr = {'x1': [np.array([x10]) for i in dt_arr],
+             'v1': [np.array([v10]) for i in dt_arr],
+             'x2': [np.array([x10]) for i in dt_arr],
+             'v2': [np.array([v10]) for i in dt_arr],
+             }
+
+# Dictionary of arrays for the RK4 Model
+rk4_arr = {'x1': [np.array([x10]) for i in dt_arr],
+             'v1': [np.array([v10]) for i in dt_arr],
+             'x2': [np.array([x10]) for i in dt_arr],
+             'v2': [np.array([v10]) for i in dt_arr],
+             }
+
+# Dictionary of arrays for the analytic solutions
+an_arr = {'x1': [np.array([x10]) for i in dt_arr],
+             'v1': [np.array([v10]) for i in dt_arr],
+             'x2': [np.array([x10]) for i in dt_arr],
+             'v2': [np.array([v10]) for i in dt_arr],
+             }
+
+#x1_e = [np.array([x10]) for i in dt_arr]
+
 
 # ----------------------- ARRAY CALCULATIONS FOR FIGURES -----------------------
 x1e = np.array([x10])
@@ -356,31 +381,31 @@ print('RK4: ', [np.mean(lerr1_r), np.mean(lerr2_r), np.mean(gerr1_r), np.mean(ge
 
 # #---------- II: ENERGY CONSERVATION ------------
 
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize = (8,12))
-fig.suptitle(rf'Energy conservation: $\Delta t = ${dt}, $m_2=${m2/m1}$m_1$')
+# fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize = (8,12))
+# fig.suptitle(rf'Energy conservation: $\Delta t = ${dt}, $m_2=${m2/m1}$m_1$')
 
-ax1.set_title('Symplectic Euler')
-ax1.plot(t_arr, Ue, label = r'$U(t)$')
-ax1.plot(t_arr, Te, label = r'$T(t)$')
-ax1.plot(t_arr, Ee, label = r'$E(t)$')
+# ax1.set_title('Symplectic Euler')
+# ax1.plot(t_arr, Ue, label = r'$U(t)$')
+# ax1.plot(t_arr, Te, label = r'$T(t)$')
+# ax1.plot(t_arr, Ee, label = r'$E(t)$')
 
-ax2.set_title('Runge-Kutta 4')
-ax2.plot(t_arr, Ur, label = r'$U(t)$')
-ax2.plot(t_arr, Tr, label = r'$T(t)$')
-ax2.plot(t_arr, Er, label = r'$E(t)$')
+# ax2.set_title('Runge-Kutta 4')
+# ax2.plot(t_arr, Ur, label = r'$U(t)$')
+# ax2.plot(t_arr, Tr, label = r'$T(t)$')
+# ax2.plot(t_arr, Er, label = r'$E(t)$')
 
-ax3.set_title('Analytic Solution')
-ax3.plot(t_arr, Uas, label = r'$U(t)$')
-ax3.plot(t_arr, Tas, label = r'$T(t)$')
-ax3.plot(t_arr, Eas, label = r'$E(t)$')
+# ax3.set_title('Analytic Solution')
+# ax3.plot(t_arr, Uas, label = r'$U(t)$')
+# ax3.plot(t_arr, Tas, label = r'$T(t)$')
+# ax3.plot(t_arr, Eas, label = r'$E(t)$')
 
-ax1.legend()
-ax2.legend()
-ax3.legend()
+# ax1.legend()
+# ax2.legend()
+# ax3.legend()
 
-plt.tight_layout()
+# plt.tight_layout()
 
-plt.savefig('energy_cons_dt0p6.png')
+# plt.savefig('energy_cons_dt0p6.png')
 
 # # ---------------- ERROR PROPAGATION ----------------
 # dt_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
