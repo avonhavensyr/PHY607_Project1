@@ -145,9 +145,12 @@ t_lst = []
 for dt in dt_arr:
     t_lst.append(np.arange(start = 0, stop = tmax + dt, step = dt))
 print(type(t_lst[0]))
-# Calculate analytic solution
-#x1_as, x2_as = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_arr)
 
+an_dict = {'x1': [],
+             'v1': [],
+             'x2': [],
+             'v2': [],
+             }
 
 # Dictionary of lists of arrays for the Symplectic Euler Model
 euler_dict = {'x1': [np.array([x10]) for i in dt_arr],
@@ -164,23 +167,23 @@ rk4_dict = {'x1': [np.array([x10]) for i in dt_arr],
              }
 
 # Dictionary of lists of arrays for the SciPy solver
-sp_dict = {'x1': [np.array([x10]) for i in dt_arr],
-             'v1': [np.array([v10]) for i in dt_arr],
-             'x2': [np.array([x10]) for i in dt_arr],
-             'v2': [np.array([v10]) for i in dt_arr],
+sp_dict = {'x1': [],
+             'v1': [],
+             'x2': [],
+             'v2': [],
              }
 
-# Dictionary of lists of arrays for the analytic solution
-an_dict = {'x1': [np.array([x10]) for i in dt_arr],
-             'v1': [np.array([v10]) for i in dt_arr],
-             'x2': [np.array([x10]) for i in dt_arr],
-             'v2': [np.array([v10]) for i in dt_arr],
-             }
 
-#test = euler_dict['x1'][0]       # returned --> [1] as expected
-#print(test)
+    
 
-# get results for multiple dt values
+# ----------------------- CALCULATIONS FOR FIGURES -----------------------
+
+# -------------------- Analytic Solution --------------------
+for i, dt in enumerate(dt_arr):
+    x1, x2 = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_lst[i])
+    an_dict['x1'].append(x1)
+
+# -------------------- Symplectic Euler --------------------
 for i, dt in enumerate(dt_arr):
     for j in range(len(t_lst[i])-1):
         # Evaluate at the most recent ("nth") step
@@ -201,14 +204,8 @@ for i, dt in enumerate(dt_arr):
         euler_dict['x2'][i] = np.append(euler_dict['x2'][i], x2np1)
         euler_dict['v1'][i] = np.append(euler_dict['v1'][i], v1np1)
         euler_dict['v2'][i] = np.append(euler_dict['v2'][i], v2np1)
-    
 
-# ----------------------- ARRAY CALCULATIONS FOR FIGURES -----------------------
-x1e = np.array([x10])
-x2e = np.array([x20])
-v1e = np.array([v10])
-v2e = np.array([v20])
-
+# -------------------- 4th-Order Runge Kutta --------------------
 for i, dt in enumerate(dt_arr):
     for j in range(len(t_lst[i])-1):
         x1n = rk4_dict['x1'][i][-1]
@@ -234,9 +231,7 @@ fig, ax = plt.subplots()
 ax.plot(t_lst[0], euler_dict['x1'][0])
 ax.plot(t_lst[0], rk4_dict['x1'][0])
 
-plt.show()
-
-# ----------- SCIPY ARRAYS ---------------
+# -------------------- SCIPY RK45 Method --------------------
 s0 = np.array([x10, x20, v10, v20])
 # Tuple input for SciPy RK4
 
@@ -245,13 +240,14 @@ for i, t_arr in enumerate(t_lst):
     # Compare to SciPy
     scipy = solve_ivp(fNew, t_range, s0, method = 'RK45', t_eval=t_arr, args = (m1, m2))
 
-    sp_dict['x1'][i][-1] = np.append()
+    sp_dict['x1'].append(scipy.y[0])
+    sp_dict['x2'].append(scipy.y[1])
+    sp_dict['v1'].append(scipy.y[2])
+    sp_dict['v2'].append(scipy.y[3])
 
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 12))
 
-    x1sp = scipy.y[0]
-    x2sp = scipy.y[1]
-    v1sp = scipy.y[2]
-    v2sp = scipy.y[3]
+plt.show()
 
 # # ----------------------------- ENERGY ---------------------------
 # # Euler
