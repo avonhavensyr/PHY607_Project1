@@ -332,13 +332,13 @@ for i, dt in enumerate(dt_arr):
         # RK4
         r_s1np1, r_s2np1 = meth.RK4(f, m1, m2, v1n, v2n, x1n, x2n, dt)
         # extract xn+1
-        x1r_np1 = s1np1[0]
-        x2r_np1 = s2np1[0]
+        x1r_np1 = r_s1np1[0]
+        x2r_np1 = r_s2np1[0]
         # extract vn+1
         v1r_np1 = r_s1np1[1]
         v2r_np1 = r_s2np1[1]
-        lerr1_r = np.append(lerr1_r, np.abs(x1a[i][n+1] - x1r_np1))
-        lerr2_r = np.append(lerr2_r, np.abs(x2a[i][n+1] - x2r_np1))
+        lerr1_r[i] = np.append(lerr1_r[i], np.abs(x1a[i][n+1] - x1r_np1))
+        lerr2_r[i] = np.append(lerr2_r[i], np.abs(x2a[i][n+1] - x2r_np1))
 
 # Average local errors per dt
 avg_lerr1_e = [np.mean(i) for i in lerr1_e]
@@ -346,6 +346,12 @@ avg_lerr2_e = [np.mean(i) for i in lerr2_e]
 avg_lerr1_r = [np.mean(i) for i in lerr1_r]
 avg_lerr2_r = [np.mean(i) for i in lerr2_r]
 
+avg_gerr1_e = [np.mean(i) for i in gerr1_e]
+avg_gerr2_e = [np.mean(i) for i in gerr2_e]
+avg_gerr1_r = [np.mean(i) for i in gerr1_r]
+avg_gerr2_r = [np.mean(i) for i in gerr2_r]
+
+print(gerr1_e[0])
 # THIS ONE SEEMS TO WORK TOO HOORAY
 
 # Global Truncation Errors: RK4
@@ -453,44 +459,29 @@ O_2 = dt_arr ** 2
 O_4 = dt_arr ** 4
 O_5 = dt_arr ** 5
 
-# do: global error, avg local error per dt, local error forall dt
-# tup1: euler
-# tup2: rk4
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (12,8))
+#do: global error, avg local error per dt, local error forall dt
+#tup1: euler
+#tup2: rk4
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
 fig.suptitle('Mass 1')
 ax1.set_title('Symplectic Euler: Average Local & Global Error')
 ax2.set_title('Symplectic Euler: Local Error')
 ax3.set_title('RK4: Average Local & Global Error')
 ax4.set_title('RK4: Local Error')
 
+ax1.loglog(dt_arr, O_1, label = r'$\mathcal{O}(\Delta t)$',color = 'C1',ls='--')
+ax1.loglog(dt_arr, O_2, label = r'$\mathcal{O}(\Delta t^2)$',color = 'C0',ls='--')
+ax3.loglog(dt_arr, O_4, label = r'$\mathcal{O}(\Delta t^4)$',color = 'C1',ls='--')
+ax3.loglog(dt_arr, O_5, label = r'$\mathcal{O}(\Delta t^5)$',color = 'C0',ls='--')
+
+ax1.loglog(dt_arr, avg_gerr1_e, label = 'Global Error')
 ax1.loglog(dt_arr, avg_lerr1_e, label = 'Average Local Error')
-ax1.loglog(dt_arr, gerr1_e, label = 'Global Error')
+ax3.loglog(dt_arr, avg_gerr1_r, label = 'Global Error')
 ax3.loglog(dt_arr, avg_lerr1_r, label = 'Average Local Error')
-ax3.loglog(dt_arr, gerr1_r, label = 'Global Error')
 
 for i, dt in enumerate(dt_arr):
-    ax2.loglog(dt_arr, lerr1_e[i], label = rf'$\Delta t=${dt}')
-    ax4.loglog(dt_arr, lerr1_r[i], label = rf'$\Delta t=${dt}')
-
-# ax1.set_title('Symplectic Euler: Local Error')
-# ax1.loglog(dt_arr, lerr1_e_avg, label = 'Local Error for Mass 1')
-# ax1.loglog(dt_arr, lerr2_e_avg, label = 'Local Error for Mass 2')
-# ax1.loglog(dt_arr, O_2, label = r'$\mathcal{O}(\Delta t^2)$')
-
-# ax2.set_title('Symplectic Euler: Global Error')
-# ax2.loglog(dt_arr, gerr1_e_avg, label = 'Global Error for Mass 1')
-# ax2.loglog(dt_arr, gerr2_e_avg, label = 'Global Error for Mass 2')
-# ax2.loglog(dt_arr, O_1, label = r'$\mathcal{O}(\Delta t)$')
-
-# ax3.set_title('Runge-Kutta 4: Local Error')
-# ax3.loglog(dt_arr, lerr1_r_avg, label = 'Local Error for Mass 1')
-# ax3.loglog(dt_arr, lerr2_r_avg, label = 'Local Error for Mass 2')
-# ax3.loglog(dt_arr, O_5, label = r'$\mathcal{O}(\Delta t^5)$')
-
-# ax4.set_title('Runge-Kutta 4: Global Error')
-# ax4.loglog(dt_arr, gerr1_r_avg, label = 'Global Error for Mass 1')
-# ax4.loglog(dt_arr, gerr2_r_avg, label = 'Global Error for Mass 2')
-# ax4.loglog(dt_arr, O_4, label = r'$\mathcal{O}(\Delta t^4)$')
+    ax2.loglog(t_lst[i], lerr1_e[i], label = rf'$\Delta t=${dt}')
+    ax4.loglog(t_lst[i], lerr1_r[i], label = rf'$\Delta t=${dt}')
 
 ax1.legend()
 ax2.legend()
