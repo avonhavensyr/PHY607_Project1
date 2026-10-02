@@ -170,14 +170,38 @@ an_arr = {'x1': [np.array([x10]) for i in dt_arr],
              'v2': [np.array([v10]) for i in dt_arr],
              }
 
-test = euler_arr['x1'][0]
+test = euler_arr['x1'[0]]       # returned --> [1] as expected
 print(test)
 
-# # get results for multiple dt values
-# for i, dt in enumerate(dt_arr):
-#     x1 = euler_arr['x1']
-#     for j in range(len(t_arr)-1):
-#         x1n = euler_arr['x1']
+# get results for multiple dt values
+for i, dt in enumerate(dt_arr):
+    for j in range(len(t_arr)-1):
+        # Evaluate at the most recent ("nth") step
+        x1n = euler_arr['x1'][i][-1]
+        x2n = euler_arr['x2'][i][-1]
+        v1n = euler_arr['v1'][i][-1]
+        v2n = euler_arr['v2'][i][-1]
+        s1np1 = meth.Euler(f, v1n, x1n, dt, xi = x2n, m = m1)
+        s2np1 = meth.Euler(f, v2n, x2n, dt, xi = x1n, m = m2)
+        # extract xn+1
+        x1np1 = s1np1[0]
+        x2np1 = s2np1[0]
+        # extract vn+1
+        v1np1 = s1np1[1]
+        v2np1 = s2np1[1]
+        # append n+1th values
+        euler_arr['x1'][i] = np.append(euler_arr['x1'][i], x1np1)
+        euler_arr['x2'][i] = np.append(euler_arr['x2'][i], x2np1)
+        euler_arr['v1'][i] = np.append(euler_arr['v1'][i], v1np1)
+        euler_arr['v2'][i] = np.append(euler_arr['v2'][i], v2np1)
+    
+
+test = euler_arr['x1'][0]       # returned --> [1] as expected
+print(np.shape(test))
+print(test)
+
+#fig, ax = plt.subplots()
+#ax.plot(t_arr, euler_arr['x1'][0])
 
 # ----------------------- ARRAY CALCULATIONS FOR FIGURES -----------------------
 x1e = np.array([x10])
