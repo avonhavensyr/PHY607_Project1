@@ -147,8 +147,8 @@ for dt in dt_arr:
 print(type(t_lst[0]))
 
 an_dict = {'x1': [],
-             'v1': [],
              'x2': [],
+             'v1': [],
              'v2': [],
              }
 
@@ -182,6 +182,7 @@ sp_dict = {'x1': [],
 for i, dt in enumerate(dt_arr):
     x1, x2 = coupledOscillator(m1, m2, x10, x20, v10, v20, k, t_lst[i])
     an_dict['x1'].append(x1)
+    an_dict['x2'].append(x2)
 
 # -------------------- Symplectic Euler --------------------
 for i, dt in enumerate(dt_arr):
@@ -227,10 +228,6 @@ for i, dt in enumerate(dt_arr):
         rk4_dict['v1'][i] = np.append(rk4_dict['v1'][i], v1np1)
         rk4_dict['v2'][i] = np.append(rk4_dict['v2'][i], v2np1)
 
-fig, ax = plt.subplots()
-ax.plot(t_lst[0], euler_dict['x1'][0])
-ax.plot(t_lst[0], rk4_dict['x1'][0])
-
 # -------------------- SCIPY RK45 Method --------------------
 s0 = np.array([x10, x20, v10, v20])
 # Tuple input for SciPy RK4
@@ -245,8 +242,65 @@ for i, t_arr in enumerate(t_lst):
     sp_dict['v1'].append(scipy.y[2])
     sp_dict['v2'].append(scipy.y[3])
 
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 12))
+# ----------------------- PLOTS-----------------------
+# Indices for the small and large dt values
+s_idx = 0
+l_idx = -2
 
+# Variables for cleaner plotting
+x1e = euler_dict['x1']
+x2e = euler_dict['x2']
+v1e = euler_dict['v1']
+v2e = euler_dict['v2']
+
+x1r = rk4_dict['x1']
+x2r = rk4_dict['x2']
+v1r = rk4_dict['v1']
+v2r = rk4_dict['v2']
+
+x1a = an_dict['x1']
+x2a = an_dict['x2']
+v1a = an_dict['v1']
+v2a = an_dict['v2']
+
+x1s = sp_dict['x1']
+x2s = sp_dict['x2']
+v1s = sp_dict['v1']
+v2s = sp_dict['v2']
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
+
+ax1.set_title(rf'Mass 1: $\Delta t=${dt_arr[s_idx]}')
+ax1.plot(t_lst[s_idx], x1a[s_idx], label = 'Analytic', ls = '-')
+ax1.plot(t_lst[s_idx], x1e[s_idx], label = 'Euler', ls = '--')
+ax1.plot(t_lst[s_idx], x1r[s_idx], label = 'RK4', ls = '--')
+ax1.plot(t_lst[s_idx], x1s[s_idx], label = 'SciPy RK45', ls = '--')
+
+ax2.set_title(rf'Mass 2: $\Delta t=${dt_arr[s_idx]}')
+ax2.plot(t_lst[s_idx], x2a[s_idx], label = 'Analytic', ls = '-')
+ax2.plot(t_lst[s_idx], x2e[s_idx], label = 'Euler', ls = '--')
+ax2.plot(t_lst[s_idx], x2r[s_idx], label = 'RK4', ls = '--')
+ax2.plot(t_lst[s_idx], x2s[s_idx], label = 'SciPy RK45', ls = '--')
+
+ax3.set_title(rf'Mass 1: $\Delta t=${dt_arr[l_idx]}')
+ax3.plot(t_lst[l_idx], x1a[l_idx], label = 'Analytic', ls = '-')
+ax3.plot(t_lst[l_idx], x1e[l_idx], label = 'Euler', ls = '--')
+ax3.plot(t_lst[l_idx], x1r[l_idx], label = 'RK4', ls = '--')
+ax3.plot(t_lst[l_idx], x1s[l_idx], label = 'SciPy RK45', ls = '--')
+
+ax4.set_title(rf'Mass 2: $\Delta t=${dt_arr[l_idx]}')
+ax4.plot(t_lst[l_idx], x2a[l_idx], label = 'Analytic', ls = '-')
+ax4.plot(t_lst[l_idx], x2e[l_idx], label = 'Euler', ls = '--')
+ax4.plot(t_lst[l_idx], x2r[l_idx], label = 'RK4', ls = '--')
+ax4.plot(t_lst[l_idx], x2s[l_idx], label = 'SciPy RK45', ls = '--')
+
+ax1.legend()
+ax2.legend()
+ax3.legend()
+ax4.legend()
+
+plt.tight_layout()
+plt.savefig('ode_comparisons.png')
 plt.show()
 
 # # ----------------------------- ENERGY ---------------------------
