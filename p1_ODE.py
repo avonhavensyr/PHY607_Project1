@@ -23,7 +23,7 @@ ODE Solver: Coupled Harmonic Oscillator
 
 # CONSTANTS
 m1 = 1
-m2 = 10
+m2 = 1
 k = 1
 
 # INITIAL CONDITIONS
@@ -242,7 +242,6 @@ for i, t_arr in enumerate(t_lst):
     sp_dict['v1'].append(scipy.y[2])
     sp_dict['v2'].append(scipy.y[3])
 
-# ----------------------- PLOTS-----------------------
 # Indices for the small and large dt values
 s_idx = 0
 l_idx = -2
@@ -268,48 +267,60 @@ x2s = sp_dict['x2']
 v1s = sp_dict['v1']
 v2s = sp_dict['v2']
 
+# ----------------------------- ENERGY ---------------------------
+# Euler
+sUe, sTe, sEe = coupledEnergy(m1, m2, v1e[s_idx], v2e[s_idx], x1e[s_idx], x2e[s_idx])
+# RK4
+sUr, sTr, sEr = coupledEnergy(m1, m2, v1r[s_idx], v2r[s_idx], x1r[s_idx], x2r[s_idx])
+# Analytic
+sUas, sTas, sEas = coupledEnergy(m1, m2, v1r[s_idx], v2r[s_idx], x1a[s_idx], x2a[s_idx])
+# Euler
+lUe, lTe, lEe = coupledEnergy(m1, m2, v1e[l_idx], v2e[l_idx], x1e[l_idx], x2e[l_idx])
+# RK4
+lUr, lTr, lEr = coupledEnergy(m1, m2, v1r[l_idx], v2r[l_idx], x1r[l_idx], x2r[l_idx])
+# Analytic
+lUas, lTas, lEas = coupledEnergy(m1, m2, v1r[l_idx], v2r[l_idx], x1a[l_idx], x2a[l_idx])
+
+
+# ----------------------- PLOTS-----------------------
+
+
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
 
 ax1.set_title(rf'Mass 1: $\Delta t=${dt_arr[s_idx]}')
 ax1.plot(t_lst[s_idx], x1a[s_idx], label = 'Analytic', ls = '-')
 ax1.plot(t_lst[s_idx], x1e[s_idx], label = 'Euler', ls = '--')
-ax1.plot(t_lst[s_idx], x1r[s_idx], label = 'RK4', ls = '--')
+ax1.plot(t_lst[s_idx], x1r[s_idx], label = 'RK4', ls = '-')
 ax1.plot(t_lst[s_idx], x1s[s_idx], label = 'SciPy RK45', ls = '--')
 
 ax2.set_title(rf'Mass 2: $\Delta t=${dt_arr[s_idx]}')
 ax2.plot(t_lst[s_idx], x2a[s_idx], label = 'Analytic', ls = '-')
 ax2.plot(t_lst[s_idx], x2e[s_idx], label = 'Euler', ls = '--')
-ax2.plot(t_lst[s_idx], x2r[s_idx], label = 'RK4', ls = '--')
+ax2.plot(t_lst[s_idx], x2r[s_idx], label = 'RK4', ls = '-')
 ax2.plot(t_lst[s_idx], x2s[s_idx], label = 'SciPy RK45', ls = '--')
 
 ax3.set_title(rf'Mass 1: $\Delta t=${dt_arr[l_idx]}')
 ax3.plot(t_lst[l_idx], x1a[l_idx], label = 'Analytic', ls = '-')
 ax3.plot(t_lst[l_idx], x1e[l_idx], label = 'Euler', ls = '--')
-ax3.plot(t_lst[l_idx], x1r[l_idx], label = 'RK4', ls = '--')
+ax3.plot(t_lst[l_idx], x1r[l_idx], label = 'RK4', ls = '-')
 ax3.plot(t_lst[l_idx], x1s[l_idx], label = 'SciPy RK45', ls = '--')
 
 ax4.set_title(rf'Mass 2: $\Delta t=${dt_arr[l_idx]}')
 ax4.plot(t_lst[l_idx], x2a[l_idx], label = 'Analytic', ls = '-')
 ax4.plot(t_lst[l_idx], x2e[l_idx], label = 'Euler', ls = '--')
-ax4.plot(t_lst[l_idx], x2r[l_idx], label = 'RK4', ls = '--')
+ax4.plot(t_lst[l_idx], x2r[l_idx], label = 'RK4', ls = '-')
 ax4.plot(t_lst[l_idx], x2s[l_idx], label = 'SciPy RK45', ls = '--')
 
-ax1.legend()
-ax2.legend()
-ax3.legend()
-ax4.legend()
+ax1.legend(loc = 'lower left')
+ax2.legend(loc = 'lower left')
+ax3.legend(loc = 'lower left')
+ax4.legend(loc = 'lower left')
+
 
 plt.tight_layout()
-plt.savefig('ode_comparisons.png')
+plt.savefig('ode_lim_case1.png')
 plt.show()
 
-# # ----------------------------- ENERGY ---------------------------
-# # Euler
-# Ue, Te, Ee = coupledEnergy(m1, m2, v1e, v2e, x1e, x2e)
-# # RK4
-# Ur, Tr, Er = coupledEnergy(m1, m2, v1r, v2r, x1r, x2r)
-# # Analytic
-# Uas, Tas, Eas = coupledEnergy(m1, m2, v1r, v2r, x1_as, x2_as)
 
 # # ----------------------------- ERRORS ---------------------------
 # # Expected Errors

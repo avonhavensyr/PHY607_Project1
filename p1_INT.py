@@ -161,15 +161,18 @@ for lvl, arr in enumerate(n_states):
         A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = lvl + 1)
     n_approx[lvl] = psi_num
 
-fig, ax = plt.subplots()
-ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
-ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
+#ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
+#ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
 
-ax.legend()
+for lvl, arr in enumerate(n_states[:4]):
+    fig, ax = plt.subplots(figsize = (5,4))
+    ax.set_title(rf'$n=${lvl+1}')
+    ax.plot(x_arr, n_states[lvl], label = rf'Analytical', color = f'C{lvl}', ls = '--')
+    ax.plot(x_arr, n_approx[lvl], label = rf'Numerical', color = f'C{lvl+1}', ls = ':')
+    ax.legend()
 plt.tight_layout
 plt.show()
-# for lvl, arr in enumerate(n_states):
-#     ax.plot(x_arr,)
+
 
 
 
