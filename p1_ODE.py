@@ -286,13 +286,18 @@ lUas, lTas, lEas = coupledEnergy(m1, m2, v1r[l_idx], v2r[l_idx], x1a[l_idx], x2a
 # Fill all of the error arrays with 0s since there shouldn't be errors at the initial time
 
 # Global Truncation Errors
+gerr1_e = []
+gerr2_e = []
+gerr1_r = []
+gerr2_r = []
+
 for i, dt in enumerate(dt_arr):
     # SI Euler
-    gerr1_e = np.abs(x1a[i] - x1e[i])
-    gerr2_e = np.abs(x2a[i] - x2e[i])
+    gerr1_e.append(np.abs(x1a[i] - x1e[i]))
+    gerr2_e.append(np.abs(x2a[i] - x2e[i]))
     # RK4
-    gerr1_r = np.abs(x1a[i] - x1r[i])
-    gerr2_r = np.abs(x2a[i] - x2r[i])
+    gerr1_r.append(np.abs(x1a[i] - x1r[i]))
+    gerr2_r.append(np.abs(x2a[i] - x2r[i]))
 # Local Truncation Errors
 # SI Euler
 lerr1_e = [np.array([0]) for dt in dt_arr]
@@ -335,7 +340,7 @@ for i, dt in enumerate(dt_arr):
         lerr1_r = np.append(lerr1_r, np.abs(x1a[i][n+1] - x1r_np1))
         lerr2_r = np.append(lerr2_r, np.abs(x2a[i][n+1] - x2r_np1))
 
-print(len(gerr1_e))
+print(gerr1_e[0])
 
 # THIS ONE SEEMS TO WORK TOO HOORAY
 
