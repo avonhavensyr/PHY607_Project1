@@ -179,6 +179,20 @@ for lvl in range(n_levels):
     gerr = np.abs(n_states[lvl] - n_approx[lvl])
     n_gerr = np.append(n_gerr, gerr)
 print(n_gerr)
+
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'Global Error of the Ground State')
+# ax.scatter(x_arr, n_gerr[0], label = rf'$n=1$')
+# #ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+
+ax.set_xlabel(r'$\Delta x$')
+ax.set_ylabel(r'Local Error')
+
+ax.legend()
+
+
+plt.tight_layout()
+plt.savefig('NEWg_lerr_comp.png')
 # Local truncation error for the ground state
 lerr1 = np.array([])
 # copied from ODE side
@@ -281,19 +295,7 @@ ax.legend()
 
 #n_gerr_avg = [np.a]
 
-# fig, ax = plt.subplots(figsize = (8, 5))
-# ax.set_title(r'Global Error of the Ground State')
-# ax.scatter(x_arr, n_gerr[0], label = rf'$n=1$')
-# #ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
-
-ax.legend()
-
-
-plt.tight_layout()
-plt.savefig('NEWg_lerr_comp.png')
 
 ex_n_lerr = n_lerr[1:]      # extract only the exited states
 fig, ax = plt.subplots(figsize = (8, 5))
