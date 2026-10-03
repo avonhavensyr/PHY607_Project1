@@ -149,38 +149,45 @@ def squared(x):
 step = 0.01
 
 n_levels = 10       # number of energy levels
-# analytical states
-n_states = [np.array([]) for i in range(n_levels)]
-# numerical approximations
-n_approx = [np.array([]) for i in range(n_levels)]
 # discrete x values
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 x_arr = [np.arange(start =-a, stop = a+dx, step = dx) for dx in dx_arr]
-
 
 # make dictionaries to hold the analytical and numerical values for each n and dx
 # make plots like for the ODE case
 # Find errors
 # plot errors
 # Solve limiting cases
-psi_dict_an = {dx: n_states for dx in dx_arr}
-psi_dict_num = {dx: n_states for dx in dx_arr}
+psi_an_dict = {dx: [] for dx in dx_arr}
+psi_num_dict = {dx: [] for dx in dx_arr}
 # get the numerical and analytical values for each psi_n
-
-for dx in dx_arr:
-    for n, arr in enumerate(n_states):
-        psi_an = psi_isw(x_arr, a, n + 1)
-        n_states[n] = psi_an
-        psi_num = np.array([])
+for i, dx in enumerate(dx_arr):
+    for n in range(n_levels):
+        psi_an_dict[dx].append(np.array([]))
+        psi_num_dict[dx].append(np.array([]))
         A_tot = 0
-        for i in range(len(x_arr)):
-            psi_num = np.append(psi_num, A_tot)
-            A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = n + 1)
-        n_approx[n] = psi_num
+        for x, arr in enumerate(x_arr[i]):
+            A_tot = meth.Riemann(dpsi_isw, arr, dx, A=A_tot, a = a, n = n + 1)
+            psi_an_dict[dx][n] = np.append(psi_an_dict[dx][n], psi_isw(arr, a, n+1))
+            psi_num_dict[dx][n] = np.append(psi_num_dict[dx][n], A_tot)
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8))
+
+sidx = 0
+lidx = -2
+dx_s = dx_arr[sidx]
+dx_l = dx_arr[lidx]
+
+ax1.set_title(rf'$n=1$')
+ax1.plot(x_arr[sidx],psi_an_dict[dx_s][0], label = rf'Analytical: $\Delta x =${dx_s}')
+ax1.plot(x_arr[sidx],psi_num_dict[dx_s][0], label = rf'Numerical: $\Delta x =${dx_s}', ls = '--')
+ax1.plot(x_arr[lidx],psi_an_dict[dx_l][0], label = rf'Analytical: $\Delta x =${dx_l}', ls = '--')
+ax1.plot(x_arr[lidx],psi_num_dict[dx_l][0], label = rf'Numerical: $\Delta x =${dx_l}', ls = '--')
+
 
 #ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
 #ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
-
+plt.show()
 
 
 # ----------------------------- ERRORS ---------------------------
