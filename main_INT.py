@@ -233,8 +233,8 @@ for i in range(5):
     ax2.loglog(dx_short, avg_gerr_lst[i][:5], label=rf'$n={i+1}$')
     ax3.loglog(x_arr[sidx][:-1], lerr_dict[dx_s][i], label = rf'$n=${i+1}: $\Delta x=${dx_s}')
     ax3.loglog(x_arr[lidx][:-1], lerr_dict[dx_l][i], label = rf'$n=${i+1} $\Delta x=${dx_l}')
-    ax4.loglog(x_arr[sidx][:-1], gerr_dict[dx_s][i], label = rf'$n=${i+1}: $\Delta x=${dx_s}')
-    ax4.loglog(x_arr[lidx][:-1], gerr_dict[dx_l][i], label = rf'$n=${i+1} $\Delta x=${dx_l}')
+    ax4.loglog(x_arr[sidx], gerr_dict[dx_s][i], label = rf'$n=${i+1}: $\Delta x=${dx_s}')
+    ax4.loglog(x_arr[lidx], gerr_dict[dx_l][i], label = rf'$n=${i+1} $\Delta x=${dx_l}')
 
 
 plt.show()
