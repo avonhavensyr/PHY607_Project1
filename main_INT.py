@@ -192,19 +192,6 @@ for i, dx in enumerate(dx_arr):
 lerr_dict = {dx: [] for dx in dx_arr}
 avg_lerr_dict = {dx: [] for dx in dx_arr}
 
-# n_lerr = [np.array([]) for i in range(n_levels)]
-# for lvl, arr in enumerate(n_lerr):
-#     for dx in dx_arr:
-#         lerr = np.array([0])
-#         for i in range(len(x_arr) - 1):
-#             # numerical solution
-#             psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = lvl + 1)
-#             # change in psi_isw when xf-xi = dx
-#             psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
-#             # local error
-#             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
-#         n_lerr[lvl] = np.append(n_lerr[lvl], np.mean(lerr))
-
 for i, dx in enumerate(dx_arr):
     for n in range(5):
         lerr = []
@@ -245,7 +232,10 @@ for i in range(5):
     ax4.loglog(x_arr[sidx], gerr_dict[dx_s][i], color=f'C{i}', linestyle='-',  label = rf'$n=${i+1}: $\Delta x=${dx_s}')
     ax4.loglog(x_arr[lidx], gerr_dict[dx_l][i], color=f'C{i}', linestyle='--', label = rf'$n=${i+1} $\Delta x=${dx_l}')
 
-
+ax1.set_xlabel(r'$\Delta x$')
+ax2.set_xlabel(r'$\Delta x$')
+ax3.set_xlabel(r'$x$')
+ax4.set_xlabel(r'$x$')
 ax1.legend(loc = 'lower left', fontsize = 9)
 ax2.legend(loc = 'lower left', fontsize = 9)
 ax3.legend(loc = 'lower left', fontsize = 9)
@@ -293,32 +283,6 @@ ax4.legend(loc = 'lower left', fontsize = 9)
 
 plt.tight_layout()
 plt.savefig('FINAL_int_comp.png')
-
-
-
-# # plt.tight_layout()
-# # plt.savefig('NEWg_lerr_comp.png')
-# # # Local truncation error for the ground state
-# # lerr1 = np.array([])
-# # copied from ODE side
-# dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
-
-# n_lerr = [np.array([]) for i in range(n_levels)]
-# for lvl, arr in enumerate(n_lerr):
-#     for dx in dx_arr:
-#         lerr = np.array([0])
-#         for i in range(len(x_arr) - 1):
-#             # numerical solution
-#             psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = lvl + 1)
-#             # change in psi_isw when xf-xi = dx
-#             psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
-#             # local error
-#             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
-#         n_lerr[lvl] = np.append(n_lerr[lvl], np.mean(lerr))
-
-# # Plot quadratic curves that align with the expected local error for a reimann integrator
-# c1 = 0.08
-# th_lerr1 = c1 * (dx_arr ** 2)
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
 # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
@@ -388,58 +352,5 @@ for p, pair in enumerate(pairs):
     print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
 
 
-# fig, ax = plt.subplots(figsize = (8, 5))
-# ax.set_title(r'Local Error of the Ground State')
-# ax.scatter(dx_arr, n_lerr[0], label = rf'$n=1$')
-# ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
-# ax.set_xlabel(r'$\Delta x$')
-# ax.set_ylabel(r'Local Error')
-
-# ax.legend()
-
-#n_gerr_avg = [np.a]
-
-
-
-# ex_n_lerr = n_lerr[1:]      # extract only the exited states
-# fig, ax = plt.subplots(figsize = (8, 5))
-# ax.set_title(r'Log Local Error for Excited States')
-# for lvl, arr in enumerate(ex_n_lerr):
-#     ax.loglog(dx_arr, ex_n_lerr[lvl], label = rf'$n=${lvl+2}')
-# ax.set_xlabel(r'$\Delta x$')
-# ax.set_ylabel(r'Local Error')
-
-# ax.legend()
-
-# plt.tight_layout()
-# plt.savefig('NEWe_lerr_comp.png')
-
-# fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
-
-# ax1.set_title(rf'$n=1$')
-# ax1.plot(x_arr, n_states[0], label = rf'Analytical', ls = '-')
-# ax1.plot(x_arr, n_approx[0], label = rf'Numerical', ls = '--')
-# ax1.legend(loc = 'lower left')
-
-# ax2.set_title(rf'$n=1$')
-# ax2.plot(x_arr, n_states[1], label = rf'Analytical', ls = '-')
-# ax2.plot(x_arr, n_approx[1], label = rf'Numerical', ls = '--')
-# ax2.legend(loc = 'lower left')
-
-# ax3.set_title(rf'$n=1$')
-# ax3.plot(x_arr, n_states[2], label = rf'Analytical', ls = '-')
-# ax3.plot(x_arr, n_approx[2], label = rf'Numerical', ls = '--')
-# ax3.legend(loc = 'lower left')
-
-# ax4.set_title(rf'$n=1$')
-# ax4.plot(x_arr, n_states[3], label = rf'Analytical', ls = '-')
-# ax4.plot(x_arr, n_approx[3], label = rf'Numerical', ls = '--')
-# ax4.legend(loc = 'lower left')
-
-# fig.supxlabel('x')
-# fig.supylabel(r'$\psi_n')
-
-# plt.tight_layout()
-# plt.savefig('NEWint_comparisons.png')
 plt.show()
