@@ -154,7 +154,6 @@ dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 x_arr = [np.arange(start =-a, stop = a+dx, step = dx) for dx in dx_arr]
 
 # make dictionaries to hold the analytical and numerical values for each n and dx
-# make plots like for the ODE case
 # Find errors
 # plot errors
 # Solve limiting cases
@@ -171,10 +170,37 @@ for i, dx in enumerate(dx_arr):
             psi_an_dict[dx][n] = np.append(psi_an_dict[dx][n], psi_isw(arr, a, n+1))
             psi_num_dict[dx][n] = np.append(psi_num_dict[dx][n], A_tot)
 
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8))
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
 
 sidx = 0
 lidx = -2
+
+
+
+
+# ----------------------------- ERRORS ---------------------------
+# Global truncation error for the ground state
+gerr_dict = {dx: [] for dx in dx_arr}
+avg_gerr_dict = {dx: [] for dx in dx_arr}
+
+n_gerr = [np.array([]) for i in range(n_levels)]
+for i, dx in enumerate(dx_arr):
+    for n in range(n_levels):
+        gerr_dict[dx].append(np.abs(psi_an_dict[dx][n] - psi_num_dict[dx][n]))
+        avg_gerr_dict[dx].append(np.mean(np.abs(psi_an_dict[dx][n] - psi_num_dict[dx][n])))
+
+
+
+print(len(n_gerr))
+print(len(x_arr))
+
+
+
+
+
+
+fig.supxlabel('x')
+fig.supylabel(r'$\psi_n(x)$')
 dx_s = dx_arr[sidx]
 dx_l = dx_arr[lidx]
 
@@ -184,21 +210,33 @@ ax1.plot(x_arr[sidx],psi_num_dict[dx_s][0], label = rf'Numerical: $\Delta x =${d
 ax1.plot(x_arr[lidx],psi_an_dict[dx_l][0], label = rf'Analytical: $\Delta x =${dx_l}', ls = '--')
 ax1.plot(x_arr[lidx],psi_num_dict[dx_l][0], label = rf'Numerical: $\Delta x =${dx_l}', ls = '--')
 
+ax2.set_title(rf'$n=2$')
+ax2.plot(x_arr[sidx],psi_an_dict[dx_s][1], label = rf'Analytical: $\Delta x =${dx_s}')
+ax2.plot(x_arr[sidx],psi_num_dict[dx_s][1], label = rf'Numerical: $\Delta x =${dx_s}', ls = '--')
+ax2.plot(x_arr[lidx],psi_an_dict[dx_l][1], label = rf'Analytical: $\Delta x =${dx_l}', ls = '--')
+ax2.plot(x_arr[lidx],psi_num_dict[dx_l][1], label = rf'Numerical: $\Delta x =${dx_l}', ls = '--')
+
+ax3.set_title(rf'$n=3$')
+ax3.plot(x_arr[sidx],psi_an_dict[dx_s][2], label = rf'Analytical: $\Delta x =${dx_s}')
+ax3.plot(x_arr[sidx],psi_num_dict[dx_s][2], label = rf'Numerical: $\Delta x =${dx_s}', ls = '--')
+ax3.plot(x_arr[lidx],psi_an_dict[dx_l][2], label = rf'Analytical: $\Delta x =${dx_l}', ls = '--')
+ax3.plot(x_arr[lidx],psi_num_dict[dx_l][2], label = rf'Numerical: $\Delta x =${dx_l}', ls = '--')
+
+ax4.set_title(rf'$n=4$')
+ax4.plot(x_arr[sidx],psi_an_dict[dx_s][3], label = rf'Analytical: $\Delta x =${dx_s}')
+ax4.plot(x_arr[sidx],psi_num_dict[dx_s][3], label = rf'Numerical: $\Delta x =${dx_s}', ls = '--')
+ax4.plot(x_arr[lidx],psi_an_dict[dx_l][3], label = rf'Analytical: $\Delta x =${dx_l}', ls = '--')
+ax4.plot(x_arr[lidx],psi_num_dict[dx_l][3], label = rf'Numerical: $\Delta x =${dx_l}', ls = '--')
+
+ax1.legend(loc = 'lower left')
+ax2.legend(loc = 'lower left')
+ax3.legend(loc = 'lower left')
+ax4.legend(loc = 'lower left')
 
 #ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
 #ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
-plt.show()
-
-
-# ----------------------------- ERRORS ---------------------------
-# # Global truncation error for the ground state
-# n_gerr = [np.array([]) for i in range(n_levels)]
-# gerr = np.abs(n_states[lvl] - n_approx[lvl])
-# n_gerr = np.append(n_gerr, gerr)
-# print(len(n_gerr))
-#print(len(x_arr))
-
-
+plt.tight_layout()
+#plt.show()
 
 # fig, ax = plt.subplots(figsize = (8, 5))
 # ax.set_title(r'Global Error of the Ground State')
