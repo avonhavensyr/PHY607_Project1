@@ -152,7 +152,10 @@ n_levels = 10       # number of energy levels
 # discrete x values
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 x_arr = [np.arange(start =-a, stop = a+dx, step = dx) for dx in dx_arr]
-
+sidx = 0
+lidx = -2
+dx_s = dx_arr[sidx]
+dx_l = dx_arr[lidx]
 # make dictionaries to hold the analytical and numerical values for each n and dx
 # Find errors
 # plot errors
@@ -212,14 +215,26 @@ for i, dx in enumerate(dx_arr):
         lerr_dict[dx].append(np.array(lerr))
         avg_lerr_dict[dx].append(np.mean(lerr))
 
-avg_lerr_lst = list(avg_lerr_dict.values())
-avg_gerr_lst = list(avg_gerr_dict.values())
+lerr_lst = [[lerr_dict[dx][n] for dx in dx_arr] for n in range(5)]
+gerr_lst = [[gerr_dict[dx][n] for dx in dx_arr] for n in range(5)]
 
-fig, (ax1, ax2) = plt.subplots(2, 1)
+avg_lerr_lst = [[avg_lerr_dict[dx][n] for dx in dx_arr] for n in range(5)]
+avg_gerr_lst = [[avg_gerr_dict[dx][n] for dx in dx_arr] for n in range(5)]
 
-ax1.loglog(dx_arr, avg_lerr_lst)
-ax1.loglog(dx_arr, avg_gerr_lst)
 
+fig, ((ax1, ax2),(ax3, ax4)) = plt.subplots(2, 2)
+
+O_1 = dx_arr
+O_2 = dx_arr ** 2
+
+dx_short = dx_arr[:5]
+for i in range(5):
+    ax1.loglog(dx_short, avg_lerr_lst[i][:5], label=rf'$n={i+1}$')
+    ax2.loglog(dx_short, avg_gerr_lst[i][:5], label=rf'$n={i+1}$')
+    ax3.loglog(x_arr[sidx][:-1], lerr_dict[dx_s][i], label = rf'$n=${i+1}: $\Delta x=${dx_s}')
+    ax3.loglog(x_arr[lidx][:-1], lerr_dict[dx_l][i], label = rf'$n=${i+1} $\Delta x=${dx_l}')
+    ax4.loglog(x_arr[sidx][:-1], gerr_dict[dx_s][i], label = rf'$n=${i+1}: $\Delta x=${dx_s}')
+    ax4.loglog(x_arr[lidx][:-1], gerr_dict[dx_l][i], label = rf'$n=${i+1} $\Delta x=${dx_l}')
 
 
 plt.show()
@@ -228,13 +243,10 @@ plt.show()
 
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
 
-sidx = 0
-lidx = -2
 
 fig.supxlabel('x')
 fig.supylabel(r'$\psi_n(x)$')
-dx_s = dx_arr[sidx]
-dx_l = dx_arr[lidx]
+
 
 ax1.set_title(rf'$n=1$')
 ax1.plot(x_arr[sidx],psi_an_dict[dx_s][0], label = rf'Analytical: $\Delta x =${dx_s}')
