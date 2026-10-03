@@ -170,10 +170,7 @@ for i, dx in enumerate(dx_arr):
             psi_an_dict[dx][n] = np.append(psi_an_dict[dx][n], psi_isw(arr, a, n+1))
             psi_num_dict[dx][n] = np.append(psi_num_dict[dx][n], A_tot)
 
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
 
-sidx = 0
-lidx = -2
 
 
 
@@ -183,7 +180,6 @@ lidx = -2
 gerr_dict = {dx: [] for dx in dx_arr}
 avg_gerr_dict = {dx: [] for dx in dx_arr}
 
-n_gerr = [np.array([]) for i in range(n_levels)]
 for i, dx in enumerate(dx_arr):
     for n in range(n_levels):
         gerr_dict[dx].append(np.abs(psi_an_dict[dx][n] - psi_num_dict[dx][n]))
@@ -193,20 +189,43 @@ for i, dx in enumerate(dx_arr):
 lerr_dict = {dx: [] for dx in dx_arr}
 avg_lerr_dict = {dx: [] for dx in dx_arr}
 
-n_gerr = [np.array([]) for i in range(n_levels)]
+# n_lerr = [np.array([]) for i in range(n_levels)]
+# for lvl, arr in enumerate(n_lerr):
+#     for dx in dx_arr:
+#         lerr = np.array([0])
+#         for i in range(len(x_arr) - 1):
+#             # numerical solution
+#             psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = lvl + 1)
+#             # change in psi_isw when xf-xi = dx
+#             psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
+#             # local error
+#             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
+#         n_lerr[lvl] = np.append(n_lerr[lvl], np.mean(lerr))
+
+
 for i, dx in enumerate(dx_arr):
-    for n in range(n_levels):
+    for n in range(5):
         lerr_dict[dx].append(np.diff(psi_an_dict[dx][n] - psi_num_dict[dx][n]))
-        avg_lerr_dict[dx].append(np.diff(np.abs(psi_an_dict[dx][n] - psi_num_dict[dx][n])))
+        avg_lerr_dict[dx].append(np.mean((np.diff(psi_an_dict[dx][n] - psi_num_dict[dx][n]))))
+
+avg_lerr_lst = list(avg_lerr_dict.values())
+avg_gerr_lst = list(avg_gerr_dict.values())
+
+fig, (ax1, ax2) = plt.subplots(2, 1)
+
+#ax1.loglog(dx_arr, avg_lerr_lst)
+ax1.loglog(dx_arr, avg_gerr_lst)
 
 
-print(len(n_gerr))
-print(len(x_arr))
+
+plt.show()
 
 
 
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
 
-
+sidx = 0
+lidx = -2
 
 fig.supxlabel('x')
 fig.supylabel(r'$\psi_n(x)$')
@@ -237,15 +256,15 @@ ax4.plot(x_arr[sidx],psi_num_dict[dx_s][3], label = rf'Numerical: $\Delta x =${d
 ax4.plot(x_arr[lidx],psi_an_dict[dx_l][3], label = rf'Analytical: $\Delta x =${dx_l}', ls = '--')
 ax4.plot(x_arr[lidx],psi_num_dict[dx_l][3], label = rf'Numerical: $\Delta x =${dx_l}', ls = '--')
 
-ax1.legend(loc = 'lower left')
-ax2.legend(loc = 'lower left')
-ax3.legend(loc = 'lower left')
-ax4.legend(loc = 'lower left')
+ax1.legend(loc = 'lower left', fontsize = 9)
+ax2.legend(loc = 'lower left', fontsize = 9)
+ax3.legend(loc = 'lower left', fontsize = 9)
+ax4.legend(loc = 'lower left', fontsize = 9)
 
 #ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
 #ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
 plt.tight_layout()
-plt.show()
+#plt.show()
 
 # fig, ax = plt.subplots(figsize = (8, 5))
 # ax.set_title(r'Global Error of the Ground State')
