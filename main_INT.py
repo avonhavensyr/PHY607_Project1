@@ -190,6 +190,15 @@ for i, dx in enumerate(dx_arr):
         avg_gerr_dict[dx].append(np.mean(np.abs(psi_an_dict[dx][n] - psi_num_dict[dx][n])))
 
 
+lerr_dict = {dx: [] for dx in dx_arr}
+avg_lerr_dict = {dx: [] for dx in dx_arr}
+
+n_gerr = [np.array([]) for i in range(n_levels)]
+for i, dx in enumerate(dx_arr):
+    for n in range(n_levels):
+        lerr_dict[dx].append(np.diff(psi_an_dict[dx][n] - psi_num_dict[dx][n]))
+        avg_lerr_dict[dx].append(np.diff(np.abs(psi_an_dict[dx][n] - psi_num_dict[dx][n])))
+
 
 print(len(n_gerr))
 print(len(x_arr))
@@ -236,7 +245,7 @@ ax4.legend(loc = 'lower left')
 #ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
 #ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
 plt.tight_layout()
-#plt.show()
+plt.show()
 
 # fig, ax = plt.subplots(figsize = (8, 5))
 # ax.set_title(r'Global Error of the Ground State')
