@@ -227,14 +227,10 @@ fig, ((ax1, ax2),(ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8))
 
 O_11 = dx_short
 O_21 = dx_short ** 2
-O_12 = dx_arr
-O_22 = dx_arr ** 2
 
-ax1.loglog(dx_short, O_11, label = r'$\mathcal{O}(\Delta t)$',color = 'black',ls='--')
-ax2.loglog(dx_short, O_21, label = r'$\mathcal{O}(\Delta t^2)$',color = 'black',ls='--')
-ax3.loglog(dx_short, O_12, label = r'$\mathcal{O}(\Delta t)$',color = 'black',ls='--')
-ax4.loglog(dx_short, O_22, label = r'$\mathcal{O}(\Delta t^2)$',color = 'black',ls='--')
 
+ax1.loglog(dx_short, 3.5 * O_21, label = r'$\mathcal{O}(\Delta t)$',color = 'black',ls='--')
+ax2.loglog(dx_short, 1.5 * O_11, label = r'$\mathcal{O}(\Delta t^2)$',color = 'black',ls='--')
 
 ax1.set_title('Average Local Error')
 ax2.set_title('Average Global Error')
@@ -249,7 +245,13 @@ for i in range(5):
     ax4.loglog(x_arr[sidx], gerr_dict[dx_s][i], color=f'C{i}', linestyle='-',  label = rf'$n=${i+1}: $\Delta x=${dx_s}')
     ax4.loglog(x_arr[lidx], gerr_dict[dx_l][i], color=f'C{i}', linestyle='--', label = rf'$n=${i+1} $\Delta x=${dx_l}')
 
-plt.show()
+
+ax1.legend(loc = 'lower left', fontsize = 9)
+ax2.legend(loc = 'lower left', fontsize = 9)
+ax3.legend(loc = 'lower left', fontsize = 9)
+ax4.legend(loc = 'lower left', fontsize = 9)
+plt.tight_layout()
+plt.savefig('FINAL_int_err.png')
 
 
 
@@ -289,20 +291,9 @@ ax2.legend(loc = 'lower left', fontsize = 9)
 ax3.legend(loc = 'lower left', fontsize = 9)
 ax4.legend(loc = 'lower left', fontsize = 9)
 
-#ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
-#ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
 plt.tight_layout()
-#plt.show()
+plt.savefig('FINAL_int_comp.png')
 
-# fig, ax = plt.subplots(figsize = (8, 5))
-# ax.set_title(r'Global Error of the Ground State')
-# ax.scatter(x_arr, n_gerr[0], label = rf'$n=1$')
-# # #ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
-
-# # ax.set_xlabel(r'$\Delta x$')
-# # ax.set_ylabel(r'Local Error')
-
-# # ax.legend()
 
 
 # # plt.tight_layout()
@@ -329,31 +320,31 @@ plt.tight_layout()
 # c1 = 0.08
 # th_lerr1 = c1 * (dx_arr ** 2)
 
-# # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
-# # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
+# ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
+# ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
 
-# # Energy levels to find <x^2> for
-# n_lst = np.arange(1, 26)       # go up to n=20
-# step = 0.02
-# # List of expectation values
-# exp_lst = np.array([])
-# for i in n_lst:
-#     # get the expectation value of x squared
-#     exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
-#     # add to list
-#     exp_lst = np.append(exp_lst, exp_x_squared)
-# # value the expectation value should converge to
-# con_val = (a**2) / 3
+# Energy levels to find <x^2> for
+n_lst = np.arange(1, 26)       # go up to n=20
+step = 0.02
+# List of expectation values
+exp_lst = np.array([])
+for i in n_lst:
+    # get the expectation value of x squared
+    exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
+    # add to list
+    exp_lst = np.append(exp_lst, exp_x_squared)
+# value the expectation value should converge to
+con_val = (a**2) / 3
 
-# #make figure
-# # fig, ax = plt.subplots()
-# # ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
-# # ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
-# # ax.set_xlabel('n')
-# # ax.set_ylabel(r'$\langle x\rangle$')
-# # ax.legend()
-# # plt.tight_layout()
-# # plt.savefig('NEWint_lim_case1.png')
+#make figure
+fig, ax = plt.subplots()
+ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
+ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
+ax.set_xlabel('n')
+ax.set_ylabel(r'$\langle x\rangle$')
+ax.legend()
+plt.tight_layout()
+plt.savefig('NEWint_lim_case1.png')
 
 
 
@@ -451,4 +442,4 @@ plt.tight_layout()
 
 # plt.tight_layout()
 # plt.savefig('NEWint_comparisons.png')
-#plt.show()
+plt.show()
