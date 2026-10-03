@@ -156,6 +156,16 @@ n_approx = [np.array([]) for i in range(n_levels)]
 # discrete x values
 x_arr = np.arange(start = -a, stop = a + step, step = step)
 
+dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+
+
+# make dictionaries to hold the analytical and numerical values for each n and dx
+# make plots like for the ODE case
+# Find errors
+# plot errors
+# Solve limiting cases
+psi_dict = {}
+
 # get the numerical and analytical values for each psi_n
 for lvl, arr in enumerate(n_states):
     psi_an = psi_isw(x_arr, a, lvl + 1)
@@ -175,26 +185,28 @@ for lvl, arr in enumerate(n_states):
 # ----------------------------- ERRORS ---------------------------
 # Global truncation error for the ground state
 n_gerr = [np.array([]) for i in range(n_levels)]
-for lvl in range(n_levels):
-    gerr = np.abs(n_states[lvl] - n_approx[lvl])
-    n_gerr = np.append(n_gerr, gerr)
-print(n_gerr)
+gerr = np.abs(n_states[lvl] - n_approx[lvl])
+n_gerr = np.append(n_gerr, gerr)
+print(len(n_gerr))
+#print(len(x_arr))
+
+
 
 # fig, ax = plt.subplots(figsize = (8, 5))
 # ax.set_title(r'Global Error of the Ground State')
 # ax.scatter(x_arr, n_gerr[0], label = rf'$n=1$')
 # #ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
+# ax.set_xlabel(r'$\Delta x$')
+# ax.set_ylabel(r'Local Error')
 
-ax.legend()
+# ax.legend()
 
 
-plt.tight_layout()
-plt.savefig('NEWg_lerr_comp.png')
-# Local truncation error for the ground state
-lerr1 = np.array([])
+# plt.tight_layout()
+# plt.savefig('NEWg_lerr_comp.png')
+# # Local truncation error for the ground state
+# lerr1 = np.array([])
 # copied from ODE side
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 
