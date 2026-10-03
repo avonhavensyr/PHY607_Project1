@@ -241,8 +241,6 @@ ax2.legend(loc = 'lower left', fontsize = 9)
 ax3.legend(loc = 'lower left', fontsize = 9)
 ax4.legend(loc = 'lower left', fontsize = 9)
 plt.tight_layout()
-plt.savefig('FINAL_int_err.png')
-
 
 
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
@@ -282,7 +280,6 @@ ax3.legend(loc = 'lower left', fontsize = 9)
 ax4.legend(loc = 'lower left', fontsize = 9)
 
 plt.tight_layout()
-plt.savefig('FINAL_int_comp.png')
 
 # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
 # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
@@ -308,8 +305,6 @@ ax.set_xlabel('n')
 ax.set_ylabel(r'$\langle x\rangle$')
 ax.legend()
 plt.tight_layout()
-plt.savefig('NEWint_lim_case1.png')
-
 
 
 # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------

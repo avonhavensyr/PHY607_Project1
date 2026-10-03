@@ -401,9 +401,6 @@ ax4.legend(loc = 'lower left')
 fig.supxlabel('t')
 
 plt.tight_layout()
-#plt.savefig('NEWode_comparisons.png')
-plt.savefig('NEWlim_case1.png')
-
 
 #---------- II: Energy Conservation ------------
 fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(8, 10), sharex = True)
@@ -451,8 +448,6 @@ ax6.legend()
 
 plt.tight_layout()
 
-plt.savefig('NEWode_energy_cons.png')
-
 # ---------------- ERROR PROPAGATION ----------------
 O_1 = dt_arr
 O_2 = dt_arr ** 2
@@ -496,7 +491,6 @@ ax2.set_ylabel(r'Error')
 ax4.set_ylabel(r'Error')
 
 plt.tight_layout()
-plt.savefig('ODE_err1.png')
 plt.show()
 
 
@@ -537,5 +531,4 @@ ax2.set_ylabel(r'Error')
 ax4.set_ylabel(r'Error')
 
 plt.tight_layout()
-plt.savefig('ODE_err2.png')
 plt.show()
