@@ -202,18 +202,22 @@ avg_lerr_dict = {dx: [] for dx in dx_arr}
 #             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
 #         n_lerr[lvl] = np.append(n_lerr[lvl], np.mean(lerr))
 
-
 for i, dx in enumerate(dx_arr):
     for n in range(5):
-        lerr_dict[dx].append(np.diff(psi_an_dict[dx][n] - psi_num_dict[dx][n]))
-        avg_lerr_dict[dx].append(np.mean((np.diff(psi_an_dict[dx][n] - psi_num_dict[dx][n]))))
+        lerr = []
+        for x in range(len(x_arr[i]) - 1):
+            psi_diff = psi_an_dict[dx][n][x + 1] - psi_an_dict[dx][n][x]
+            psi_num = meth.Riemann(dpsi_isw, x_arr[i][x], dx, a=a, n=n + 1)
+            lerr.append(np.abs(psi_num - psi_diff))
+        lerr_dict[dx].append(np.array(lerr))
+        avg_lerr_dict[dx].append(np.mean(lerr))
 
 avg_lerr_lst = list(avg_lerr_dict.values())
 avg_gerr_lst = list(avg_gerr_dict.values())
 
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
-#ax1.loglog(dx_arr, avg_lerr_lst)
+ax1.loglog(dx_arr, avg_lerr_lst)
 ax1.loglog(dx_arr, avg_gerr_lst)
 
 
