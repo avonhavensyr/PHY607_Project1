@@ -221,21 +221,33 @@ gerr_lst = [[gerr_dict[dx][n] for dx in dx_arr] for n in range(5)]
 avg_lerr_lst = [[avg_lerr_dict[dx][n] for dx in dx_arr] for n in range(5)]
 avg_gerr_lst = [[avg_gerr_dict[dx][n] for dx in dx_arr] for n in range(5)]
 
-
-fig, ((ax1, ax2),(ax3, ax4)) = plt.subplots(2, 2)
-
-O_1 = dx_arr
-O_2 = dx_arr ** 2
-
 dx_short = dx_arr[:5]
+
+fig, ((ax1, ax2),(ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8))
+
+O_11 = dx_short
+O_21 = dx_short ** 2
+O_12 = dx_arr
+O_22 = dx_arr ** 2
+
+ax1.loglog(dx_short, O_11, label = r'$\mathcal{O}(\Delta t)$',color = 'black',ls='--')
+ax2.loglog(dx_short, O_21, label = r'$\mathcal{O}(\Delta t^2)$',color = 'black',ls='--')
+ax3.loglog(dx_short, O_12, label = r'$\mathcal{O}(\Delta t)$',color = 'black',ls='--')
+ax4.loglog(dx_short, O_22, label = r'$\mathcal{O}(\Delta t^2)$',color = 'black',ls='--')
+
+
+ax1.set_title('Average Local Error')
+ax2.set_title('Average Global Error')
+ax3.set_title('Local Error Over x')
+ax4.set_title('Global Error Over x')
+
 for i in range(5):
     ax1.loglog(dx_short, avg_lerr_lst[i][:5], label=rf'$n={i+1}$')
     ax2.loglog(dx_short, avg_gerr_lst[i][:5], label=rf'$n={i+1}$')
-    ax3.loglog(x_arr[sidx][:-1], lerr_dict[dx_s][i], label = rf'$n=${i+1}: $\Delta x=${dx_s}')
-    ax3.loglog(x_arr[lidx][:-1], lerr_dict[dx_l][i], label = rf'$n=${i+1} $\Delta x=${dx_l}')
-    ax4.loglog(x_arr[sidx], gerr_dict[dx_s][i], label = rf'$n=${i+1}: $\Delta x=${dx_s}')
-    ax4.loglog(x_arr[lidx], gerr_dict[dx_l][i], label = rf'$n=${i+1} $\Delta x=${dx_l}')
-
+    ax3.loglog(x_arr[sidx][:-1], lerr_dict[dx_s][i], color=f'C{i}', linestyle='-',  label = rf'$n=${i+1}: $\Delta x=${dx_s}')
+    ax3.loglog(x_arr[lidx][:-1], lerr_dict[dx_l][i], color=f'C{i}', linestyle='--', label = rf'$n=${i+1} $\Delta x=${dx_l}')
+    ax4.loglog(x_arr[sidx], gerr_dict[dx_s][i], color=f'C{i}', linestyle='-',  label = rf'$n=${i+1}: $\Delta x=${dx_s}')
+    ax4.loglog(x_arr[lidx], gerr_dict[dx_l][i], color=f'C{i}', linestyle='--', label = rf'$n=${i+1} $\Delta x=${dx_l}')
 
 plt.show()
 
