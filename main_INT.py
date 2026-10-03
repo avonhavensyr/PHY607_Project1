@@ -348,44 +348,44 @@ plt.savefig('NEWint_lim_case1.png')
 
 
 
-# # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
-# # Nodes at n = 3: a/3, 2a/3
-# # Tuples:
-# pairs = [(3, 2), (5, 6), (8, 9)]
-# # Node Pairs:
-# nodes = [(a/3, (2*a)/3), ((2 * a)/5, (4 * a)/5), ((4 * a)/9, (8 * a)/9)]
+# ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
+# Nodes at n = 3: a/3, 2a/3
+# Tuples:
+pairs = [(3, 2), (5, 6), (8, 9)]
+# Node Pairs:
+nodes = [(a/3, (2*a)/3), ((2 * a)/5, (4 * a)/5), ((4 * a)/9, (8 * a)/9)]
 
-# dpsi1 = []
-# psi2 = []
+dpsi1 = []
+psi2 = []
 
-# lhs_lst = []
-# rhs_lst = []
+lhs_lst = []
+rhs_lst = []
 
-# for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
-#     # dpsi1 values
-#     dp11 = dpsi_isw(x = x2, a = a, n = n1)
-#     dp12 = dpsi_isw(x = x1, a = a, n = n1)
-#     dpsi1.append((dp11, dp12))
-#     # psi1 values
-#     p21 = psi_isw(x = x2, a = a, n = n2)
-#     p22 = psi_isw(x = x1, a = a, n = n2)
-#     psi2.append((p21, p22))
-#     # energies for n1 and n2
-#     En1 = E_isw(n1, a)
-#     En2 = E_isw(n2, a)
-#     int_psiprod = meth.recRiemann(psiProd, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
-#     lhs = (dp12 * p22) - (dp11 * p21)
-#     rhs = ((2*m)/hbar) * (En1 - En2) * int_psiprod
+for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
+    # dpsi1 values
+    dp11 = dpsi_isw(x = x2, a = a, n = n1)
+    dp12 = dpsi_isw(x = x1, a = a, n = n1)
+    dpsi1.append((dp11, dp12))
+    # psi1 values
+    p21 = psi_isw(x = x2, a = a, n = n2)
+    p22 = psi_isw(x = x1, a = a, n = n2)
+    psi2.append((p21, p22))
+    # energies for n1 and n2
+    En1 = E_isw(n1, a)
+    En2 = E_isw(n2, a)
+    int_psiprod = meth.recRiemann(psiProd, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
+    lhs = (dp12 * p22) - (dp11 * p21)
+    rhs = ((2*m)/hbar) * (En1 - En2) * int_psiprod
 
-#     lhs_lst.append(lhs)
-#     rhs_lst.append(rhs)
+    lhs_lst.append(lhs)
+    rhs_lst.append(rhs)
 
-# print(f'Pairs: {pairs}')
-# print(f'Nodes: {nodes}')
-# print(f'Left Hand Side: {lhs_lst}')
-# print(f'Right Hand Side: {rhs_lst}')
-# for p, pair in enumerate(pairs):
-#     print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
+print(f'Pairs: {pairs}')
+print(f'Nodes: {nodes}')
+print(f'Left Hand Side: {lhs_lst}')
+print(f'Right Hand Side: {rhs_lst}')
+for p, pair in enumerate(pairs):
+    print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
 
 
 # fig, ax = plt.subplots(figsize = (8, 5))
