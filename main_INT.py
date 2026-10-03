@@ -154,9 +154,8 @@ n_states = [np.array([]) for i in range(n_levels)]
 # numerical approximations
 n_approx = [np.array([]) for i in range(n_levels)]
 # discrete x values
-x_arr = np.arange(start = -a, stop = a + step, step = step)
-
 dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+x_arr = [np.arange(start =-a, stop = a+dx, step = dx) for dx in dx_arr]
 
 
 # make dictionaries to hold the analytical and numerical values for each n and dx
@@ -164,18 +163,20 @@ dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 # Find errors
 # plot errors
 # Solve limiting cases
-psi_dict = {}
-
+psi_dict_an = {dx: n_states for dx in dx_arr}
+psi_dict_num = {dx: n_states for dx in dx_arr}
 # get the numerical and analytical values for each psi_n
-for lvl, arr in enumerate(n_states):
-    psi_an = psi_isw(x_arr, a, lvl + 1)
-    n_states[lvl] = psi_an
-    psi_num = np.array([])
-    A_tot = 0
-    for i in range(len(x_arr)):
-        psi_num = np.append(psi_num, A_tot)
-        A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = lvl + 1)
-    n_approx[lvl] = psi_num
+
+for dx in dx_arr:
+    for n, arr in enumerate(n_states):
+        psi_an = psi_isw(x_arr, a, n + 1)
+        n_states[n] = psi_an
+        psi_num = np.array([])
+        A_tot = 0
+        for i in range(len(x_arr)):
+            psi_num = np.append(psi_num, A_tot)
+            A_tot += meth.Riemann(dpsi_isw, x_arr[i], step, a = a, n = n + 1)
+        n_approx[n] = psi_num
 
 #ax.plot(x_arr, n_states[0], label = 'Ground State Analytical')
 #ax.plot(x_arr, n_approx[0], label = 'Ground State Numerical')
@@ -183,11 +184,11 @@ for lvl, arr in enumerate(n_states):
 
 
 # ----------------------------- ERRORS ---------------------------
-# Global truncation error for the ground state
-n_gerr = [np.array([]) for i in range(n_levels)]
-gerr = np.abs(n_states[lvl] - n_approx[lvl])
-n_gerr = np.append(n_gerr, gerr)
-print(len(n_gerr))
+# # Global truncation error for the ground state
+# n_gerr = [np.array([]) for i in range(n_levels)]
+# gerr = np.abs(n_states[lvl] - n_approx[lvl])
+# n_gerr = np.append(n_gerr, gerr)
+# print(len(n_gerr))
 #print(len(x_arr))
 
 
@@ -195,97 +196,97 @@ print(len(n_gerr))
 # fig, ax = plt.subplots(figsize = (8, 5))
 # ax.set_title(r'Global Error of the Ground State')
 # ax.scatter(x_arr, n_gerr[0], label = rf'$n=1$')
-# #ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+# # #ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
-# ax.set_xlabel(r'$\Delta x$')
-# ax.set_ylabel(r'Local Error')
+# # ax.set_xlabel(r'$\Delta x$')
+# # ax.set_ylabel(r'Local Error')
 
-# ax.legend()
-
-
-# plt.tight_layout()
-# plt.savefig('NEWg_lerr_comp.png')
-# # Local truncation error for the ground state
-# lerr1 = np.array([])
-# copied from ODE side
-dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
-
-n_lerr = [np.array([]) for i in range(n_levels)]
-for lvl, arr in enumerate(n_lerr):
-    for dx in dx_arr:
-        lerr = np.array([0])
-        for i in range(len(x_arr) - 1):
-            # numerical solution
-            psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = lvl + 1)
-            # change in psi_isw when xf-xi = dx
-            psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
-            # local error
-            lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
-        n_lerr[lvl] = np.append(n_lerr[lvl], np.mean(lerr))
-
-# Plot quadratic curves that align with the expected local error for a reimann integrator
-c1 = 0.08
-th_lerr1 = c1 * (dx_arr ** 2)
-
-# ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
-# ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
-
-# Energy levels to find <x^2> for
-n_lst = np.arange(1, 26)       # go up to n=20
-step = 0.02
-# List of expectation values
-exp_lst = np.array([])
-for i in n_lst:
-    # get the expectation value of x squared
-    exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
-    # add to list
-    exp_lst = np.append(exp_lst, exp_x_squared)
-# value the expectation value should converge to
-con_val = (a**2) / 3
-
-#make figure
-# fig, ax = plt.subplots()
-# ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
-# ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
-# ax.set_xlabel('n')
-# ax.set_ylabel(r'$\langle x\rangle$')
-# ax.legend()
-# plt.tight_layout()
-# plt.savefig('NEWint_lim_case1.png')
+# # ax.legend()
 
 
+# # plt.tight_layout()
+# # plt.savefig('NEWg_lerr_comp.png')
+# # # Local truncation error for the ground state
+# # lerr1 = np.array([])
+# # copied from ODE side
+# dx_arr = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 
-# ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
-# Nodes at n = 3: a/3, 2a/3
-# Tuples:
-pairs = [(3, 2), (5, 6), (8, 9)]
-# Node Pairs:
-nodes = [(a/3, (2*a)/3), ((2 * a)/5, (4 * a)/5), ((4 * a)/9, (8 * a)/9)]
+# n_lerr = [np.array([]) for i in range(n_levels)]
+# for lvl, arr in enumerate(n_lerr):
+#     for dx in dx_arr:
+#         lerr = np.array([0])
+#         for i in range(len(x_arr) - 1):
+#             # numerical solution
+#             psinp1 = meth.Riemann(dpsi_isw, x_arr[i], dx, a = a, n = lvl + 1)
+#             # change in psi_isw when xf-xi = dx
+#             psi_diff = psi_isw(x_arr[i] + dx, a, 1) - psi_isw(x_arr[i], a, 1)
+#             # local error
+#             lerr = np.append(lerr, np.abs(psinp1 - psi_diff))
+#         n_lerr[lvl] = np.append(n_lerr[lvl], np.mean(lerr))
 
-dpsi1 = []
-psi2 = []
+# # Plot quadratic curves that align with the expected local error for a reimann integrator
+# c1 = 0.08
+# th_lerr1 = c1 * (dx_arr ** 2)
 
-lhs_lst = []
-rhs_lst = []
+# # ------------------- TESTED PROPERTIES/LIMITING CASES -------------------
+# # ---------------- II: Griffiths 2.4-- Convergence of <x^2> for high n-------------------
 
-for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
-    # dpsi1 values
-    dp11 = dpsi_isw(x = x2, a = a, n = n1)
-    dp12 = dpsi_isw(x = x1, a = a, n = n1)
-    dpsi1.append((dp11, dp12))
-    # psi1 values
-    p21 = psi_isw(x = x2, a = a, n = n2)
-    p22 = psi_isw(x = x1, a = a, n = n2)
-    psi2.append((p21, p22))
-    # energies for n1 and n2
-    En1 = E_isw(n1, a)
-    En2 = E_isw(n2, a)
-    int_psiprod = meth.recRiemann(psiProd, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
-    lhs = (dp12 * p22) - (dp11 * p21)
-    rhs = ((2*m)/hbar) * (En1 - En2) * int_psiprod
+# # Energy levels to find <x^2> for
+# n_lst = np.arange(1, 26)       # go up to n=20
+# step = 0.02
+# # List of expectation values
+# exp_lst = np.array([])
+# for i in n_lst:
+#     # get the expectation value of x squared
+#     exp_x_squared = expecVal(psi_isw, 0, a, step, x_func = squared, n = i, a = a)
+#     # add to list
+#     exp_lst = np.append(exp_lst, exp_x_squared)
+# # value the expectation value should converge to
+# con_val = (a**2) / 3
 
-    lhs_lst.append(lhs)
-    rhs_lst.append(rhs)
+# #make figure
+# # fig, ax = plt.subplots()
+# # ax.axhline(y = con_val, linestyle = '--', label = r'$\langle x^2\rangle=\frac{a^2}{3}$', color = 'C1', zorder=1)
+# # ax.scatter(n_lst, exp_lst, label = r'Numerical $\langle x^2\rangle_n$ Values', marker = 'o')
+# # ax.set_xlabel('n')
+# # ax.set_ylabel(r'$\langle x\rangle$')
+# # ax.legend()
+# # plt.tight_layout()
+# # plt.savefig('NEWint_lim_case1.png')
+
+
+
+# # ---------------- II: Griffiths 2.45 -- Property of Nodes -------------------
+# # Nodes at n = 3: a/3, 2a/3
+# # Tuples:
+# pairs = [(3, 2), (5, 6), (8, 9)]
+# # Node Pairs:
+# nodes = [(a/3, (2*a)/3), ((2 * a)/5, (4 * a)/5), ((4 * a)/9, (8 * a)/9)]
+
+# dpsi1 = []
+# psi2 = []
+
+# lhs_lst = []
+# rhs_lst = []
+
+# for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
+#     # dpsi1 values
+#     dp11 = dpsi_isw(x = x2, a = a, n = n1)
+#     dp12 = dpsi_isw(x = x1, a = a, n = n1)
+#     dpsi1.append((dp11, dp12))
+#     # psi1 values
+#     p21 = psi_isw(x = x2, a = a, n = n2)
+#     p22 = psi_isw(x = x1, a = a, n = n2)
+#     psi2.append((p21, p22))
+#     # energies for n1 and n2
+#     En1 = E_isw(n1, a)
+#     En2 = E_isw(n2, a)
+#     int_psiprod = meth.recRiemann(psiProd, x1, x2, step, n1 = 3, n2 = 2, a = a, psi = psi_isw)
+#     lhs = (dp12 * p22) - (dp11 * p21)
+#     rhs = ((2*m)/hbar) * (En1 - En2) * int_psiprod
+
+#     lhs_lst.append(lhs)
+#     rhs_lst.append(rhs)
 
 # print(f'Pairs: {pairs}')
 # print(f'Nodes: {nodes}')
@@ -295,58 +296,58 @@ for i, ((n1, n2), (x1, x2)) in enumerate(zip(pairs,nodes)):
 #     print(f'Difference for pair{p+1}: {lhs_lst[p] - rhs_lst[p]}')
 
 
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Local Error of the Ground State')
-ax.scatter(dx_arr, n_lerr[0], label = rf'$n=1$')
-ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'Local Error of the Ground State')
+# ax.scatter(dx_arr, n_lerr[0], label = rf'$n=1$')
+# ax.plot(dx_arr, th_lerr1, linestyle = '--', label = rf'{c1}$\Delta x^2$')
 
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
+# ax.set_xlabel(r'$\Delta x$')
+# ax.set_ylabel(r'Local Error')
 
-ax.legend()
+# ax.legend()
 
 #n_gerr_avg = [np.a]
 
 
 
-ex_n_lerr = n_lerr[1:]      # extract only the exited states
-fig, ax = plt.subplots(figsize = (8, 5))
-ax.set_title(r'Log Local Error for Excited States')
-for lvl, arr in enumerate(ex_n_lerr):
-    ax.loglog(dx_arr, ex_n_lerr[lvl], label = rf'$n=${lvl+2}')
-ax.set_xlabel(r'$\Delta x$')
-ax.set_ylabel(r'Local Error')
+# ex_n_lerr = n_lerr[1:]      # extract only the exited states
+# fig, ax = plt.subplots(figsize = (8, 5))
+# ax.set_title(r'Log Local Error for Excited States')
+# for lvl, arr in enumerate(ex_n_lerr):
+#     ax.loglog(dx_arr, ex_n_lerr[lvl], label = rf'$n=${lvl+2}')
+# ax.set_xlabel(r'$\Delta x$')
+# ax.set_ylabel(r'Local Error')
 
-ax.legend()
+# ax.legend()
 
-plt.tight_layout()
-plt.savefig('NEWe_lerr_comp.png')
+# plt.tight_layout()
+# plt.savefig('NEWe_lerr_comp.png')
 
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
+# fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize = (10, 8), sharex = True, sharey = True)
 
-ax1.set_title(rf'$n=1$')
-ax1.plot(x_arr, n_states[0], label = rf'Analytical', ls = '-')
-ax1.plot(x_arr, n_approx[0], label = rf'Numerical', ls = '--')
-ax1.legend(loc = 'lower left')
+# ax1.set_title(rf'$n=1$')
+# ax1.plot(x_arr, n_states[0], label = rf'Analytical', ls = '-')
+# ax1.plot(x_arr, n_approx[0], label = rf'Numerical', ls = '--')
+# ax1.legend(loc = 'lower left')
 
-ax2.set_title(rf'$n=1$')
-ax2.plot(x_arr, n_states[1], label = rf'Analytical', ls = '-')
-ax2.plot(x_arr, n_approx[1], label = rf'Numerical', ls = '--')
-ax2.legend(loc = 'lower left')
+# ax2.set_title(rf'$n=1$')
+# ax2.plot(x_arr, n_states[1], label = rf'Analytical', ls = '-')
+# ax2.plot(x_arr, n_approx[1], label = rf'Numerical', ls = '--')
+# ax2.legend(loc = 'lower left')
 
-ax3.set_title(rf'$n=1$')
-ax3.plot(x_arr, n_states[2], label = rf'Analytical', ls = '-')
-ax3.plot(x_arr, n_approx[2], label = rf'Numerical', ls = '--')
-ax3.legend(loc = 'lower left')
+# ax3.set_title(rf'$n=1$')
+# ax3.plot(x_arr, n_states[2], label = rf'Analytical', ls = '-')
+# ax3.plot(x_arr, n_approx[2], label = rf'Numerical', ls = '--')
+# ax3.legend(loc = 'lower left')
 
-ax4.set_title(rf'$n=1$')
-ax4.plot(x_arr, n_states[3], label = rf'Analytical', ls = '-')
-ax4.plot(x_arr, n_approx[3], label = rf'Numerical', ls = '--')
-ax4.legend(loc = 'lower left')
+# ax4.set_title(rf'$n=1$')
+# ax4.plot(x_arr, n_states[3], label = rf'Analytical', ls = '-')
+# ax4.plot(x_arr, n_approx[3], label = rf'Numerical', ls = '--')
+# ax4.legend(loc = 'lower left')
 
-fig.supxlabel('x')
-fig.supylabel(r'$\psi_n')
+# fig.supxlabel('x')
+# fig.supylabel(r'$\psi_n')
 
-plt.tight_layout()
-plt.savefig('NEWint_comparisons.png')
+# plt.tight_layout()
+# plt.savefig('NEWint_comparisons.png')
 #plt.show()
